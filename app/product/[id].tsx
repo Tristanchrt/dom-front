@@ -446,8 +446,9 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
-    height: 250,
-    resizeMode: 'cover',
+    height: 200,
+    resizeMode: 'contain',
+    backgroundColor: '#F8F8F8',
   },
   thumbnailContainer: {
     position: 'absolute',
