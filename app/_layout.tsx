@@ -14,8 +14,8 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  // Start with login screen for social network app
+  initialRouteName: 'login',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -51,7 +51,22 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
+        <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="profile/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="post/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="product/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="shop" options={{ headerShown: false }} />
+        <Stack.Screen name="messaging" options={{ headerShown: false }} />
+        <Stack.Screen name="chat/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="settings/subscription" options={{ headerShown: false }} />
+        <Stack.Screen name="settings/profile" options={{ headerShown: false }} />
+        <Stack.Screen name="settings/products" options={{ headerShown: false }} />
+        <Stack.Screen name="settings/orders" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding/profile-setup" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding/interests" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding/test-debug" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>

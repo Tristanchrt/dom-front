@@ -1,0 +1,336 @@
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  TextInput,
+  Alert,
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { router } from 'expo-router';
+
+export default function ProfileEditScreen() {
+  const [profile, setProfile] = useState({
+    name: 'Marilyn Aminoff',
+    language: 'en ligne',
+    description: '',
+    category: '',
+    socialNetworks: ''
+  });
+
+  const handleSave = () => {
+    Alert.alert(
+      '✅ Profil sauvegardé',
+      'Vos modifications ont été enregistrées avec succès',
+      [{ text: 'OK' }]
+    );
+  };
+
+  const ProfileSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
+    </View>
+  );
+
+  const EditableField = ({ 
+    label, 
+    value, 
+    onChangeText, 
+    placeholder,
+    multiline = false 
+  }: {
+    label: string,
+    value: string,
+    onChangeText: (text: string) => void,
+    placeholder: string,
+    multiline?: boolean
+  }) => (
+    <View style={styles.fieldContainer}>
+      <View style={styles.fieldHeader}>
+        <FontAwesome name="lock" size={14} color="#FF8C42" />
+        <Text style={styles.fieldLabel}>{label}</Text>
+        <TouchableOpacity style={styles.modifyButton}>
+          <Text style={styles.modifyText}>modifier</Text>
+          <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
+        </TouchableOpacity>
+      </View>
+      <TextInput
+        style={[styles.fieldInput, multiline && styles.multilineInput]}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#8B7355"
+        multiline={multiline}
+        numberOfLines={multiline ? 3 : 1}
+      />
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <FontAwesome name="arrow-left" size={24} color="#2C1810" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Profil</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Profile Header */}
+        <View style={styles.profileHeader}>
+          <View style={styles.profileImageContainer}>
+            <Image 
+              source={{ uri: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face' }}
+              style={styles.profileImage}
+            />
+            <TouchableOpacity style={styles.editImageButton}>
+              <FontAwesome name="camera" size={16} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>{profile.name}</Text>
+            <Text style={styles.profileStatus}>{profile.language}</Text>
+          </View>
+          <View style={styles.languageSelector}>
+            <TouchableOpacity style={styles.languageButton}>
+              <Text style={styles.languageText}>🇬🇧</Text>
+              <FontAwesome name="chevron-down" size={12} color="#8B7355" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Profile Banner */}
+        <View style={styles.profileBanner}>
+          <View style={styles.bannerContent}>
+            <View style={styles.bannerText}>
+              <Text style={styles.bannerTitle}>Profil complet</Text>
+              <Text style={styles.bannerSubtitle}>Optimisez votre visibilité</Text>
+            </View>
+            <Image 
+              source={{ uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop' }}
+              style={styles.bannerImage}
+            />
+          </View>
+        </View>
+
+        {/* Editable Fields */}
+        <ProfileSection title="">
+          <EditableField
+            label="Description"
+            value={profile.description}
+            onChangeText={(text) => setProfile({...profile, description: text})}
+            placeholder="Décrivez-vous en quelques mots..."
+            multiline
+          />
+          
+          <EditableField
+            label="Catégorie"
+            value={profile.category}
+            onChangeText={(text) => setProfile({...profile, category: text})}
+            placeholder="Votre domaine d'expertise..."
+          />
+          
+          <EditableField
+            label="Réseaux sociaux"
+            value={profile.socialNetworks}
+            onChangeText={(text) => setProfile({...profile, socialNetworks: text})}
+            placeholder="Vos liens de réseaux sociaux..."
+          />
+        </ProfileSection>
+
+        {/* Save Button */}
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>Sauvegarder les modifications</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F8F8',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2C1810',
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  profileHeader: {
+    backgroundColor: '#FFFFFF',
+    margin: 16,
+    borderRadius: 12,
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImageContainer: {
+    position: 'relative',
+    marginRight: 16,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  editImageButton: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: '#FF8C42',
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2C1810',
+    marginBottom: 4,
+  },
+  profileStatus: {
+    fontSize: 14,
+    color: '#4CAF50',
+  },
+  languageSelector: {
+    alignItems: 'center',
+  },
+  languageButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  languageText: {
+    fontSize: 16,
+    marginRight: 8,
+  },
+  profileBanner: {
+    backgroundColor: '#FFF4E6',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    padding: 16,
+  },
+  bannerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bannerText: {
+    flex: 1,
+  },
+  bannerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2C1810',
+    marginBottom: 4,
+  },
+  bannerSubtitle: {
+    fontSize: 14,
+    color: '#8B7355',
+  },
+  bannerImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  section: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2C1810',
+    marginBottom: 16,
+  },
+  fieldContainer: {
+    marginBottom: 20,
+  },
+  fieldHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2C1810',
+    marginLeft: 8,
+    flex: 1,
+  },
+  modifyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modifyText: {
+    fontSize: 14,
+    color: '#FF8C42',
+    marginRight: 4,
+  },
+  fieldInput: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#2C1810',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  multilineInput: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  saveButton: {
+    backgroundColor: '#FF8C42',
+    borderRadius: 25,
+    paddingVertical: 16,
+    marginHorizontal: 16,
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
+
