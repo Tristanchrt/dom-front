@@ -12,7 +12,6 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-// Sample conversations data
 const conversations = [
   {
     id: 'conv1',
@@ -103,17 +102,6 @@ export default function MessagingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color="#2C1810" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Messagerie</Text>
-        <TouchableOpacity style={styles.newMessageButton}>
-          <FontAwesome name="edit" size={20} color="#FF8C42" />
-        </TouchableOpacity>
-      </View>
-
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -149,27 +137,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8F8F8',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2C1810',
-  },
-  newMessageButton: {
-    padding: 8,
   },
   searchContainer: {
     backgroundColor: '#FFFFFF',

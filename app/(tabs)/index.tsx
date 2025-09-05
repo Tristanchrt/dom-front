@@ -151,12 +151,6 @@ export default function HomeScreen() {
       <Text style={styles.logo}>DÖM</Text>
       
       <View style={styles.headerActions}>
-        <TouchableOpacity style={styles.messageButton} onPress={() => router.push('/messaging')}>
-          <FontAwesome name="comment" size={22} color="#2C1810" />
-          <View style={styles.messageBadge}>
-            <Text style={styles.messageBadgeText}>3</Text>
-          </View>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
           <FontAwesome name="shopping-cart" size={24} color="#2C1810" />
         </TouchableOpacity>
