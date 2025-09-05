@@ -94,40 +94,40 @@ const samplePosts = [
 
 const sampleShop = [
   {
-    id: 's1',
-    name: 'Peinture Méditerranéenne',
-    price: '450 €',
+    id: 'p1',
+    name: 'T-shirt coutumain',
+    price: '30 €',
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop',
+    seller: 'Marin',
+    rating: 4.8,
+    category: 'Poterie',
+  },
+  {
+    id: 'p2',
+    name: 'Vase en céramique',
+    price: '45 €',
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop',
     seller: 'Art Studio',
-    rating: 4.8,
-    category: 'Art',
-  },
-  {
-    id: 's2',
-    name: 'Tarte aux Pommes Maison',
-    price: '25 €',
-    image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=200&h=200&fit=crop',
-    seller: 'Food Lover',
     rating: 4.9,
-    category: 'Cuisine',
+    category: 'Poterie',
   },
   {
-    id: 's3',
-    name: 'Programme Fitness Complet',
-    price: '89 €',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop',
-    seller: 'Fitness Coach',
+    id: 'p3',
+    name: 'Livre de recettes',
+    price: '25 €',
+    image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=200&h=200&fit=crop',
+    seller: 'Chef Antoine',
     rating: 4.7,
-    category: 'Sport',
+    category: 'Livre Image',
   },
   {
-    id: 's4',
-    name: 'Guide de Voyage Islande',
-    price: '35 €',
+    id: 'p4',
+    name: 'Carte postale vintage',
+    price: '5 €',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
     seller: 'Travel Explorer',
-    rating: 4.9,
-    category: 'Voyage',
+    rating: 4.6,
+    category: 'Carte custom',
   },
 ];
 
@@ -212,7 +212,10 @@ export default function SearchScreen() {
   );
 
   const renderShopItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.shopCard}>
+    <TouchableOpacity 
+      style={styles.shopCard}
+      onPress={() => router.push(`/product/${item.id}`)}
+    >
       <Image source={{ uri: item.image }} style={styles.shopImage} />
       <View style={styles.shopContent}>
         <Text style={styles.shopName} numberOfLines={2}>
@@ -518,8 +521,9 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
+    height: 160,
+    resizeMode: 'contain',
+    backgroundColor: '#F8F8F8',
   },
   postContent: {
     padding: 16,
@@ -577,8 +581,9 @@ const styles = StyleSheet.create({
   },
   shopImage: {
     width: '100%',
-    height: 120,
-    resizeMode: 'cover',
+    height: 100,
+    resizeMode: 'contain',
+    backgroundColor: '#F8F8F8',
   },
   shopContent: {
     padding: 12,
