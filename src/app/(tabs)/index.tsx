@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, FlatList, View, Text, TouchableOpacity, SafeAreaView, Animated } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import Post from '@/components/Post';
+import Post from '@/components/specific/Post';
 
 const followingPosts = [
   {

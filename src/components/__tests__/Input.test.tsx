@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { Input, InputProps } from './Input';
+import { Input, InputProps } from '../common/Input/Input';
 
 describe('Input Component', () => {
   const defaultProps: InputProps = {

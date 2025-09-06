@@ -2,7 +2,7 @@ import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-import { Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/common/Themed';
 
 export default function ProfileScreen() {
   const handleLogout = () => {
