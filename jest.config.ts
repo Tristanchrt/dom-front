@@ -10,9 +10,14 @@ const config: Config = {
     ],
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  setupFilesAfterEnv: ["@testing-library/jest-native/extend-expect"],
+  setupFilesAfterEnv: [
+    "@testing-library/jest-native/extend-expect",
+    "<rootDir>/jest.setup.ts",
+  ],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1", // adjust if you use `@` alias
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@expo/vector-icons$": "<rootDir>/__mocks__/expo-vector-icons.tsx",
+    "^@expo/vector-icons/(.*)$": "<rootDir>/__mocks__/expo-vector-icons.tsx",
   },
   transformIgnorePatterns: [
     "node_modules/(?!(jest-)?react-native|@react-native|@react-navigation|expo(nent)?|@expo(nent)?|unimodules|native-base|react-clone-referenced-element|@sentry|sentry-expo)",

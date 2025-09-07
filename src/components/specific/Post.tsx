@@ -121,6 +121,16 @@ export default function Post({ post }: PostProps) {
     );
   };
 
+  const handleBuy = () => {
+    Alert.alert(
+      'Acheter',
+      'Redirection vers la page de commande...',
+      [
+        { text: 'OK', style: 'default' },
+      ]
+    );
+  };
+
   const handleDoubleTap = () => {
     const now = Date.now();
     const DOUBLE_PRESS_DELAY = 300;
@@ -136,8 +146,6 @@ export default function Post({ post }: PostProps) {
   };
 
   const handlePostClick = () => {
-    // Navigate to post detail
-    console.log('Navigating to post:', post.id);
     try {
       router.push(`/post/${post.id}`);
     } catch (error) {
@@ -147,8 +155,6 @@ export default function Post({ post }: PostProps) {
   };
 
   const handleUserClick = () => {
-    // Navigate to user profile if user ID is available
-    console.log('Navigating to user profile:', post.user.id);
     if (post.user.id) {
       try {
         router.push(`/profile/${post.user.id}`);
@@ -165,11 +171,17 @@ export default function Post({ post }: PostProps) {
     <View style={styles.container}>
       {/* User Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.userInfo} onPress={handleUserClick} activeOpacity={0.7}>
+        <TouchableOpacity testID="user-avatar" style={styles.userInfo} onPress={handleUserClick} activeOpacity={0.7}>
           <Image source={{ uri: post.user.avatar }} style={styles.avatar} />
           <View style={styles.userText}>
-            <Text style={styles.userName}>{post.user.name}</Text>
-            <Text style={styles.timestamp}>{post.timestamp} ago</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.userName}>{post.user.name}</Text>
+              {post.user.verified && (
+                <Text testID="verified-badge" style={{ marginLeft: 6 }}>✓</Text>
+              )}
+            </View>
+            <Text style={styles.handle}>{post.user.handle}</Text>
+            <Text style={styles.timestamp}>{post.timestamp}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.moreButton}>
@@ -185,10 +197,13 @@ export default function Post({ post }: PostProps) {
       {/* Post Image */}
       {post.image && (
         <TouchableOpacity 
+          testID="post-container"
           style={styles.imageContainer} 
           activeOpacity={0.9} 
-          onPress={handlePostClick}
-          onLongPress={handleDoubleTap}
+          onPress={() => {
+            handleDoubleTap();
+            handlePostClick();
+          }}
         >
           <Image source={{ uri: post.image }} style={styles.postImage} />
           {post.price && (
@@ -199,9 +214,16 @@ export default function Post({ post }: PostProps) {
         </TouchableOpacity>
       )}
 
+      {post.price && (
+        <TouchableOpacity onPress={handleBuy} activeOpacity={0.8} style={styles.buyButton}>
+          <Text style={styles.buyButtonText}>Acheter {post.price}</Text>
+        </TouchableOpacity>
+      )}
+
       {/* Action Bar */}
       <View style={styles.actionBar}>
         <TouchableOpacity 
+          testID="like-button"
           style={styles.actionButton} 
           onPress={handleLike}
           activeOpacity={0.7}
@@ -219,20 +241,27 @@ export default function Post({ post }: PostProps) {
         </TouchableOpacity>
 
         <TouchableOpacity 
+          testID="comment-button"
           style={styles.actionButton} 
           onPress={handleComment}
           activeOpacity={0.7}
         >
           <FontAwesome name="comment-o" size={18} color="#8B7355" />
-          <Text style={styles.actionText}>{commentCount}</Text>
+          {commentCount > 0 && (
+            <Text style={styles.actionText}>{formatNumber(commentCount)}</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity 
+          testID="share-button"
           style={styles.actionButton} 
           onPress={handleShare}
           activeOpacity={0.7}
         >
           <FontAwesome name="share" size={18} color="#8B7355" />
+          {post.shares > 0 && (
+            <Text style={styles.actionText}>{formatNumber(post.shares)}</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -269,6 +298,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#2C1810',
+    marginBottom: 2,
+  },
+  handle: {
+    fontSize: 14,
+    color: '#8B7355',
     marginBottom: 2,
   },
   timestamp: {
@@ -308,6 +342,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  buyButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#FF8C42',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  buyButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
   actionBar: {
     flexDirection: 'row',
