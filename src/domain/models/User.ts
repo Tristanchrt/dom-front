@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  username?: string;
+  specialty?: string;
   isOnline: boolean;
   createdAt: Date;
   updatedAt: Date;
