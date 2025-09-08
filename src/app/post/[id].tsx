@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
+import { postsUseCases } from '@/data/container';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -268,8 +269,19 @@ export default function PostDetailScreen() {
   }
 
   React.useEffect(() => {
-    setLikeCount(post.likes);
-  }, [post.likes]);
+    let mounted = true;
+    (async () => {
+      const postFromRepo = id ? await postsUseCases.getById(String(id)) : null;
+      if (!mounted) return;
+      if (postFromRepo) {
+        setIsLiked(postFromRepo.isLiked);
+        setLikeCount(postFromRepo.likesCount);
+      } else {
+        setLikeCount(post.likes);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [id]);
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -279,12 +291,17 @@ export default function PostDetailScreen() {
   };
 
   const handleLike = () => {
-    if (isLiked) {
+    const wasLiked = isLiked;
+    if (wasLiked) {
       setIsLiked(false);
       setLikeCount(prev => prev - 1);
     } else {
       setIsLiked(true);
       setLikeCount(prev => prev + 1);
+    }
+    const postId = id ? String(id) : null;
+    if (postId) {
+      postsUseCases.toggleLike(postId, wasLiked).catch(() => {});
     }
   };
 

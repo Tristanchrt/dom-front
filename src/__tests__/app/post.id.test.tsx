@@ -24,14 +24,12 @@ describe('PostDetailScreen (app/post/[id])', () => {
     expect(getByText('Publication non trouvée')).toBeTruthy();
   });
 
-  it('renders post details and toggles liked state', () => {
+  it('renders post details and toggles liked state', async () => {
     setRouteId('e1');
-    const { getByText } = render(<PostDetailScreen />);
+    const { findByText } = render(<PostDetailScreen />);
 
-    // Initial like count for e1 is 8200 -> displayed as 8.2k
-    const likeCount = getByText('8.2k');
+    const likeCount = await findByText('8.2k');
 
-    // Pressing the count should toggle the liked state (text color becomes red)
     fireEvent.press(likeCount);
     expect(likeCount).toHaveStyle({ color: '#FF4444' });
   });

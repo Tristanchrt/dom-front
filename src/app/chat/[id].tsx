@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
+import { messagingUseCases } from '@/data/container';
 
 // Sample users data
 const users = {
@@ -119,6 +120,26 @@ export default function ChatScreen() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    // Hydrate messages from repo if present
+    let mounted = true;
+    (async () => {
+      if (!id) return;
+      const repoMessages = await messagingUseCases.getMessages(String(id));
+      if (!mounted) return;
+      if (repoMessages && repoMessages.length > 0) {
+        setMessages(repoMessages.map(m => ({
+          id: m.id,
+          text: m.content,
+          timestamp: new Date(m.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+          senderId: m.senderId,
+          isMe: m.senderId === 'me',
+        })));
+      }
+    })();
+    return () => { mounted = false; };
+  }, [id]);
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -149,6 +170,10 @@ export default function ChatScreen() {
 
       setMessages(prev => [...prev, newMessage]);
       setMessage('');
+      const receiverId = id ? String(id) : null;
+      if (receiverId) {
+        messagingUseCases.sendMessage({ content: newMessage.text, receiverId }).catch(() => {});
+      }
     }
   };
 
