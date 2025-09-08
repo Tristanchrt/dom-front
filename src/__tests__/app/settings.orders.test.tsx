@@ -12,7 +12,7 @@ describe('OrdersScreen (app/settings/orders)', () => {
     const { getByText } = render(<OrdersScreen />);
 
     // Default is 'all'
-    expect(getByText(/Toutes \(\d+\)/)).toBeTruthy();
+    expect(getByText(/All \(\d+\)/)).toBeTruthy();
 
     fireEvent.press(getByText(/Paid \(\d+\)/));
     expect(getByText(/Paid \(\d+\)/)).toBeTruthy();

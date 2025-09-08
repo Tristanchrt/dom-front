@@ -120,7 +120,7 @@ export default function ShopScreen() {
               <Text style={styles.listSellerName}>{item.seller}</Text>
             </View>
             <Text style={styles.listProductDescription} numberOfLines={1}>
-              Vendu par {item.seller}
+              Sold by {item.seller}
             </Text>
             <View style={styles.listPriceRow}>
               <Text style={styles.listCurrentPrice}>{item.price}</Text>
@@ -180,7 +180,7 @@ export default function ShopScreen() {
             <Text style={styles.sellerName}>{item.seller}</Text>
           </View>
           <Text style={styles.productDescription} numberOfLines={2}>
-            Vendu par {item.seller}
+            Sold by {item.seller}
           </Text>
 
           <View style={styles.productFooter}>
@@ -224,7 +224,7 @@ export default function ShopScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Magasin</Text>
+        <Text style={styles.headerTitle}>Shop</Text>
         <TouchableOpacity
           style={styles.viewModeButton}
           onPress={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
@@ -239,7 +239,7 @@ export default function ShopScreen() {
           <FontAwesome name="search" size={18} color="#8B7355" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Rechercher"
+            placeholder="Search"
             placeholderTextColor="#8B7355"
             value={searchQuery}
             onChangeText={setSearchQuery}

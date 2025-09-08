@@ -56,6 +56,6 @@ describe('CreatorProfileScreen (profile/[id])', () => {
     jest.spyOn(expoRouter, 'useLocalSearchParams').mockReturnValue({ id: 'unknown' });
 
     const { getByText } = render(<ProfileScreen />);
-    expect(getByText('Profil non trouvé')).toBeTruthy();
+    expect(getByText('Profile not found')).toBeTruthy();
   });
 });

@@ -15,7 +15,7 @@ describe('ShopScreen (app/shop)', () => {
     fireEvent.press(getByText('Poterie'));
 
     // Search for a term that matches seller or name
-    const input = getByPlaceholderText('Rechercher');
+    const input = getByPlaceholderText('Search');
     fireEvent.changeText(input, 'vase');
 
     // Should show product containing 'Vase'

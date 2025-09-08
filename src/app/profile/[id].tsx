@@ -34,7 +34,7 @@ export default function CreatorProfileScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <FontAwesome name="user-times" size={48} color="#E0E0E0" />
-          <Text style={styles.errorTitle}>Profil non trouvé</Text>
+          <Text style={styles.errorTitle}>Profile not found</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>Retour</Text>
           </TouchableOpacity>
@@ -258,7 +258,7 @@ export default function CreatorProfileScreen() {
               color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
             />
             <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
-              Produits
+              Products
             </Text>
           </TouchableOpacity>
         </View>

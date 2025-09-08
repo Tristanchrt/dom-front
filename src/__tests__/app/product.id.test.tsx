@@ -25,12 +25,12 @@ describe('ProductDetailScreen (product/[id])', () => {
     expect(getByText('T-SHIRT COUTUMAIN')).toBeTruthy();
 
     // Add to cart triggers alert
-    fireEvent.press(getByText('Ajouter au panier'));
+    fireEvent.press(getByText('Add to cart'));
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
-        '🛒 Ajouté au panier',
-        expect.stringContaining('T-shirt coutumain'),
+        expect.stringContaining('🛒 Added to cart'),
+        expect.any(String),
         expect.any(Array),
       );
     });

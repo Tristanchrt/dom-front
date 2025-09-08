@@ -69,10 +69,10 @@ export default function OrdersScreen() {
 
       <View style={styles.orderInfo}>
         <Text style={styles.orderProduct}>{item.productName}</Text>
-        <Text style={styles.orderCustomer}>Client: {item.customerName}</Text>
+        <Text style={styles.orderCustomer}>Customer: {item.customerName}</Text>
         <Text style={styles.orderDate}>{new Date(item.date).toLocaleDateString('fr-FR')}</Text>
         <View style={styles.orderMeta}>
-          <Text style={styles.orderQuantity}>Qté: {item.quantity}</Text>
+          <Text style={styles.orderQuantity}>Qty: {item.quantity}</Text>
           <Text style={styles.orderPrice}>{item.price}</Text>
         </View>
       </View>
@@ -119,11 +119,11 @@ export default function OrdersScreen() {
         <View style={styles.revenueContent}>
           <View style={styles.revenueStats}>
             <Text style={styles.revenueAmount}>{totalRevenue} €</Text>
-            <Text style={styles.revenueLabel}>Chiffre d'affaires total</Text>
+            <Text style={styles.revenueLabel}>Total revenue</Text>
           </View>
           <View style={styles.revenueStats}>
             <Text style={styles.revenueAmount}>{orders.length}</Text>
-            <Text style={styles.revenueLabel}>Commandes totales</Text>
+            <Text style={styles.revenueLabel}>Total orders</Text>
           </View>
         </View>
       </View>
@@ -135,7 +135,7 @@ export default function OrdersScreen() {
           onPress={() => setSelectedFilter('all')}
         >
           <Text style={[styles.filterText, selectedFilter === 'all' && styles.activeFilterText]}>
-            Toutes ({orders.length})
+            All ({orders.length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -168,8 +168,8 @@ export default function OrdersScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <FontAwesome name="shopping-cart" size={48} color="#E0E0E0" />
-            <Text style={styles.emptyText}>Aucune commande trouvée</Text>
-            <Text style={styles.emptySubtext}>Vos commandes apparaîtront ici</Text>
+            <Text style={styles.emptyText}>No orders found</Text>
+            <Text style={styles.emptySubtext}>Your orders will appear here</Text>
           </View>
         }
       />

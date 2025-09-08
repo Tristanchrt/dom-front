@@ -43,7 +43,7 @@ export default function ProductDetailScreen() {
           </TouchableOpacity>
         </View>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Produit non trouvé</Text>
+          <Text style={styles.errorText}>Product not found</Text>
         </View>
       </SafeAreaView>
     );
@@ -51,24 +51,24 @@ export default function ProductDetailScreen() {
 
   const handleAddToCart = () => {
     Alert.alert(
-      '🛒 Ajouté au panier',
-      `${uiProduct.name} (${selectedColor}, ${selectedSize}) a été ajouté à votre panier avec succès !`,
+      '🛒 Added to cart',
+      `${uiProduct.name} (${selectedColor}, ${selectedSize}) has been added to your cart successfully!`,
       [
-        { text: 'Continuer les achats', style: 'cancel' },
-        { text: 'Voir le panier', onPress: () => console.log('Navigate to cart') },
+        { text: 'Continue shopping', style: 'cancel' },
+        { text: 'View cart', onPress: () => console.log('Navigate to cart') },
       ],
     );
   };
 
   const handlePurchase = () => {
     Alert.alert(
-      "💳 Confirmer l'achat",
-      `Acheter: ${uiProduct.name}\nCouleur: ${selectedColor}\nTaille: ${selectedSize}\nPrix: ${uiProduct.price}`,
+      '💳 Confirm purchase',
+      `Buy: ${uiProduct.name}\nColor: ${selectedColor}\nSize: ${selectedSize}\nPrice: ${uiProduct.price}`,
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Procéder au paiement',
-          onPress: () => Alert.alert('✅ Succès', 'Commande passée avec succès !'),
+          text: 'Proceed to payment',
+          onPress: () => Alert.alert('✅ Success', 'Order placed successfully!'),
         },
       ],
     );
@@ -138,7 +138,7 @@ export default function ProductDetailScreen() {
         {/* Welcome Offer Banner */}
         {uiProduct.welcomeOffer && (
           <View style={styles.welcomeBanner}>
-            <Text style={styles.welcomeText}>Offre de bienvenue</Text>
+            <Text style={styles.welcomeText}>Welcome offer</Text>
             <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
           </View>
         )}
@@ -147,7 +147,7 @@ export default function ProductDetailScreen() {
         <View style={styles.productInfo}>
           <View style={styles.sellerInfoTop}>
             <FontAwesome name="user-circle" size={16} color="#FF8C42" />
-            <Text style={styles.sellerNameTop}>Vendu par {uiProduct.seller}</Text>
+            <Text style={styles.sellerNameTop}>Sold by {uiProduct.seller}</Text>
             <View style={styles.userIcon}>
               <FontAwesome name="user" size={12} color="#FFFFFF" />
             </View>
@@ -172,7 +172,7 @@ export default function ProductDetailScreen() {
 
           {/* Color Selection */}
           <View style={styles.optionSection}>
-            <Text style={styles.optionTitle}>Couleur: {selectedColor}</Text>
+            <Text style={styles.optionTitle}>Color: {selectedColor}</Text>
             <View style={styles.optionButtons}>
               {uiProduct.colors.map((color) => (
                 <TouchableOpacity
@@ -198,7 +198,7 @@ export default function ProductDetailScreen() {
 
           {/* Size Selection */}
           <View style={styles.optionSection}>
-            <Text style={styles.optionTitle}>Taille: {selectedSize}</Text>
+            <Text style={styles.optionTitle}>Size: {selectedSize}</Text>
             <View style={styles.optionButtons}>
               {uiProduct.sizes.map((size) => (
                 <TouchableOpacity
@@ -224,7 +224,7 @@ export default function ProductDetailScreen() {
 
           {/* Quantity Selection */}
           <View style={styles.quantitySection}>
-            <Text style={styles.quantityTitle}>Quantité</Text>
+            <Text style={styles.quantityTitle}>Quantity</Text>
             <View style={styles.quantityContainer}>
               <TouchableOpacity style={styles.quantityButton}>
                 <FontAwesome name="minus" size={12} color="#8B7355" />
@@ -238,7 +238,7 @@ export default function ProductDetailScreen() {
 
           {/* Features */}
           <View style={styles.featuresSection}>
-            <Text style={styles.featuresTitle}>Caractéristiques:</Text>
+            <Text style={styles.featuresTitle}>Features:</Text>
             {uiProduct.features.map((feature, index) => (
               <Text key={index} style={styles.featureItem}>
                 • {feature}
@@ -249,7 +249,7 @@ export default function ProductDetailScreen() {
           {/* Seller Info */}
           <View style={styles.sellerSection}>
             <FontAwesome name="user-circle" size={16} color="#FF8C42" />
-            <Text style={styles.sellerText}>Vendu par {uiProduct.seller}</Text>
+            <Text style={styles.sellerText}>Sold by {uiProduct.seller}</Text>
             <View style={styles.ratingContainer}>
               <FontAwesome name="star" size={12} color="#FFD700" />
               <Text style={styles.ratingText}>{uiProduct.rating}</Text>
@@ -261,10 +261,10 @@ export default function ProductDetailScreen() {
       {/* Bottom Action Bar */}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-          <Text style={styles.addToCartText}>Ajouter au panier</Text>
+          <Text style={styles.addToCartText}>Add to cart</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buyButton} onPress={handlePurchase}>
-          <Text style={styles.buyButtonText}>Acheter</Text>
+          <Text style={styles.buyButtonText}>Buy</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

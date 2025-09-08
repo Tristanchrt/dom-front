@@ -15,32 +15,32 @@ export default function SettingsScreen() {
   const settingsOptions = [
     {
       id: 'products',
-      title: 'Mes produits',
-      subtitle: 'Gérer mes produits',
+      title: 'My products',
+      subtitle: 'Manage my products',
       icon: 'shopping-bag',
       color: '#FF8C42',
       route: '/settings/products',
     },
     {
       id: 'personalization',
-      title: 'Personnalisation',
-      subtitle: 'Personnalisez votre profil',
+      title: 'Personalization',
+      subtitle: 'Customize your profile',
       icon: 'user',
       color: '#FF8C42',
       route: '/settings/profile',
     },
     {
       id: 'orders',
-      title: 'Mes commandes',
-      subtitle: 'Historique des commandes',
+      title: 'My orders',
+      subtitle: 'Order history',
       icon: 'list',
       color: '#FF8C42',
       route: '/settings/orders',
     },
     {
       id: 'purchases',
-      title: 'Mes achats',
-      subtitle: 'Vos achats récents',
+      title: 'My purchases',
+      subtitle: 'Your recent purchases',
       icon: 'credit-card',
       color: '#FF8C42',
       route: '/settings/purchases',
@@ -50,19 +50,19 @@ export default function SettingsScreen() {
   const accountOptions = [
     {
       id: 'contact',
-      title: 'Nous contacter',
+      title: 'Contact us',
       icon: 'envelope',
       color: '#FF8C42',
     },
     {
       id: 'privacy',
-      title: 'Politique de confidentialité',
+      title: 'Privacy policy',
       icon: 'shield',
       color: '#FF8C42',
     },
     {
       id: 'about',
-      title: 'À propos',
+      title: 'About',
       icon: 'info-circle',
       color: '#FF8C42',
     },
@@ -92,7 +92,7 @@ export default function SettingsScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Paramètres</Text>
+        <Text style={styles.headerTitle}>Settings</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -107,10 +107,10 @@ export default function SettingsScreen() {
               style={styles.profileImage}
             />
             <View style={styles.profileInfo}>
-              <Text style={styles.profileTitle}>Développez votre</Text>
-              <Text style={styles.profileTitle}>communauté</Text>
+              <Text style={styles.profileTitle}>Grow your</Text>
+              <Text style={styles.profileTitle}>community</Text>
               <TouchableOpacity style={styles.seeButton}>
-                <Text style={styles.seeButtonText}>Voir</Text>
+                <Text style={styles.seeButtonText}>View</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -118,13 +118,13 @@ export default function SettingsScreen() {
 
         {/* General Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Général</Text>
+          <Text style={styles.sectionTitle}>General</Text>
           {settingsOptions.map(renderSettingItem)}
         </View>
 
         {/* Account Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Qu'est-ce pour vous ?</Text>
+          <Text style={styles.sectionTitle}>For you</Text>
           {accountOptions.map(renderSettingItem)}
         </View>
       </ScrollView>

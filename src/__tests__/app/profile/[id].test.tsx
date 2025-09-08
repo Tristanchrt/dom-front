@@ -21,7 +21,7 @@ describe('CreatorProfileScreen (app/profile/[id])', () => {
   it('renders error state for unknown creator id', () => {
     setRouteId('unknown');
     const { getByText } = render(<CreatorProfileScreen />);
-    expect(getByText('Profil non trouvé')).toBeTruthy();
+    expect(getByText('Profile not found')).toBeTruthy();
   });
 
   it('renders profile and toggles follow state', () => {
@@ -38,11 +38,11 @@ describe('CreatorProfileScreen (app/profile/[id])', () => {
     expect(queryByText('Abonné')).toBeTruthy();
   });
 
-  it('switches to Produits tab and shows a product', () => {
+  it('switches to Products tab and shows a product', () => {
     setRouteId('c1');
     const { getByText } = render(<CreatorProfileScreen />);
 
-    fireEvent.press(getByText('Produits'));
+    fireEvent.press(getByText('Products'));
     expect(getByText('Guide Voyage Islande')).toBeTruthy();
   });
 });

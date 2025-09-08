@@ -178,7 +178,7 @@ export default function SearchScreen() {
         </View>
         <Text style={styles.creatorHandle}>{item.handle}</Text>
         <Text style={styles.creatorCategory}>{item.category}</Text>
-        <Text style={styles.creatorFollowers}>{item.followers} abonnés</Text>
+        <Text style={styles.creatorFollowers}>{item.followers} followers</Text>
       </View>
       <TouchableOpacity style={styles.followButton}>
         <Text style={styles.followButtonText}>Suivre</Text>
@@ -255,11 +255,11 @@ export default function SearchScreen() {
       return (
         <View style={styles.emptyState}>
           <FontAwesome name="search" size={48} color="#E0E0E0" />
-          <Text style={styles.emptyStateTitle}>Aucun résultat</Text>
+          <Text style={styles.emptyStateTitle}>No results</Text>
           <Text style={styles.emptyStateText}>
             {searchQuery
-              ? `Aucun résultat pour "${searchQuery}"`
-              : `Recherchez des ${activeTab === 'creators' ? 'créateurs' : activeTab === 'posts' ? 'publications' : 'produits'}`}
+              ? `No results for "${searchQuery}"`
+              : `Search ${activeTab === 'creators' ? 'creators' : activeTab === 'posts' ? 'posts' : 'products'}`}
           </Text>
         </View>
       );
@@ -287,7 +287,7 @@ export default function SearchScreen() {
           <TextInput
             ref={searchInputRef}
             style={styles.searchInput}
-            placeholder="Rechercher..."
+            placeholder="Search..."
             placeholderTextColor="#8B7355"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -319,7 +319,7 @@ export default function SearchScreen() {
               color={activeTab === 'creators' ? '#FF8C42' : '#8B7355'}
             />
             <Text style={[styles.tabText, activeTab === 'creators' && styles.activeTabText]}>
-              Créateurs
+              Creators
             </Text>
           </TouchableOpacity>
 
@@ -333,7 +333,7 @@ export default function SearchScreen() {
               color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'}
             />
             <Text style={[styles.tabText, activeTab === 'posts' && styles.activeTabText]}>
-              Publications
+              Posts
             </Text>
           </TouchableOpacity>
 
@@ -347,7 +347,7 @@ export default function SearchScreen() {
               color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
             />
             <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
-              Boutique
+              Shop
             </Text>
           </TouchableOpacity>
         </ScrollView>

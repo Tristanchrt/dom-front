@@ -10,10 +10,10 @@ describe('SearchScreen (tabs/search)', () => {
   it('shows empty state for unmatched query', () => {
     const { getByPlaceholderText, getByText } = render(<SearchScreen />);
 
-    const input = getByPlaceholderText('Rechercher...');
+    const input = getByPlaceholderText('Search...');
     fireEvent.changeText(input, 'zzzz_non_match');
 
-    expect(getByText('Aucun résultat')).toBeTruthy();
+    expect(getByText('No results')).toBeTruthy();
   });
 
   it('navigates to profile when pressing a creator result', () => {
@@ -28,7 +28,7 @@ describe('SearchScreen (tabs/search)', () => {
   it('switches tabs to shop and navigates to a product', () => {
     const { getByText } = render(<SearchScreen />);
 
-    fireEvent.press(getByText('Boutique'));
+    fireEvent.press(getByText('Shop'));
     fireEvent.press(getByText('Vase en céramique'));
 
     const { router } = require('expo-router');

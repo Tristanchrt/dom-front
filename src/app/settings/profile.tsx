@@ -13,6 +13,7 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { profileEditDefaults } from '@/data/fixtures/settings';
+import { usersUseCases } from '@/data/container';
 
 export default function ProfileEditScreen() {
   const [profile, setProfile] = useState({
@@ -23,10 +24,22 @@ export default function ProfileEditScreen() {
     socialNetworks: profileEditDefaults.socialLinks,
   });
 
-  const handleSave = () => {
-    Alert.alert('✅ Profile saved', 'Your changes have been saved successfully', [
-      { text: 'OK' },
-    ]);
+  const handleSave = async () => {
+    try {
+      await usersUseCases.saveProfileDraft({
+        name: profile.name,
+        status: profile.language,
+        description: profile.description,
+        category: profile.category,
+        socialLinks: profile.socialNetworks,
+        avatarUrl: profileEditDefaults.avatarUrl,
+      });
+      Alert.alert('✅ Profile saved', 'Your changes have been saved successfully', [
+        { text: 'OK' },
+      ]);
+    } catch {
+      Alert.alert('Error', 'Failed to save your profile');
+    }
   };
 
   const ProfileSection = ({ title, children }: { title: string; children: React.ReactNode }) => (

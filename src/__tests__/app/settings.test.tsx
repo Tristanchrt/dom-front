@@ -15,9 +15,9 @@ describe('SettingsScreen (app/settings)', () => {
   it('navigates to products, profile, and orders pages', () => {
     const { getByText } = render(<SettingsScreen />);
 
-    fireEvent.press(getByText('Mes produits'));
-    fireEvent.press(getByText('Personnalisation'));
-    fireEvent.press(getByText('Mes commandes'));
+    fireEvent.press(getByText('My products'));
+    fireEvent.press(getByText('Customize your profile'));
+    fireEvent.press(getByText('My orders'));
 
     const { router } = require('expo-router');
     expect(router.push).toHaveBeenCalledWith('/settings/products');

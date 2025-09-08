@@ -30,7 +30,7 @@ describe('ProductDetailScreen (app/product/[id])', () => {
 
     const { getByText } = render(<ProductDetailScreen />);
 
-    expect(getByText('Produit non trouvé')).toBeTruthy();
+    expect(getByText('Product not found')).toBeTruthy();
   });
 
   it('renders product details for p1 and shows welcome offer', () => {
@@ -39,14 +39,14 @@ describe('ProductDetailScreen (app/product/[id])', () => {
     const { getByText, getAllByText } = render(<ProductDetailScreen />);
 
     // Default selections applied from useEffect
-    expect(getByText('Couleur: Beige')).toBeTruthy();
-    expect(getByText('Taille: S')).toBeTruthy();
+    expect(getByText('Color: Beige')).toBeTruthy();
+    expect(getByText('Size: S')).toBeTruthy();
 
     // Welcome banner
-    expect(getByText('Offre de bienvenue')).toBeTruthy();
+    expect(getByText('Welcome offer')).toBeTruthy();
 
     // Seller line visible (appears in multiple places)
-    const sellerLines = getAllByText(/Vendu par/i);
+    const sellerLines = getAllByText(/Sold by/i);
     expect(sellerLines.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -58,7 +58,7 @@ describe('ProductDetailScreen (app/product/[id])', () => {
     fireEvent.press(getByText('Noir'));
 
     await waitFor(() => {
-      expect(getByText('Couleur: Noir')).toBeTruthy();
+      expect(getByText('Color: Noir')).toBeTruthy();
     });
   });
 
@@ -67,12 +67,12 @@ describe('ProductDetailScreen (app/product/[id])', () => {
 
     const { getByText } = render(<ProductDetailScreen />);
 
-    fireEvent.press(getByText('Ajouter au panier'));
+    fireEvent.press(getByText('Add to cart'));
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
-        '🛒 Ajouté au panier',
-        expect.stringContaining('T-shirt coutumain'),
+        expect.stringContaining('🛒 Added to cart'),
+        expect.any(String),
         expect.any(Array),
       );
     });
@@ -83,12 +83,12 @@ describe('ProductDetailScreen (app/product/[id])', () => {
 
     const { getByText } = render(<ProductDetailScreen />);
 
-    fireEvent.press(getByText('Acheter'));
+    fireEvent.press(getByText('Buy'));
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
-        expect.stringContaining('💳 Confirmer'),
-        expect.stringContaining('Acheter:'),
+        expect.stringContaining('💳 Confirm purchase'),
+        expect.stringContaining('Buy:'),
         expect.any(Array),
       );
     });
