@@ -166,17 +166,14 @@ export default function HomeScreen() {
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.menuButton}>
-        <FontAwesome name="bars" size={24} color="#2C1810" />
-      </TouchableOpacity>
-
-      <Text style={styles.logo}>DÖM</Text>
-
-      <View style={styles.headerActions}>
+      <View style={styles.headerCenter}>
+        <Text style={styles.logo}>DÖM</Text>
+      </View>
+     {/*  <View style={styles.headerActions}>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
           <FontAwesome name="shopping-cart" size={24} color="#2C1810" />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 
@@ -233,10 +230,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 24,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    position: 'relative',
+  },
+  headerCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
   menuButton: {
     padding: 8,
