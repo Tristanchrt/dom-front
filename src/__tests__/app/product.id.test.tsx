@@ -31,10 +31,8 @@ describe('ProductDetailScreen (product/[id])', () => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '🛒 Ajouté au panier',
         expect.stringContaining('T-shirt coutumain'),
-        expect.any(Array)
+        expect.any(Array),
       );
     });
   });
 });
-
-

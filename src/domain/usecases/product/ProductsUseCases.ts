@@ -7,8 +7,10 @@ export interface ProductsRepository {
 
 export class ProductsUseCases {
   constructor(private repo: ProductsRepository) {}
-  list(): Promise<Product[]> { return this.repo.list(); }
-  getById(id: string): Promise<Product | null> { return this.repo.getById(id); }
+  list(): Promise<Product[]> {
+    return this.repo.list();
+  }
+  getById(id: string): Promise<Product | null> {
+    return this.repo.getById(id);
+  }
 }
-
-

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,35 +10,49 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { sellerProductsUseCases } from '@/data/container';
+import { settingsSellerProducts } from '@/data/fixtures/settings';
 
-const myProducts = [
-  {
-    id: 'mp1',
-    name: 'T-shirt cousu main',
-    price: '30 €',
-    status: 'Actif',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop',
-    sales: 45,
-    views: 234,
-  },
-  {
-    id: 'mp2',
-    name: 'T-shirt cousu main',
-    price: '30 €',
-    status: 'Brouillon',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop',
-    sales: 0,
-    views: 12,
-  },
-];
+type UISellerProduct = (typeof settingsSellerProducts)[number];
+const fallbackProducts: UISellerProduct[] = settingsSellerProducts;
 
 export default function ProductsScreen() {
   const [selectedTab, setSelectedTab] = useState<'active' | 'draft'>('active');
+  const [products, setProducts] = useState<UISellerProduct[]>(fallbackProducts);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const list = await sellerProductsUseCases.listMine();
+        if (!alive) return;
+        if (!list || list.length === 0) {
+          setProducts(fallbackProducts);
+        } else {
+          const mapped: UISellerProduct[] = list.map((p) => ({
+            id: p.id,
+            name: p.name,
+            price: p.priceLabel,
+            status: p.status,
+            image: p.imageUrl,
+            sales: p.sales,
+            views: p.views,
+          }));
+          setProducts(mapped);
+        }
+      } catch (_e) {
+        if (alive) setProducts(fallbackProducts);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const renderProduct = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.productCard}>
       <Image source={{ uri: item.image }} style={styles.productImage} />
-      
+
       <View style={styles.productInfo}>
         <Text style={styles.productName}>{item.name}</Text>
         <View style={styles.productMeta}>
@@ -47,7 +61,7 @@ export default function ProductsScreen() {
         </View>
         <Text style={styles.productPrice}>{item.price}</Text>
       </View>
-      
+
       <View style={styles.productActions}>
         <TouchableOpacity style={styles.actionButton}>
           <FontAwesome name="edit" size={16} color="#FF8C42" />
@@ -55,8 +69,18 @@ export default function ProductsScreen() {
         <TouchableOpacity style={styles.actionButton}>
           <FontAwesome name="trash" size={16} color="#FF4444" />
         </TouchableOpacity>
-        <View style={[styles.statusBadge, item.status === 'Actif' ? styles.activeBadge : styles.draftBadge]}>
-          <Text style={[styles.statusText, item.status === 'Actif' ? styles.activeText : styles.draftText]}>
+        <View
+          style={[
+            styles.statusBadge,
+            item.status === 'Active' ? styles.activeBadge : styles.draftBadge,
+          ]}
+        >
+          <Text
+            style={[
+              styles.statusText,
+              item.status === 'Active' ? styles.activeText : styles.draftText,
+            ]}
+          >
             {item.status}
           </Text>
         </View>
@@ -64,8 +88,8 @@ export default function ProductsScreen() {
     </TouchableOpacity>
   );
 
-  const filteredProducts = myProducts.filter(product => 
-    selectedTab === 'active' ? product.status === 'Actif' : product.status === 'Brouillon'
+  const filteredProducts = products.filter((product) =>
+    selectedTab === 'active' ? product.status === 'Active' : product.status === 'Draft',
   );
 
   return (
@@ -99,20 +123,20 @@ export default function ProductsScreen() {
 
       {/* Tabs */}
       <View style={styles.tabsContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, selectedTab === 'active' && styles.activeTab]}
           onPress={() => setSelectedTab('active')}
         >
           <Text style={[styles.tabText, selectedTab === 'active' && styles.activeTabText]}>
-            Actifs ({myProducts.filter(p => p.status === 'Actif').length})
+            Active ({products.filter((p) => p.status === 'Active').length})
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, selectedTab === 'draft' && styles.activeTab]}
           onPress={() => setSelectedTab('draft')}
         >
           <Text style={[styles.tabText, selectedTab === 'draft' && styles.activeTabText]}>
-            Brouillons ({myProducts.filter(p => p.status === 'Brouillon').length})
+            Draft ({products.filter((p) => p.status === 'Draft').length})
           </Text>
         </TouchableOpacity>
       </View>
@@ -127,7 +151,9 @@ export default function ProductsScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <FontAwesome name="shopping-bag" size={48} color="#E0E0E0" />
-            <Text style={styles.emptyText}>Aucun produit {selectedTab === 'active' ? 'actif' : 'en brouillon'}</Text>
+            <Text style={styles.emptyText}>
+              Aucun produit {selectedTab === 'active' ? 'actif' : 'en brouillon'}
+            </Text>
             <TouchableOpacity style={styles.createButton}>
               <Text style={styles.createButtonText}>Créer un produit</Text>
             </TouchableOpacity>
@@ -312,5 +338,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-

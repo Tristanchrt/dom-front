@@ -46,10 +46,7 @@ export const Input: React.FC<InputProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  const containerStyles = [
-    styles.container,
-    containerStyle,
-  ];
+  const containerStyles = [styles.container, containerStyle];
 
   const inputContainerStyles = [
     styles.inputContainer,
@@ -89,17 +86,17 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </Text>
       )}
-      
+
       <View style={inputContainerStyles}>
         {leftIcon && (
-          <FontAwesome 
+          <FontAwesome
             name={leftIcon as any}
             size={18}
             color={error ? '#FF6B6B' : isFocused ? '#FF8C42' : '#8B7355'}
             style={styles.leftIcon}
           />
         )}
-        
+
         <TextInput
           {...textInputProps}
           style={inputStyles}
@@ -115,14 +112,14 @@ export const Input: React.FC<InputProps> = ({
           placeholderTextColor={textInputProps.placeholderTextColor || '#8B7355'}
           testID={testID}
         />
-        
+
         {(getRightIcon() || isPassword) && (
           <TouchableOpacity
             onPress={handleRightIconPress}
             style={styles.rightIcon}
             testID={`${testID}-right-icon`}
           >
-            <FontAwesome 
+            <FontAwesome
               name={getRightIcon() as any}
               size={18}
               color={error ? '#FF6B6B' : isFocused ? '#FF8C42' : '#8B7355'}
@@ -130,7 +127,7 @@ export const Input: React.FC<InputProps> = ({
           </TouchableOpacity>
         )}
       </View>
-      
+
       {error && (
         <Text style={[styles.errorText, errorStyle]} testID={`${testID}-error`}>
           {error}

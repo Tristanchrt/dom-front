@@ -40,7 +40,7 @@ describe('AuthStore', () => {
     it('should clear user and mark as unauthenticated when user is null', () => {
       // First set a user
       useAuthStore.getState().setUser(mockUser);
-      
+
       // Then clear it
       useAuthStore.getState().setUser(null);
 
@@ -53,7 +53,7 @@ describe('AuthStore', () => {
     it('should clear error when setting user', () => {
       // First set an error
       useAuthStore.getState().setError('Test error');
-      
+
       // Then set user
       useAuthStore.getState().setUser(mockUser);
 
@@ -75,7 +75,7 @@ describe('AuthStore', () => {
     it('should set loading state to false', () => {
       // First set loading to true
       useAuthStore.getState().setLoading(true);
-      
+
       // Then set to false
       useAuthStore.getState().setLoading(false);
 
@@ -88,7 +88,7 @@ describe('AuthStore', () => {
     it('should set error and stop loading', () => {
       // First set loading to true
       useAuthStore.getState().setLoading(true);
-      
+
       // Then set error
       const { setError } = useAuthStore.getState();
       setError('Test error');
@@ -101,7 +101,7 @@ describe('AuthStore', () => {
     it('should clear error when set to null', () => {
       // First set an error
       useAuthStore.getState().setError('Test error');
-      
+
       // Then clear it
       useAuthStore.getState().setError(null);
 

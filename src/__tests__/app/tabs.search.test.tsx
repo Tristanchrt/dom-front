@@ -35,5 +35,3 @@ describe('SearchScreen (tabs/search)', () => {
     expect(router.push).toHaveBeenCalledWith('/product/p2');
   });
 });
-
-

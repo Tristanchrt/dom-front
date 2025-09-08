@@ -56,7 +56,7 @@ export default function CreatorProfileScreen() {
 
   const { followersCount, isLoading, onFollowChange } = useProfile(
     id ? String(id) : undefined,
-    initialFollowers
+    initialFollowers,
   );
 
   const parseCount = (val: string): number => {
@@ -88,10 +88,7 @@ export default function CreatorProfileScreen() {
   };
 
   const renderPost = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.postItem}
-      onPress={() => router.push(`/post/${item.id}`)}
-    >
+    <TouchableOpacity style={styles.postItem} onPress={() => router.push(`/post/${item.id}`)}>
       <Image source={{ uri: item.image }} style={styles.postImage} />
       <View style={styles.postOverlay}>
         <View style={styles.postStats}>
@@ -178,19 +175,17 @@ export default function CreatorProfileScreen() {
           <View style={styles.avatarContainer}>
             <Image source={{ uri: creator.avatar }} style={styles.avatar} />
           </View>
-          
+
           <View style={styles.profileInfo}>
             <View style={styles.nameContainer}>
               <Text style={styles.name}>{creator.name}</Text>
-              {creator.verified && (
-                <FontAwesome name="check-circle" size={20} color="#FF8C42" />
-              )}
+              {creator.verified && <FontAwesome name="check-circle" size={20} color="#FF8C42" />}
             </View>
             <Text style={styles.handle}>{creator.handle}</Text>
             <Text style={styles.category}>{creator.category}</Text>
-            
+
             <Text style={styles.bio}>{creator.bio}</Text>
-            
+
             <View style={styles.metaInfo}>
               <View style={styles.metaItem}>
                 <FontAwesome name="map-marker" size={14} color="#8B7355" />
@@ -209,9 +204,9 @@ export default function CreatorProfileScreen() {
                 <Text style={styles.statLabel}>Publications</Text>
               </View>
               <View style={styles.stat}>
-                <Text style={styles.statNumber}>{
-                  followersCount !== null ? formatCount(followersCount) : creator.followers
-                }</Text>
+                <Text style={styles.statNumber}>
+                  {followersCount !== null ? formatCount(followersCount) : creator.followers}
+                </Text>
                 <Text style={styles.statLabel}>Abonnés</Text>
               </View>
               <View style={styles.stat}>
@@ -222,8 +217,8 @@ export default function CreatorProfileScreen() {
 
             {/* Action Buttons */}
             <View style={styles.actionButtons}>
-              <TouchableOpacity 
-                style={[styles.followButton, isFollowing && styles.followingButton]} 
+              <TouchableOpacity
+                style={[styles.followButton, isFollowing && styles.followingButton]}
                 onPress={handleFollow}
               >
                 <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
@@ -244,7 +239,11 @@ export default function CreatorProfileScreen() {
             style={[styles.tab, activeTab === 'posts' && styles.activeTab]}
             onPress={() => setActiveTab('posts')}
           >
-            <FontAwesome name="th-large" size={16} color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome
+              name="th-large"
+              size={16}
+              color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'}
+            />
             <Text style={[styles.tabText, activeTab === 'posts' && styles.activeTabText]}>
               Posts
             </Text>
@@ -253,7 +252,11 @@ export default function CreatorProfileScreen() {
             style={[styles.tab, activeTab === 'shop' && styles.activeTab]}
             onPress={() => setActiveTab('shop')}
           >
-            <FontAwesome name="shopping-bag" size={16} color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome
+              name="shopping-bag"
+              size={16}
+              color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
+            />
             <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
               Produits
             </Text>
@@ -261,9 +264,7 @@ export default function CreatorProfileScreen() {
         </View>
 
         {/* Content */}
-        <View style={styles.contentContainer}>
-          {renderContent()}
-        </View>
+        <View style={styles.contentContainer}>{renderContent()}</View>
       </ScrollView>
     </SafeAreaView>
   );

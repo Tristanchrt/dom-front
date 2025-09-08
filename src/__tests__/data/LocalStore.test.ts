@@ -18,5 +18,3 @@ describe('LocalStore', () => {
     expect(LocalStore.getJSON('obj', null)).toEqual(value);
   });
 });
-
-

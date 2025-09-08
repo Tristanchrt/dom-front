@@ -11,7 +11,7 @@ export class LocalProductsRepository implements ProductsRepository {
   }
   async getById(id: string): Promise<Product | null> {
     const list = await this.list();
-    const fromStore = list.find(p => p.id === id) ?? null;
+    const fromStore = list.find((p) => p.id === id) ?? null;
     if (fromStore) return fromStore;
     const fallback = productDetails[id as keyof typeof productDetails];
     if (!fallback) return null;
@@ -21,7 +21,9 @@ export class LocalProductsRepository implements ProductsRepository {
       name: fallback.name,
       description: fallback.description,
       priceCents: parsePriceCents(fallback.price),
-      originalPriceCents: fallback.originalPrice ? parsePriceCents(fallback.originalPrice) : undefined,
+      originalPriceCents: fallback.originalPrice
+        ? parsePriceCents(fallback.originalPrice)
+        : undefined,
       currency: 'EUR',
       imageUrls: [fallback.image],
       sellerName: fallback.seller,
@@ -41,5 +43,3 @@ function parsePriceCents(label: string): number {
   const euros = parseFloat(cleaned);
   return Math.round((isNaN(euros) ? 0 : euros) * 100);
 }
-
-

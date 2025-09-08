@@ -9,7 +9,6 @@ jest.mock('expo-router', () => ({
   },
 }));
 
-
 jest.mock('react-native', () => {
   const mockAnimated = {
     timing: jest.fn(() => ({
@@ -20,7 +19,7 @@ jest.mock('react-native', () => {
     })),
     Value: jest.fn().mockImplementation((value) => ({
       setValue: jest.fn(),
-      addListener: jest.fn(), 
+      addListener: jest.fn(),
       removeListener: jest.fn(),
     })),
     NativeAnimatedHelper: jest.fn(),
@@ -34,7 +33,7 @@ jest.mock('react-native', () => {
     Platform: { OS: 'ios', select: jest.fn() },
     View: 'View',
     Text: 'Text',
-    Image: 'Image', 
+    Image: 'Image',
     TouchableOpacity: 'TouchableOpacity',
     StyleSheet: {
       create: jest.fn((styles) => styles),
@@ -193,7 +192,7 @@ describe('Post Component', () => {
 
       // First tap
       fireEvent.press(postContainer);
-      
+
       // Second tap within delay
       jest.spyOn(Date, 'now').mockReturnValue(1200); // 200ms later
       fireEvent.press(postContainer);
@@ -206,7 +205,7 @@ describe('Post Component', () => {
       const postContainer = getByTestId('post-container');
 
       fireEvent.press(postContainer);
-      
+
       expect(getByText('42')).toBeTruthy(); // Not liked
     });
 
@@ -216,7 +215,7 @@ describe('Post Component', () => {
 
       // First tap
       fireEvent.press(postContainer);
-      
+
       // Second tap after delay
       jest.spyOn(Date, 'now').mockReturnValue(1400); // 400ms later (beyond 300ms delay)
       fireEvent.press(postContainer);
@@ -235,7 +234,7 @@ describe('Post Component', () => {
       expect(Alert.alert).toHaveBeenCalledWith(
         'Commentaires',
         'Fonctionnalité des commentaires bientôt disponible !',
-        expect.any(Array)
+        expect.any(Array),
       );
     });
 
@@ -266,7 +265,7 @@ describe('Post Component', () => {
       expect(Alert.alert).toHaveBeenCalledWith(
         'Partager',
         'Partager la publication de John Doe ?',
-        expect.any(Array)
+        expect.any(Array),
       );
     });
   });
@@ -299,10 +298,10 @@ describe('Post Component', () => {
 
       // Single tap should navigate
       fireEvent.press(postContainer);
-      
+
       // Wait to ensure it's not a double tap
       jest.spyOn(Date, 'now').mockReturnValue(1400);
-      
+
       expect(router.push).toHaveBeenCalledWith('/post/1');
     });
   });
@@ -317,7 +316,7 @@ describe('Post Component', () => {
       expect(Alert.alert).toHaveBeenCalledWith(
         'Acheter',
         'Redirection vers la page de commande...',
-        expect.any(Array)
+        expect.any(Array),
       );
     });
   });
@@ -349,7 +348,8 @@ describe('Post Component', () => {
     it('should handle very long content', () => {
       const postWithLongContent = {
         ...mockPost,
-        content: 'This is a very long post content that should be displayed properly even when it contains a lot of text and might wrap to multiple lines in the UI',
+        content:
+          'This is a very long post content that should be displayed properly even when it contains a lot of text and might wrap to multiple lines in the UI',
       };
       const { getByText } = render(<Post post={postWithLongContent} />);
 

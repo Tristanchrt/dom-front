@@ -25,5 +25,3 @@ describe('MessagingScreen (tabs/messaging)', () => {
     expect(router.push).toHaveBeenCalledWith('/chat/u1');
   });
 });
-
-

@@ -3,7 +3,25 @@ import { LocalStore } from '@/data/storage/LocalStore';
 
 describe('LocalMessagingRepository', () => {
   it('lists conversations and sends message', async () => {
-    LocalStore.setJSON('conversations', [{ id: 'u1', user: { id: 'u1', name: 'A', username: 'a', avatar: '', isOnline: false, email: 'a@a.com', createdAt: new Date(), updatedAt: new Date() }, lastMessage: 'hi', timestamp: 'now', unreadCount: 0, hasNewMessage: false }]);
+    LocalStore.setJSON('conversations', [
+      {
+        id: 'u1',
+        user: {
+          id: 'u1',
+          name: 'A',
+          username: 'a',
+          avatar: '',
+          isOnline: false,
+          email: 'a@a.com',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        lastMessage: 'hi',
+        timestamp: 'now',
+        unreadCount: 0,
+        hasNewMessage: false,
+      },
+    ]);
     const repo = new LocalMessagingRepository();
     const conv = await repo.getConversations();
     expect(conv.total).toBe(1);
@@ -13,5 +31,3 @@ describe('LocalMessagingRepository', () => {
     expect(msgs.length).toBe(1);
   });
 });
-
-

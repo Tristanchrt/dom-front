@@ -8,9 +8,12 @@ const Icon = React.forwardRef<any, any>((props, ref) => {
 });
 
 // Default export behaves like a module with any icon set name
-const proxy = new Proxy({}, {
-  get: () => Icon,
-});
+const proxy = new Proxy(
+  {},
+  {
+    get: () => Icon,
+  },
+);
 
 export default proxy;
 
@@ -27,5 +30,3 @@ export const MaterialCommunityIcons = Icon;
 export const SimpleLineIcons = Icon;
 export const Octicons = Icon;
 export const Zocial = Icon;
-
-

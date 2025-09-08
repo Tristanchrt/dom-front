@@ -49,7 +49,7 @@ export class AuthApi {
     const response = await fetch(`${this.baseUrl}/auth/logout`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${await this.getToken()}`,
+        Authorization: `Bearer ${await this.getToken()}`,
       },
     });
 
@@ -63,7 +63,7 @@ export class AuthApi {
   async getCurrentUser(): Promise<ApiResponse<User>> {
     const response = await fetch(`${this.baseUrl}/auth/me`, {
       headers: {
-        'Authorization': `Bearer ${await this.getToken()}`,
+        Authorization: `Bearer ${await this.getToken()}`,
       },
     });
 

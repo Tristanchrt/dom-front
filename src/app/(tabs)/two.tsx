@@ -41,13 +41,16 @@ export default function ProfileScreen() {
             <FontAwesome name="edit" size={16} color="#6B4E3D" />
             <Text style={styles.actionButtonText}>Modifier le profil</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/settings')}>
             <FontAwesome name="cog" size={16} color="#6B4E3D" />
             <Text style={styles.actionButtonText}>Paramètres</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={[styles.actionButton, styles.logoutButton]} onPress={handleLogout}>
+
+          <TouchableOpacity
+            style={[styles.actionButton, styles.logoutButton]}
+            onPress={handleLogout}
+          >
             <FontAwesome name="sign-out" size={16} color="#FF4444" />
             <Text style={[styles.actionButtonText, styles.logoutText]}>Se déconnecter</Text>
           </TouchableOpacity>

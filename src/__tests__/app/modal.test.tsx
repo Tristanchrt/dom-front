@@ -9,5 +9,3 @@ describe('ModalScreen', () => {
     expect(getByText(/app\/modal\.tsx/)).toBeTruthy();
   });
 });
-
-

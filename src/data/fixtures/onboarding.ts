@@ -27,8 +27,7 @@ export const availableInterests: InterestFixture[] = [
 ];
 
 export const profileSetupDefaults = {
-  heroImage:
-    'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&h=150&fit=crop',
+  heroImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&h=150&fit=crop',
   defaultProfileCameraUrl:
     'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
   defaultProfileGalleryUrl:
@@ -38,5 +37,3 @@ export const profileSetupDefaults = {
   defaultBannerGalleryUrl:
     'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=200&fit=crop',
 };
-
-

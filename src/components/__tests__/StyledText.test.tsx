@@ -15,37 +15,26 @@ describe('StyledText Component', () => {
       // Style structure: [themeColor, [customStyle, fontFamily]]
       expect(textElement.props.style).toEqual([
         expect.objectContaining({ color: expect.any(String) }),
-        expect.arrayContaining([
-          expect.objectContaining({ fontFamily: 'SpaceMono' })
-        ])
+        expect.arrayContaining([expect.objectContaining({ fontFamily: 'SpaceMono' })]),
       ]);
     });
 
     it('should merge custom styles with SpaceMono font', () => {
       const customStyle = { fontSize: 18, color: 'red' };
-      const { getByText } = render(
-        <MonoText style={customStyle}>Styled Mono Text</MonoText>
-      );
+      const { getByText } = render(<MonoText style={customStyle}>Styled Mono Text</MonoText>);
       const textElement = getByText('Styled Mono Text');
       // Style structure: [themeColor, [customStyle, fontFamily]]
       expect(textElement.props.style).toEqual([
         expect.objectContaining({ color: expect.any(String) }),
-        expect.arrayContaining([
-          customStyle,
-          expect.objectContaining({ fontFamily: 'SpaceMono' })
-        ])
+        expect.arrayContaining([customStyle, expect.objectContaining({ fontFamily: 'SpaceMono' })]),
       ]);
     });
 
     it('should pass through all Text props', () => {
       const { getByTestId } = render(
-        <MonoText
-          testID="mono-text"
-          numberOfLines={2}
-          ellipsizeMode="tail"
-        >
+        <MonoText testID="mono-text" numberOfLines={2} ellipsizeMode="tail">
           Long text that should be truncated
-        </MonoText>
+        </MonoText>,
       );
       const textElement = getByTestId('mono-text');
       expect(textElement.props.numberOfLines).toBe(2);
@@ -56,7 +45,7 @@ describe('StyledText Component', () => {
       const { getByText } = render(
         <MonoText lightColor="#000000" darkColor="#FFFFFF">
           Themed Mono Text
-        </MonoText>
+        </MonoText>,
       );
       expect(getByText('Themed Mono Text')).toBeTruthy();
     });

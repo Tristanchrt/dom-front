@@ -26,7 +26,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.8,
     sales: 234,
     liked: false,
-    description: 'T-shirt artisanal en coton bio avec design unique fait main'
+    description: 'T-shirt artisanal en coton bio avec design unique fait main',
   },
   {
     id: 'p2',
@@ -38,7 +38,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.9,
     sales: 156,
     liked: true,
-    description: 'Vase artisanal en céramique peint à la main'
+    description: 'Vase artisanal en céramique peint à la main',
   },
   {
     id: 'p3',
@@ -50,7 +50,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.7,
     sales: 89,
     liked: false,
-    description: 'Recettes traditionnelles françaises avec photos étape par étape'
+    description: 'Recettes traditionnelles françaises avec photos étape par étape',
   },
   {
     id: 'p4',
@@ -62,7 +62,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.6,
     sales: 345,
     liked: false,
-    description: "Collection de cartes postales vintage d'Islande"
+    description: "Collection de cartes postales vintage d'Islande",
   },
   {
     id: 'p5',
@@ -74,7 +74,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.8,
     sales: 167,
     liked: true,
-    description: 'Carnet de voyage en cuir avec pages lignées et cartes'
+    description: 'Carnet de voyage en cuir avec pages lignées et cartes',
   },
   {
     id: 'p6',
@@ -86,7 +86,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.9,
     sales: 78,
     liked: false,
-    description: 'Bol en grès émaillé, parfait pour les petits déjeuners'
+    description: 'Bol en grès émaillé, parfait pour les petits déjeuners',
   },
   {
     id: 'p7',
@@ -98,7 +98,7 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.8,
     sales: 234,
     liked: false,
-    description: 'Guide complet de la cuisine française moderne'
+    description: 'Guide complet de la cuisine française moderne',
   },
   {
     id: 'p8',
@@ -110,8 +110,8 @@ export const shopProducts: ShopProductCard[] = [
     rating: 4.7,
     sales: 445,
     liked: true,
-    description: 'Carte personnalisée avec votre photo et message'
-  }
+    description: 'Carte personnalisée avec votre photo et message',
+  },
 ];
 
 export type ShopCategory = { id: string; name: string; icon: string };
@@ -121,7 +121,5 @@ export const shopCategories: ShopCategory[] = [
   { id: 'Poterie', name: 'Poterie', icon: 'circle' },
   { id: 'Livre Image', name: 'Livre Image', icon: 'book' },
   { id: 'Carte custom', name: 'Carte custom', icon: 'credit-card' },
-  { id: 'Carnet', name: 'Carnet', icon: 'file-text' }
+  { id: 'Carnet', name: 'Carnet', icon: 'file-text' },
 ];
-
-

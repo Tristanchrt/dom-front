@@ -7,11 +7,26 @@ const seed = (posts: Post[]) => LocalStore.setJSON('posts', posts);
 describe('LocalPostsRepository', () => {
   it('list/getById/like/unlike', async () => {
     const now = new Date();
-    const posts: Post[] = [{
-      id: 'p1', content: 'hi', authorId: 'u1', author: {
-        id: 'u1', name: 'A', email: 'a@a.com', isOnline: false, createdAt: now, updatedAt: now
-      }, likesCount: 1, commentsCount: 0, isLiked: false, createdAt: now, updatedAt: now
-    }];
+    const posts: Post[] = [
+      {
+        id: 'p1',
+        content: 'hi',
+        authorId: 'u1',
+        author: {
+          id: 'u1',
+          name: 'A',
+          email: 'a@a.com',
+          isOnline: false,
+          createdAt: now,
+          updatedAt: now,
+        },
+        likesCount: 1,
+        commentsCount: 0,
+        isLiked: false,
+        createdAt: now,
+        updatedAt: now,
+      },
+    ];
     seed(posts);
     const repo = new LocalPostsRepository();
 
@@ -28,5 +43,3 @@ describe('LocalPostsRepository', () => {
     expect((await repo.getById('p1'))?.isLiked).toBe(false);
   });
 });
-
-

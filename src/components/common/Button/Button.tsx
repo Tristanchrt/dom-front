@@ -57,10 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
       accessibilityState={{ disabled: disabled || loading }}
     >
       {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={variant === 'primary' ? '#FFFFFF' : '#FF8C42'}
-        />
+        <ActivityIndicator size="small" color={variant === 'primary' ? '#FFFFFF' : '#FF8C42'} />
       ) : (
         <Text style={titleStyle}>{title}</Text>
       )}

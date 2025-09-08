@@ -23,46 +23,52 @@ export const useAuth = () => {
     return new AuthUseCases(authRepository);
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const user = await authUseCases.login(email, password);
-      setUser(user);
-      
-      return user;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [authUseCases, setLoading, setError, setUser]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const register = useCallback(async (request: CreateUserRequest) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const user = await authUseCases.register(request);
-      setUser(user);
-      
-      return user;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [authUseCases, setLoading, setError, setUser]);
+        const user = await authUseCases.login(email, password);
+        setUser(user);
+
+        return user;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Login failed';
+        setError(errorMessage);
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authUseCases, setLoading, setError, setUser],
+  );
+
+  const register = useCallback(
+    async (request: CreateUserRequest) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const user = await authUseCases.register(request);
+        setUser(user);
+
+        return user;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+        setError(errorMessage);
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authUseCases, setLoading, setError, setUser],
+  );
 
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       await authUseCases.logout();
       logoutStore();
     } catch (error) {
@@ -76,10 +82,10 @@ export const useAuth = () => {
   const getCurrentUser = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const user = await authUseCases.getCurrentUser();
       setUser(user);
-      
+
       return user;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to get current user';
@@ -96,13 +102,13 @@ export const useAuth = () => {
     isLoading,
     error,
     isAuthenticated,
-    
+
     // Actions
     login,
     register,
     logout,
     getCurrentUser,
-    
+
     // Utils
     clearError: () => setError(null),
   };

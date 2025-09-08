@@ -1,4 +1,9 @@
-import { Message, Conversation, CreateMessageRequest, ConversationsResponse } from '../../models/Message';
+import {
+  Message,
+  Conversation,
+  CreateMessageRequest,
+  ConversationsResponse,
+} from '../../models/Message';
 
 export interface MessagingRepository {
   getConversations(): Promise<ConversationsResponse>;
@@ -36,7 +41,7 @@ export class MessagingUseCases {
 
     return this.messagingRepository.sendMessage({
       ...request,
-      content: request.content.trim()
+      content: request.content.trim(),
     });
   }
 

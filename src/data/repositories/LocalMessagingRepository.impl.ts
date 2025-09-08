@@ -32,5 +32,3 @@ export class LocalMessagingRepository implements MessagingRepository {
     // In real impl, the server would handle this
   }
 }
-
-

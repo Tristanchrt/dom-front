@@ -43,7 +43,6 @@ const mockAuthStore = {
 };
 
 describe('useAuth', () => {
-
   beforeEach(() => {
     (useAuthStore as jest.MockedFunction<typeof useAuthStore>).mockReturnValue(mockAuthStore);
     jest.clearAllMocks();

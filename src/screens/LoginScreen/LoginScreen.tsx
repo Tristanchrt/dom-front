@@ -65,7 +65,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
@@ -119,8 +119,7 @@ export const LoginScreen: React.FC = () => {
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              Don't have an account?{' '}
-              <Text style={styles.linkText}>Sign up</Text>
+              Don't have an account? <Text style={styles.linkText}>Sign up</Text>
             </Text>
           </View>
         </View>

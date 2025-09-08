@@ -36,5 +36,3 @@ describe('LoginScreen (app/login)', () => {
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
   });
 });
-
-

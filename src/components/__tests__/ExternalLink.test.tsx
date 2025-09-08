@@ -27,7 +27,9 @@ jest.mock('expo-router', () => ({
   },
 }));
 
-const mockOpenBrowserAsync = WebBrowser.openBrowserAsync as jest.MockedFunction<typeof WebBrowser.openBrowserAsync>;
+const mockOpenBrowserAsync = WebBrowser.openBrowserAsync as jest.MockedFunction<
+  typeof WebBrowser.openBrowserAsync
+>;
 
 describe('ExternalLink Component', () => {
   beforeEach(() => {
@@ -36,9 +38,7 @@ describe('ExternalLink Component', () => {
 
   it('should render with href', () => {
     const { getByText } = render(
-      <ExternalLink href="https://example.com">
-        Visit Example
-      </ExternalLink>
+      <ExternalLink href="https://example.com">Visit Example</ExternalLink>,
     );
     expect(getByText('Visit Example')).toBeTruthy();
   });
@@ -48,9 +48,7 @@ describe('ExternalLink Component', () => {
     mockOpenBrowserAsync.mockResolvedValue({} as any);
 
     const { getByText } = render(
-      <ExternalLink href="https://example.com">
-        Visit Example
-      </ExternalLink>
+      <ExternalLink href="https://example.com">Visit Example</ExternalLink>,
     );
 
     const link = getByText('Visit Example');
@@ -64,9 +62,7 @@ describe('ExternalLink Component', () => {
     Platform.OS = 'web'; // Mock web platform
 
     const { getByText } = render(
-      <ExternalLink href="https://example.com">
-        Visit Example
-      </ExternalLink>
+      <ExternalLink href="https://example.com">Visit Example</ExternalLink>,
     );
 
     const link = getByText('Visit Example');
@@ -80,13 +76,13 @@ describe('ExternalLink Component', () => {
 
   it('should pass through additional props', () => {
     const { getByTestId } = render(
-      <ExternalLink 
-        href="https://example.com" 
+      <ExternalLink
+        href="https://example.com"
         testID="external-link"
         accessibilityLabel="External link"
       >
         Visit Example
-      </ExternalLink>
+      </ExternalLink>,
     );
 
     const link = getByTestId('external-link');
@@ -104,12 +100,8 @@ describe('ExternalLink Component', () => {
       'https://example.com/path?query=value#hash',
     ];
 
-    testUrls.forEach(url => {
-      const { getByText } = render(
-        <ExternalLink href={url}>
-          {url}
-        </ExternalLink>
-      );
+    testUrls.forEach((url) => {
+      const { getByText } = render(<ExternalLink href={url}>{url}</ExternalLink>);
 
       const link = getByText(url);
       fireEvent.press(link);

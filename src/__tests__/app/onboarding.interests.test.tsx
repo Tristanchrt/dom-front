@@ -27,5 +27,3 @@ describe('InterestsSelectionScreen (app/onboarding/interests)', () => {
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
   });
 });
-
-

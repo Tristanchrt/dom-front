@@ -6,9 +6,17 @@ const seed = (profiles: CreatorProfile[]) => LocalStore.setJSON('profiles', prof
 
 describe('LocalProfilesRepository', () => {
   it('follow/unfollow adjusts followersCount', async () => {
-    const profiles: CreatorProfile[] = [{
-      id: 'c1', name: 'A', handle: '@a', followersCount: 1, followingCount: 0, postsCount: 0, verified: false
-    }];
+    const profiles: CreatorProfile[] = [
+      {
+        id: 'c1',
+        name: 'A',
+        handle: '@a',
+        followersCount: 1,
+        followingCount: 0,
+        postsCount: 0,
+        verified: false,
+      },
+    ];
     seed(profiles);
     const repo = new LocalProfilesRepository();
     await repo.follow('c1');
@@ -17,5 +25,3 @@ describe('LocalProfilesRepository', () => {
     expect((await repo.getById('c1'))?.followersCount).toBe(1);
   });
 });
-
-

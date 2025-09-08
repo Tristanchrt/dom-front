@@ -24,6 +24,3 @@ describe('ShopScreen (app/shop)', () => {
     expect(queryByText(/Carnet de voyage/i)).toBeNull();
   });
 });
-
-
-

@@ -10,8 +10,8 @@ export default function TestDebugScreen() {
         <Text style={styles.subtitle}>
           Si tu vois cette page, c'est que la navigation depuis profile-setup fonctionne !
         </Text>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.button}
           onPress={() => {
             console.log('Going to interests page...');
@@ -20,8 +20,8 @@ export default function TestDebugScreen() {
         >
           <Text style={styles.buttonText}>Aller aux Centres d'Intérêt</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.button, styles.secondaryButton]}
           onPress={() => {
             console.log('Going to feed...');
@@ -30,8 +30,8 @@ export default function TestDebugScreen() {
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText]}>Aller au Feed</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.button, styles.backButton]}
           onPress={() => {
             console.log('Going back...');
@@ -97,4 +97,3 @@ const styles = StyleSheet.create({
     color: '#2C1810',
   },
 });
-

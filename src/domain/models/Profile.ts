@@ -13,5 +13,3 @@ export interface CreatorProfile {
   location?: string;
   joinDate?: string; // human readable for now
 }
-
-

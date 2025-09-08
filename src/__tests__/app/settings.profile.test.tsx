@@ -19,11 +19,8 @@ describe('ProfileEditScreen (app/settings/profile)', () => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '✅ Profil sauvegardé',
         'Vos modifications ont été enregistrées avec succès',
-        [{ text: 'OK' }]
+        [{ text: 'OK' }],
       );
     });
   });
 });
-
-
-

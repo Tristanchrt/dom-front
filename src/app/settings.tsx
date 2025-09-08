@@ -19,7 +19,7 @@ export default function SettingsScreen() {
       subtitle: 'Gérer mes produits',
       icon: 'shopping-bag',
       color: '#FF8C42',
-      route: '/settings/products'
+      route: '/settings/products',
     },
     {
       id: 'personalization',
@@ -27,7 +27,7 @@ export default function SettingsScreen() {
       subtitle: 'Personnalisez votre profil',
       icon: 'user',
       color: '#FF8C42',
-      route: '/settings/profile'
+      route: '/settings/profile',
     },
     {
       id: 'orders',
@@ -35,7 +35,7 @@ export default function SettingsScreen() {
       subtitle: 'Historique des commandes',
       icon: 'list',
       color: '#FF8C42',
-      route: '/settings/orders'
+      route: '/settings/orders',
     },
     {
       id: 'purchases',
@@ -43,8 +43,8 @@ export default function SettingsScreen() {
       subtitle: 'Vos achats récents',
       icon: 'credit-card',
       color: '#FF8C42',
-      route: '/settings/purchases'
-    }
+      route: '/settings/purchases',
+    },
   ];
 
   const accountOptions = [
@@ -52,36 +52,34 @@ export default function SettingsScreen() {
       id: 'contact',
       title: 'Nous contacter',
       icon: 'envelope',
-      color: '#FF8C42'
+      color: '#FF8C42',
     },
     {
       id: 'privacy',
       title: 'Politique de confidentialité',
       icon: 'shield',
-      color: '#FF8C42'
+      color: '#FF8C42',
     },
     {
       id: 'about',
       title: 'À propos',
       icon: 'info-circle',
-      color: '#FF8C42'
-    }
+      color: '#FF8C42',
+    },
   ];
 
   const renderSettingItem = (item: any) => (
     <TouchableOpacity
       key={item.id}
       style={styles.settingItem}
-      onPress={() => item.route ? router.push(item.route) : console.log(`Navigate to ${item.id}`)}
+      onPress={() => (item.route ? router.push(item.route) : console.log(`Navigate to ${item.id}`))}
     >
       <View style={[styles.iconContainer, { backgroundColor: `${item.color}20` }]}>
         <FontAwesome name={item.icon} size={20} color={item.color} />
       </View>
       <View style={styles.settingContent}>
         <Text style={styles.settingTitle}>{item.title}</Text>
-        {item.subtitle && (
-          <Text style={styles.settingSubtitle}>{item.subtitle}</Text>
-        )}
+        {item.subtitle && <Text style={styles.settingSubtitle}>{item.subtitle}</Text>}
       </View>
       <FontAwesome name="chevron-right" size={16} color="#8B7355" />
     </TouchableOpacity>
@@ -102,8 +100,10 @@ export default function SettingsScreen() {
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.profileHeader}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' }}
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+              }}
               style={styles.profileImage}
             />
             <View style={styles.profileInfo}>
@@ -250,5 +250,3 @@ const styles = StyleSheet.create({
     color: '#8B7355',
   },
 });
-
-

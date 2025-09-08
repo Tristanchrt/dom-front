@@ -29,5 +29,3 @@ export interface CreateProductRequest {
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {
   id: string;
 }
-
-

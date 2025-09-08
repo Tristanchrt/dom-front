@@ -31,7 +31,7 @@ export default function CreatePostScreen() {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState<PollOption[]>([
     { id: '1', text: '' },
-    { id: '2', text: '' }
+    { id: '2', text: '' },
   ]);
 
   const postTypes = [
@@ -39,7 +39,7 @@ export default function CreatePostScreen() {
     { id: 'image', icon: 'camera', label: 'Image', color: '#4CAF50' },
     { id: 'video', icon: 'video-camera', label: 'Vidéo', color: '#2196F3' },
     { id: 'product', icon: 'shopping-bag', label: 'Produit', color: '#FF8C42' },
-    { id: 'poll', icon: 'bar-chart', label: 'Sondage', color: '#9C27B0' }
+    { id: 'poll', icon: 'bar-chart', label: 'Sondage', color: '#9C27B0' },
   ];
 
   const sampleProducts = [
@@ -47,14 +47,14 @@ export default function CreatePostScreen() {
       id: 'p1',
       name: 'T-shirt cousu main',
       price: '30 €',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop'
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop',
     },
     {
       id: 'p2',
       name: 'Vase en céramique',
       price: '45 €',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop'
-    }
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop',
+    },
   ];
 
   const handleMediaSelection = () => {
@@ -63,36 +63,36 @@ export default function CreatePostScreen() {
       'Choisissez une source',
       [
         { text: 'Annuler', style: 'cancel' },
-        { 
-          text: 'Caméra', 
+        {
+          text: 'Caméra',
           onPress: () => {
-            setSelectedMedia('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop');
+            setSelectedMedia(
+              'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            );
             console.log('Open camera');
-          }
+          },
         },
-        { 
-          text: 'Galerie', 
+        {
+          text: 'Galerie',
           onPress: () => {
-            setSelectedMedia('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop');
+            setSelectedMedia(
+              'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            );
             console.log('Open gallery');
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   };
 
   const handleProductSelection = () => {
-    Alert.alert(
-      '🛍️ Sélectionner un produit',
-      'Choisissez un produit à présenter',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        ...sampleProducts.map(product => ({
-          text: `${product.name} - ${product.price}`,
-          onPress: () => setSelectedProduct(product)
-        }))
-      ]
-    );
+    Alert.alert('🛍️ Sélectionner un produit', 'Choisissez un produit à présenter', [
+      { text: 'Annuler', style: 'cancel' },
+      ...sampleProducts.map((product) => ({
+        text: `${product.name} - ${product.price}`,
+        onPress: () => setSelectedProduct(product),
+      })),
+    ]);
   };
 
   const addPollOption = () => {
@@ -103,14 +103,12 @@ export default function CreatePostScreen() {
 
   const removePollOption = (id: string) => {
     if (pollOptions.length > 2) {
-      setPollOptions(pollOptions.filter(option => option.id !== id));
+      setPollOptions(pollOptions.filter((option) => option.id !== id));
     }
   };
 
   const updatePollOption = (id: string, text: string) => {
-    setPollOptions(pollOptions.map(option => 
-      option.id === id ? { ...option, text } : option
-    ));
+    setPollOptions(pollOptions.map((option) => (option.id === id ? { ...option, text } : option)));
   };
 
   const handlePublish = () => {
@@ -119,18 +117,17 @@ export default function CreatePostScreen() {
       return;
     }
 
-    if (postType === 'poll' && (!pollQuestion.trim() || pollOptions.some(opt => !opt.text.trim()))) {
+    if (
+      postType === 'poll' &&
+      (!pollQuestion.trim() || pollOptions.some((opt) => !opt.text.trim()))
+    ) {
       Alert.alert('Erreur', 'Veuillez compléter la question et toutes les options du sondage');
       return;
     }
 
-    Alert.alert(
-      '✅ Publication créée',
-      'Votre publication a été créée avec succès !',
-      [
-        { text: 'OK', onPress: () => router.back() }
-      ]
-    );
+    Alert.alert('✅ Publication créée', 'Votre publication a été créée avec succès !', [
+      { text: 'OK', onPress: () => router.back() },
+    ]);
   };
 
   const renderPostTypeSelector = () => (
@@ -143,25 +140,25 @@ export default function CreatePostScreen() {
             style={[
               styles.typeButton,
               postType === type.id && styles.selectedTypeButton,
-              { borderColor: type.color }
+              { borderColor: type.color },
             ]}
             onPress={() => {
               setPostType(type.id as PostType);
               setSelectedMedia(null);
               setSelectedProduct(null);
               setPollQuestion('');
-              setPollOptions([{ id: '1', text: '' }, { id: '2', text: '' }]);
+              setPollOptions([
+                { id: '1', text: '' },
+                { id: '2', text: '' },
+              ]);
             }}
           >
-            <FontAwesome 
-              name={type.icon} 
-              size={24} 
-              color={postType === type.id ? type.color : '#8B7355'} 
+            <FontAwesome
+              name={type.icon}
+              size={24}
+              color={postType === type.id ? type.color : '#8B7355'}
             />
-            <Text style={[
-              styles.typeLabel,
-              postType === type.id && { color: type.color }
-            ]}>
+            <Text style={[styles.typeLabel, postType === type.id && { color: type.color }]}>
               {type.label}
             </Text>
           </TouchableOpacity>
@@ -178,7 +175,7 @@ export default function CreatePostScreen() {
       <TextInput
         style={styles.textInput}
         placeholder={
-          postType === 'poll' 
+          postType === 'poll'
             ? 'Ajoutez une description à votre sondage...'
             : 'Que voulez-vous partager ?'
         }
@@ -198,14 +195,12 @@ export default function CreatePostScreen() {
 
     return (
       <View style={styles.mediaSection}>
-        <Text style={styles.sectionTitle}>
-          {postType === 'image' ? 'Image' : 'Vidéo'}
-        </Text>
-        
+        <Text style={styles.sectionTitle}>{postType === 'image' ? 'Image' : 'Vidéo'}</Text>
+
         {selectedMedia ? (
           <View style={styles.mediaPreview}>
             <Image source={{ uri: selectedMedia }} style={styles.mediaImage} />
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.removeMediaButton}
               onPress={() => setSelectedMedia(null)}
             >
@@ -219,10 +214,10 @@ export default function CreatePostScreen() {
           </View>
         ) : (
           <TouchableOpacity style={styles.mediaSelector} onPress={handleMediaSelection}>
-            <FontAwesome 
-              name={postType === 'image' ? 'camera' : 'video-camera'} 
-              size={32} 
-              color="#8B7355" 
+            <FontAwesome
+              name={postType === 'image' ? 'camera' : 'video-camera'}
+              size={32}
+              color="#8B7355"
             />
             <Text style={styles.mediaSelectorText}>
               Ajouter une {postType === 'image' ? 'image' : 'vidéo'}
@@ -239,7 +234,7 @@ export default function CreatePostScreen() {
     return (
       <View style={styles.productSection}>
         <Text style={styles.sectionTitle}>Produit</Text>
-        
+
         {selectedProduct ? (
           <View style={styles.productPreview}>
             <Image source={{ uri: selectedProduct.image }} style={styles.productImage} />
@@ -247,7 +242,7 @@ export default function CreatePostScreen() {
               <Text style={styles.productName}>{selectedProduct.name}</Text>
               <Text style={styles.productPrice}>{selectedProduct.price}</Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.removeProductButton}
               onPress={() => setSelectedProduct(null)}
             >
@@ -278,7 +273,7 @@ export default function CreatePostScreen() {
           onChangeText={setPollQuestion}
           maxLength={200}
         />
-        
+
         <Text style={styles.sectionTitle}>Options de réponse</Text>
         {pollOptions.map((option, index) => (
           <View key={option.id} style={styles.pollOptionContainer}>
@@ -291,7 +286,7 @@ export default function CreatePostScreen() {
               maxLength={100}
             />
             {pollOptions.length > 2 && (
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.removePollOptionButton}
                 onPress={() => removePollOption(option.id)}
               >
@@ -300,7 +295,7 @@ export default function CreatePostScreen() {
             )}
           </View>
         ))}
-        
+
         {pollOptions.length < 4 && (
           <TouchableOpacity style={styles.addPollOptionButton} onPress={addPollOption}>
             <FontAwesome name="plus-circle" size={16} color="#FF8C42" />

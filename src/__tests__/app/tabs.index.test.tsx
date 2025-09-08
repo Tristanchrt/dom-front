@@ -15,5 +15,3 @@ describe('HomeScreen (tabs/index)', () => {
     expect(getByText('Explorer')).toBeTruthy();
   });
 });
-
-

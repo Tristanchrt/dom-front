@@ -91,7 +91,7 @@ export default function LoginScreen() {
           {/* Email Login Section */}
           <View style={styles.emailSection}>
             <Text style={styles.emailSectionTitle}>Connectez-vous avec e-mail</Text>
-            
+
             <View style={styles.inputContainer}>
               <FontAwesome name="envelope-o" size={16} color="#FF8C42" style={styles.inputIcon} />
               <TextInput
@@ -133,7 +133,7 @@ export default function LoginScreen() {
             <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Mot de passe oublié?</Text>
             </TouchableOpacity>
-            
+
             <View style={styles.signUpContainer}>
               <Text style={styles.noAccountText}>Vous n'avez pas de compte? </Text>
               <TouchableOpacity onPress={handleSignUp}>

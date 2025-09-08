@@ -15,11 +15,7 @@ import { router } from 'expo-router';
 export default function SubscriptionScreen() {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('annual');
 
-  const features = [
-    'Produits illimités',
-    'Commission réduite',
-    'Accès aux badges uniques'
-  ];
+  const features = ['Produits illimités', 'Commission réduite', 'Accès aux badges uniques'];
 
   const handleSubscribe = () => {
     Alert.alert(
@@ -27,8 +23,8 @@ export default function SubscriptionScreen() {
       `Vous allez souscrire au plan ${selectedPlan === 'monthly' ? 'mensuel' : 'annuel'}`,
       [
         { text: 'Annuler', style: 'cancel' },
-        { text: 'S\'abonner maintenant', onPress: () => console.log('Subscribe') }
-      ]
+        { text: "S'abonner maintenant", onPress: () => console.log('Subscribe') },
+      ],
     );
   };
 
@@ -49,7 +45,7 @@ export default function SubscriptionScreen() {
           <View style={styles.promotionContent}>
             <Text style={styles.promotionTitle}>60% de réduction maintenant</Text>
             <Text style={styles.promotionSubtitle}>Économisez sur votre abonnement</Text>
-            
+
             {/* Countdown */}
             <View style={styles.countdown}>
               <View style={styles.countdownItem}>
@@ -65,9 +61,11 @@ export default function SubscriptionScreen() {
               </View>
             </View>
           </View>
-          
-          <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&h=150&fit=crop' }}
+
+          <Image
+            source={{
+              uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&h=150&fit=crop',
+            }}
             style={styles.promotionImage}
           />
         </View>
@@ -75,7 +73,7 @@ export default function SubscriptionScreen() {
         {/* Community Development */}
         <View style={styles.communitySection}>
           <Text style={styles.communityTitle}>Développez votre communauté</Text>
-          
+
           {/* Features */}
           <View style={styles.featuresContainer}>
             {features.map((feature, index) => (
@@ -90,7 +88,7 @@ export default function SubscriptionScreen() {
         {/* Pricing Plans */}
         <View style={styles.pricingSection}>
           {/* Monthly Plan */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.planCard, selectedPlan === 'monthly' && styles.selectedPlan]}
             onPress={() => setSelectedPlan('monthly')}
           >
@@ -103,7 +101,7 @@ export default function SubscriptionScreen() {
           </TouchableOpacity>
 
           {/* Annual Plan */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.planCard, selectedPlan === 'annual' && styles.selectedPlan]}
             onPress={() => setSelectedPlan('annual')}
           >
@@ -384,5 +382,3 @@ const styles = StyleSheet.create({
     color: '#8B7355',
   },
 });
-
-

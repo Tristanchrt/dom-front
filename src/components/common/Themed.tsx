@@ -37,7 +37,7 @@ export function Text(props: TextProps) {
       ...(lightColor !== undefined && { light: lightColor }),
       ...(darkColor !== undefined && { dark: darkColor }),
     },
-    'text'
+    'text',
   );
 
   return <DefaultText style={[{ color }, style]} {...otherProps} />;
@@ -50,7 +50,7 @@ export function View(props: ViewProps) {
       ...(lightColor !== undefined && { light: lightColor }),
       ...(darkColor !== undefined && { dark: darkColor }),
     },
-    'background'
+    'background',
   );
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;

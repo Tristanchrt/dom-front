@@ -19,36 +19,34 @@ export default function ProfileEditScreen() {
     language: 'en ligne',
     description: '',
     category: '',
-    socialNetworks: ''
+    socialNetworks: '',
   });
 
   const handleSave = () => {
-    Alert.alert(
-      '✅ Profil sauvegardé',
-      'Vos modifications ont été enregistrées avec succès',
-      [{ text: 'OK' }]
-    );
+    Alert.alert('✅ Profil sauvegardé', 'Vos modifications ont été enregistrées avec succès', [
+      { text: 'OK' },
+    ]);
   };
 
-  const ProfileSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+  const ProfileSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
       {children}
     </View>
   );
 
-  const EditableField = ({ 
-    label, 
-    value, 
-    onChangeText, 
+  const EditableField = ({
+    label,
+    value,
+    onChangeText,
     placeholder,
-    multiline = false 
+    multiline = false,
   }: {
-    label: string,
-    value: string,
-    onChangeText: (text: string) => void,
-    placeholder: string,
-    multiline?: boolean
+    label: string;
+    value: string;
+    onChangeText: (text: string) => void;
+    placeholder: string;
+    multiline?: boolean;
   }) => (
     <View style={styles.fieldContainer}>
       <View style={styles.fieldHeader}>
@@ -86,8 +84,10 @@ export default function ProfileEditScreen() {
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.profileImageContainer}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face' }}
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+              }}
               style={styles.profileImage}
             />
             <TouchableOpacity style={styles.editImageButton}>
@@ -113,8 +113,10 @@ export default function ProfileEditScreen() {
               <Text style={styles.bannerTitle}>Profil complet</Text>
               <Text style={styles.bannerSubtitle}>Optimisez votre visibilité</Text>
             </View>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop' }}
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop',
+              }}
               style={styles.bannerImage}
             />
           </View>
@@ -125,22 +127,22 @@ export default function ProfileEditScreen() {
           <EditableField
             label="Description"
             value={profile.description}
-            onChangeText={(text) => setProfile({...profile, description: text})}
+            onChangeText={(text) => setProfile({ ...profile, description: text })}
             placeholder="Décrivez-vous en quelques mots..."
             multiline
           />
-          
+
           <EditableField
             label="Catégorie"
             value={profile.category}
-            onChangeText={(text) => setProfile({...profile, category: text})}
+            onChangeText={(text) => setProfile({ ...profile, category: text })}
             placeholder="Votre domaine d'expertise..."
           />
-          
+
           <EditableField
             label="Réseaux sociaux"
             value={profile.socialNetworks}
-            onChangeText={(text) => setProfile({...profile, socialNetworks: text})}
+            onChangeText={(text) => setProfile({ ...profile, socialNetworks: text })}
             placeholder="Vos liens de réseaux sociaux..."
           />
         </ProfileSection>
@@ -333,4 +335,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

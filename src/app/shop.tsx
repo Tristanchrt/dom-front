@@ -47,8 +47,10 @@ export default function ShopScreen() {
           id: p.id,
           name: p.name,
           price: centsToLabel(p.priceCents, p.currency),
-          ...(p.originalPriceCents ? { originalPrice: centsToLabel(p.originalPriceCents, p.currency) } : {}),
-          image: p.imageUrls?.[0] ?? fixtureProducts.find(fp => fp.id === p.id)?.image ?? '',
+          ...(p.originalPriceCents
+            ? { originalPrice: centsToLabel(p.originalPriceCents, p.currency) }
+            : {}),
+          image: p.imageUrls?.[0] ?? fixtureProducts.find((fp) => fp.id === p.id)?.image ?? '',
           seller: p.sellerName,
           category: p.category ?? 'Autre',
           rating: p.rating ?? 0,
@@ -62,7 +64,9 @@ export default function ShopScreen() {
         if (isMounted) setProducts(fixtureProducts);
       }
     })();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filterProducts = () => {
@@ -70,16 +74,17 @@ export default function ShopScreen() {
 
     // Filter by category
     if (activeCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === activeCategory);
+      filtered = filtered.filter((product) => product.category === activeCategory);
     }
 
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(query) ||
-        product.seller.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.seller.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query),
       );
     }
 
@@ -87,18 +92,16 @@ export default function ShopScreen() {
   };
 
   const toggleLike = (productId: string) => {
-    setLikedProducts(prev => 
-      prev.includes(productId) 
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+    setLikedProducts((prev) =>
+      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
     );
   };
 
   const renderProduct = ({ item }: { item: any }) => {
     if (viewMode === 'list') {
       return (
-        <TouchableOpacity 
-          style={styles.listProductCard} 
+        <TouchableOpacity
+          style={styles.listProductCard}
           onPress={() => router.push(`/product/${item.id}`)}
         >
           <View style={styles.listImageContainer}>
@@ -109,7 +112,7 @@ export default function ShopScreen() {
               </View>
             )}
           </View>
-          
+
           <View style={styles.listProductInfo}>
             <Text style={styles.listProductName}>{item.name}</Text>
             <View style={styles.listSellerRow}>
@@ -123,18 +126,18 @@ export default function ShopScreen() {
               <Text style={styles.listCurrentPrice}>{item.price}</Text>
             </View>
           </View>
-          
-          <TouchableOpacity 
-            style={styles.listLikeButton} 
+
+          <TouchableOpacity
+            style={styles.listLikeButton}
             onPress={(e) => {
               e.stopPropagation();
               toggleLike(item.id);
             }}
           >
-            <FontAwesome 
-              name={likedProducts.includes(item.id) ? "heart" : "heart-o"} 
-              size={18} 
-              color={likedProducts.includes(item.id) ? "#FF4444" : "#8B7355"} 
+            <FontAwesome
+              name={likedProducts.includes(item.id) ? 'heart' : 'heart-o'}
+              size={18}
+              color={likedProducts.includes(item.id) ? '#FF4444' : '#8B7355'}
             />
           </TouchableOpacity>
         </TouchableOpacity>
@@ -142,23 +145,23 @@ export default function ShopScreen() {
     }
 
     return (
-      <TouchableOpacity 
-        style={styles.productCard} 
+      <TouchableOpacity
+        style={styles.productCard}
         onPress={() => router.push(`/product/${item.id}`)}
       >
         <View style={styles.productImageContainer}>
           <Image source={{ uri: item.image }} style={styles.productImage} />
-          <TouchableOpacity 
-            style={styles.likeButton} 
+          <TouchableOpacity
+            style={styles.likeButton}
             onPress={(e) => {
               e.stopPropagation();
               toggleLike(item.id);
             }}
           >
-            <FontAwesome 
-              name={likedProducts.includes(item.id) ? "heart" : "heart-o"} 
-              size={16} 
-              color={likedProducts.includes(item.id) ? "#FF4444" : "#8B7355"} 
+            <FontAwesome
+              name={likedProducts.includes(item.id) ? 'heart' : 'heart-o'}
+              size={16}
+              color={likedProducts.includes(item.id) ? '#FF4444' : '#8B7355'}
             />
           </TouchableOpacity>
           {item.originalPrice && (
@@ -167,7 +170,7 @@ export default function ShopScreen() {
             </View>
           )}
         </View>
-        
+
         <View style={styles.productInfo}>
           <Text style={styles.productName} numberOfLines={2}>
             {item.name}
@@ -179,13 +182,11 @@ export default function ShopScreen() {
           <Text style={styles.productDescription} numberOfLines={2}>
             Vendu par {item.seller}
           </Text>
-          
+
           <View style={styles.productFooter}>
             <View style={styles.priceContainer}>
               <Text style={styles.currentPrice}>{item.price}</Text>
-              {item.originalPrice && (
-                <Text style={styles.originalPrice}>{item.originalPrice}</Text>
-              )}
+              {item.originalPrice && <Text style={styles.originalPrice}>{item.originalPrice}</Text>}
             </View>
             <View style={styles.ratingContainer}>
               <FontAwesome name="star" size={12} color="#FFD700" />
@@ -203,12 +204,14 @@ export default function ShopScreen() {
       style={[styles.categoryTab, activeCategory === category.id && styles.activeCategoryTab]}
       onPress={() => setActiveCategory(category.id)}
     >
-      <FontAwesome 
-        name={category.icon} 
-        size={16} 
-        color={activeCategory === category.id ? '#FF8C42' : '#8B7355'} 
+      <FontAwesome
+        name={category.icon}
+        size={16}
+        color={activeCategory === category.id ? '#FF8C42' : '#8B7355'}
       />
-      <Text style={[styles.categoryText, activeCategory === category.id && styles.activeCategoryText]}>
+      <Text
+        style={[styles.categoryText, activeCategory === category.id && styles.activeCategoryText]}
+      >
         {category.name}
       </Text>
     </TouchableOpacity>
@@ -222,15 +225,11 @@ export default function ShopScreen() {
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Magasin</Text>
-        <TouchableOpacity 
-          style={styles.viewModeButton} 
+        <TouchableOpacity
+          style={styles.viewModeButton}
           onPress={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
         >
-          <FontAwesome 
-            name={viewMode === 'grid' ? "list" : "th"} 
-            size={20} 
-            color="#2C1810" 
-          />
+          <FontAwesome name={viewMode === 'grid' ? 'list' : 'th'} size={20} color="#2C1810" />
         </TouchableOpacity>
       </View>
 
@@ -249,9 +248,9 @@ export default function ShopScreen() {
       </View>
 
       {/* Category Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
         style={styles.categoriesContainer}
         contentContainerStyle={styles.categoriesContent}
       >
@@ -268,7 +267,7 @@ export default function ShopScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.productsContainer,
-          viewMode === 'list' && styles.listProductsContainer
+          viewMode === 'list' && styles.listProductsContainer,
         ]}
         columnWrapperStyle={viewMode === 'grid' ? styles.productRow : undefined}
       />

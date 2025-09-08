@@ -30,37 +30,39 @@ export default function ProfileSetupScreen() {
       `Choisissez une image pour votre ${type === 'profile' ? 'profil' : 'bannière'}`,
       [
         { text: 'Annuler', style: 'cancel' },
-        { 
-          text: 'Caméra', 
+        {
+          text: 'Caméra',
           onPress: () => {
-            const imageUrl = type === 'profile' 
-              ? profileSetupDefaults.defaultProfileCameraUrl
-              : profileSetupDefaults.defaultBannerCameraUrl;
-            setProfileData(prev => ({
+            const imageUrl =
+              type === 'profile'
+                ? profileSetupDefaults.defaultProfileCameraUrl
+                : profileSetupDefaults.defaultBannerCameraUrl;
+            setProfileData((prev) => ({
               ...prev,
-              [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl
+              [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl,
             }));
-          }
+          },
         },
-        { 
-          text: 'Galerie', 
+        {
+          text: 'Galerie',
           onPress: () => {
-            const imageUrl = type === 'profile' 
-              ? profileSetupDefaults.defaultProfileGalleryUrl
-              : profileSetupDefaults.defaultBannerGalleryUrl;
-            setProfileData(prev => ({
+            const imageUrl =
+              type === 'profile'
+                ? profileSetupDefaults.defaultProfileGalleryUrl
+                : profileSetupDefaults.defaultBannerGalleryUrl;
+            setProfileData((prev) => ({
               ...prev,
-              [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl
+              [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl,
             }));
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   };
 
   const handleContinue = () => {
     console.log('🔥 Continue button clicked');
-    
+
     if (!profileData.name.trim()) {
       console.log('❌ Name validation failed');
       Alert.alert('Erreur', 'Veuillez saisir votre nom et prénom');
@@ -68,7 +70,7 @@ export default function ProfileSetupScreen() {
     }
 
     console.log('✅ Name validation passed, attempting navigation...');
-    
+
     try {
       console.log('🚀 Navigating to test debug page...');
       router.push('/onboarding/test-debug');
@@ -89,20 +91,20 @@ export default function ProfileSetupScreen() {
     }
   };
 
-  const ProfileField = ({ 
-    label, 
-    value, 
-    onChangeText, 
+  const ProfileField = ({
+    label,
+    value,
+    onChangeText,
     placeholder,
     multiline = false,
-    icon 
+    icon,
   }: {
-    label: string,
-    value: string,
-    onChangeText: (text: string) => void,
-    placeholder: string,
-    multiline?: boolean,
-    icon: string
+    label: string;
+    value: string;
+    onChangeText: (text: string) => void;
+    placeholder: string;
+    multiline?: boolean;
+    icon: string;
   }) => (
     <View style={styles.fieldContainer}>
       <View style={styles.fieldHeader}>
@@ -136,17 +138,14 @@ export default function ProfileSetupScreen() {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroIllustration}>
-            <Image 
-              source={{ uri: profileSetupDefaults.heroImage }}
-              style={styles.heroImage}
-            />
+            <Image source={{ uri: profileSetupDefaults.heroImage }} style={styles.heroImage} />
           </View>
           <Text style={styles.heroTitle}>PRÉSENTEZ VOUS</Text>
         </View>
 
         {/* Profile Image Section */}
         <View style={styles.profileImageSection}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.profileImageContainer}
             onPress={() => handleImageSelection('profile')}
           >
@@ -166,14 +165,14 @@ export default function ProfileSetupScreen() {
             placeholder="Nom et prénom"
             placeholderTextColor="#8B7355"
             value={profileData.name}
-            onChangeText={(text) => setProfileData(prev => ({ ...prev, name: text }))}
+            onChangeText={(text) => setProfileData((prev) => ({ ...prev, name: text }))}
           />
         </View>
 
         {/* Banner Section */}
         <View style={styles.bannerSection}>
           <Text style={styles.sectionTitle}>Bannière</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.bannerContainer}
             onPress={() => handleImageSelection('banner')}
           >
@@ -193,24 +192,24 @@ export default function ProfileSetupScreen() {
           <ProfileField
             label="Description"
             value={profileData.description}
-            onChangeText={(text) => setProfileData(prev => ({ ...prev, description: text }))}
+            onChangeText={(text) => setProfileData((prev) => ({ ...prev, description: text }))}
             placeholder="Décrivez-vous en quelques mots..."
             multiline
             icon="user"
           />
-          
+
           <ProfileField
             label="Catégorie"
             value={profileData.category}
-            onChangeText={(text) => setProfileData(prev => ({ ...prev, category: text }))}
+            onChangeText={(text) => setProfileData((prev) => ({ ...prev, category: text }))}
             placeholder="Votre domaine d'expertise..."
             icon="tag"
           />
-          
+
           <ProfileField
             label="Réseaux sociaux"
             value={profileData.socialNetworks}
-            onChangeText={(text) => setProfileData(prev => ({ ...prev, socialNetworks: text }))}
+            onChangeText={(text) => setProfileData((prev) => ({ ...prev, socialNetworks: text }))}
             placeholder="Vos liens de réseaux sociaux..."
             icon="share"
           />

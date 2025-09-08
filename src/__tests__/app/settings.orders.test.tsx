@@ -14,13 +14,10 @@ describe('OrdersScreen (app/settings/orders)', () => {
     // Default is 'all'
     expect(getByText(/Toutes \(\d+\)/)).toBeTruthy();
 
-    fireEvent.press(getByText(/Payées/));
-    expect(getByText(/Payées \(\d+\)/)).toBeTruthy();
+    fireEvent.press(getByText(/Paid \(\d+\)/));
+    expect(getByText(/Paid \(\d+\)/)).toBeTruthy();
 
-    fireEvent.press(getByText(/En attente/));
-    expect(getByText(/En attente \(\d+\)/)).toBeTruthy();
+    fireEvent.press(getByText(/Pending \(\d+\)/));
+    expect(getByText(/Pending \(\d+\)/)).toBeTruthy();
   });
 });
-
-
-

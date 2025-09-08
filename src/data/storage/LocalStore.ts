@@ -2,9 +2,15 @@ type JsonValue = unknown;
 
 class MemoryStorage {
   private map = new Map<string, string>();
-  getItem(key: string) { return this.map.get(key) ?? null; }
-  setItem(key: string, value: string) { this.map.set(key, value); }
-  removeItem(key: string) { this.map.delete(key); }
+  getItem(key: string) {
+    return this.map.get(key) ?? null;
+  }
+  setItem(key: string, value: string) {
+    this.map.set(key, value);
+  }
+  removeItem(key: string) {
+    this.map.delete(key);
+  }
 }
 
 const getStorage = () => {
@@ -31,11 +37,13 @@ export const LocalStore = {
   getJSON<T = JsonValue>(key: string, fallback: T): T {
     const raw = storage.getItem(key);
     if (!raw) return fallback;
-    try { return JSON.parse(raw) as T; } catch { return fallback; }
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return fallback;
+    }
   },
   setJSON<T = JsonValue>(key: string, value: T): void {
     storage.setItem(key, JSON.stringify(value));
   },
 };
-
-

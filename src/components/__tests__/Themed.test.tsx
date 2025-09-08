@@ -5,7 +5,9 @@ import * as useColorSchemeModule from '../../hooks/useColorScheme';
 
 // Mock the useColorScheme hook
 jest.mock('../../hooks/useColorScheme');
-const mockUseColorScheme = useColorSchemeModule.useColorScheme as jest.MockedFunction<typeof useColorSchemeModule.useColorScheme>;
+const mockUseColorScheme = useColorSchemeModule.useColorScheme as jest.MockedFunction<
+  typeof useColorSchemeModule.useColorScheme
+>;
 
 // Mock Colors
 jest.mock('@/constants/Colors', () => ({
@@ -67,49 +69,33 @@ describe('Themed Components', () => {
 
     it('should apply custom light color', () => {
       mockUseColorScheme.mockReturnValue('light');
-      const { getByText } = render(
-        <Text lightColor="#FF0000">Colored Text</Text>
-      );
+      const { getByText } = render(<Text lightColor="#FF0000">Colored Text</Text>);
       const textElement = getByText('Colored Text');
       expect(textElement.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ color: '#FF0000' })
-        ])
+        expect.arrayContaining([expect.objectContaining({ color: '#FF0000' })]),
       );
     });
 
     it('should apply custom dark color', () => {
       mockUseColorScheme.mockReturnValue('dark');
-      const { getByText } = render(
-        <Text darkColor="#00FF00">Dark Colored Text</Text>
-      );
+      const { getByText } = render(<Text darkColor="#00FF00">Dark Colored Text</Text>);
       const textElement = getByText('Dark Colored Text');
       expect(textElement.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ color: '#00FF00' })
-        ])
+        expect.arrayContaining([expect.objectContaining({ color: '#00FF00' })]),
       );
     });
 
     it('should merge custom styles', () => {
       mockUseColorScheme.mockReturnValue('light');
       const customStyle = { fontSize: 18 };
-      const { getByText } = render(
-        <Text style={customStyle}>Styled Text</Text>
-      );
+      const { getByText } = render(<Text style={customStyle}>Styled Text</Text>);
       const textElement = getByText('Styled Text');
-      expect(textElement.props.style).toEqual(
-        expect.arrayContaining([customStyle])
-      );
+      expect(textElement.props.style).toEqual(expect.arrayContaining([customStyle]));
     });
 
     it('should handle undefined colors gracefully', () => {
       mockUseColorScheme.mockReturnValue('light');
-      const { getByText } = render(
-        <Text>
-          Default Text
-        </Text>
-      );
+      const { getByText } = render(<Text>Default Text</Text>);
       expect(getByText('Default Text')).toBeTruthy();
     });
   });
@@ -120,7 +106,7 @@ describe('Themed Components', () => {
       const { getByTestId } = render(
         <View testID="themed-view">
           <Text>Content</Text>
-        </View>
+        </View>,
       );
       expect(getByTestId('themed-view')).toBeTruthy();
     });
@@ -130,13 +116,11 @@ describe('Themed Components', () => {
       const { getByTestId } = render(
         <View testID="light-view" lightColor="#FF0000">
           <Text>Content</Text>
-        </View>
+        </View>,
       );
       const viewElement = getByTestId('light-view');
       expect(viewElement.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ backgroundColor: '#FF0000' })
-        ])
+        expect.arrayContaining([expect.objectContaining({ backgroundColor: '#FF0000' })]),
       );
     });
 
@@ -145,13 +129,11 @@ describe('Themed Components', () => {
       const { getByTestId } = render(
         <View testID="dark-view" darkColor="#00FF00">
           <Text>Content</Text>
-        </View>
+        </View>,
       );
       const viewElement = getByTestId('dark-view');
       expect(viewElement.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ backgroundColor: '#00FF00' })
-        ])
+        expect.arrayContaining([expect.objectContaining({ backgroundColor: '#00FF00' })]),
       );
     });
 
@@ -160,7 +142,7 @@ describe('Themed Components', () => {
       const { getByTestId } = render(
         <View testID="default-view">
           <Text>Content</Text>
-        </View>
+        </View>,
       );
       expect(getByTestId('default-view')).toBeTruthy();
     });

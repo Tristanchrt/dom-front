@@ -25,6 +25,3 @@ describe('SettingsScreen (app/settings)', () => {
     expect(router.push).toHaveBeenCalledWith('/settings/orders');
   });
 });
-
-
-

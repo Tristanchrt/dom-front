@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, FlatList, View, Text, TouchableOpacity, SafeAreaView, Animated } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Animated,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Post from '@/components/specific/Post';
@@ -11,7 +19,8 @@ const followingPosts = [
       id: 'c1',
       name: 'NYC Design',
       handle: '@nycdesign',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     },
     content: 'ef... zjemzjnezjnezjp ejenjb zjebnjz es zenjbc zjeb vjzbe vjz',
     likes: 3100,
@@ -25,9 +34,11 @@ const followingPosts = [
       id: 'c1',
       name: 'NYC Design',
       handle: '@nycdesign',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Man, you\'re my new guru! Viewing the lessons for a second time. Thoroughly pleased. And impressed that you draw from scientific literature in telling memorable...',
+    content:
+      "Man, you're my new guru! Viewing the lessons for a second time. Thoroughly pleased. And impressed that you draw from scientific literature in telling memorable...",
     likes: 3100,
     comments: 22,
     shares: 0,
@@ -39,7 +50,8 @@ const followingPosts = [
       id: 'c1',
       name: 'NYC Design',
       handle: '@nycdesign',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     },
     content: 'Ma nouvelle création à partager en famille !!',
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
@@ -58,9 +70,11 @@ const explorerPosts = [
       id: 'c3',
       name: 'Travel Explorer',
       handle: '@travelexplorer',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     },
-    content: '🌍 Découvrez les merveilles cachées de l\'Islande ! Ces paysages à couper le souffle vous laisseront sans voix.',
+    content:
+      "🌍 Découvrez les merveilles cachées de l'Islande ! Ces paysages à couper le souffle vous laisseront sans voix.",
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
     likes: 8200,
     comments: 156,
@@ -73,9 +87,11 @@ const explorerPosts = [
       id: 'c2',
       name: 'Food Lover',
       handle: '@foodlover',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Recette du jour : Tarte aux pommes traditionnelle française 🥧 Parfaite pour les soirées d\'automne !',
+    content:
+      "Recette du jour : Tarte aux pommes traditionnelle française 🥧 Parfaite pour les soirées d'automne !",
     image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=300&fit=crop',
     likes: 2400,
     comments: 89,
@@ -89,9 +105,11 @@ const explorerPosts = [
       id: 'c4',
       name: 'Tech Guru',
       handle: '@techguru',
-      avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Les nouvelles tendances en IA révolutionnent notre façon de travailler. Voici 5 outils que tout développeur devrait connaître en 2024 💻',
+    content:
+      'Les nouvelles tendances en IA révolutionnent notre façon de travailler. Voici 5 outils que tout développeur devrait connaître en 2024 💻',
     likes: 5600,
     comments: 234,
     shares: 0,
@@ -103,9 +121,11 @@ const explorerPosts = [
       id: 'c1',
       name: 'Art Studio',
       handle: '@artstudio',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Nouvelle œuvre terminée ! Peinture à l\'huile sur toile, inspirée des couchers de soleil méditerranéens 🎨',
+    content:
+      "Nouvelle œuvre terminée ! Peinture à l'huile sur toile, inspirée des couchers de soleil méditerranéens 🎨",
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
     likes: 1800,
     comments: 67,
@@ -119,9 +139,11 @@ const explorerPosts = [
       id: 'c4',
       name: 'Fitness Coach',
       handle: '@fitnesscoach',
-      avatar: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
     },
-    content: '💪 Séance du matin terminée ! 45 minutes d\'entraînement intense. Qui me rejoint demain à 7h pour une session de groupe ?',
+    content:
+      "💪 Séance du matin terminée ! 45 minutes d'entraînement intense. Qui me rejoint demain à 7h pour une session de groupe ?",
     image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
     likes: 920,
     comments: 43,
@@ -147,9 +169,9 @@ export default function HomeScreen() {
       <TouchableOpacity style={styles.menuButton}>
         <FontAwesome name="bars" size={24} color="#2C1810" />
       </TouchableOpacity>
-      
+
       <Text style={styles.logo}>DÖM</Text>
-      
+
       <View style={styles.headerActions}>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
           <FontAwesome name="shopping-cart" size={24} color="#2C1810" />
@@ -160,7 +182,7 @@ export default function HomeScreen() {
 
   const renderTabBar = () => (
     <View style={styles.tabBar}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.tab, activeFeed === 'following' && styles.activeTab]}
         onPress={() => handleFeedSwitch('following')}
         activeOpacity={0.7}
@@ -169,7 +191,7 @@ export default function HomeScreen() {
           Abonnements
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.tab, activeFeed === 'explorer' && styles.activeTab]}
         onPress={() => handleFeedSwitch('explorer')}
         activeOpacity={0.7}

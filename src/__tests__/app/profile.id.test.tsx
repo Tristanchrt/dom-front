@@ -59,5 +59,3 @@ describe('CreatorProfileScreen (profile/[id])', () => {
     expect(getByText('Profil non trouvé')).toBeTruthy();
   });
 });
-
-

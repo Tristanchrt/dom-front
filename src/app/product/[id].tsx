@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Text, View, TouchableOpacity, Image, ScrollView, Dimensions, Alert } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Dimensions,
+  Alert,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useProduct } from '@/hooks/useProduct';
 import { productDetails } from '@/data/fixtures/products';
 
 const { width: screenWidth } = Dimensions.get('window');
-
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -46,22 +55,22 @@ export default function ProductDetailScreen() {
       `${uiProduct.name} (${selectedColor}, ${selectedSize}) a été ajouté à votre panier avec succès !`,
       [
         { text: 'Continuer les achats', style: 'cancel' },
-        { text: 'Voir le panier', onPress: () => console.log('Navigate to cart') }
-      ]
+        { text: 'Voir le panier', onPress: () => console.log('Navigate to cart') },
+      ],
     );
   };
 
   const handlePurchase = () => {
     Alert.alert(
-      '💳 Confirmer l\'achat',
+      "💳 Confirmer l'achat",
       `Acheter: ${uiProduct.name}\nCouleur: ${selectedColor}\nTaille: ${selectedSize}\nPrix: ${uiProduct.price}`,
       [
         { text: 'Annuler', style: 'cancel' },
-        { 
-          text: 'Procéder au paiement', 
-          onPress: () => Alert.alert('✅ Succès', 'Commande passée avec succès !') 
-        }
-      ]
+        {
+          text: 'Procéder au paiement',
+          onPress: () => Alert.alert('✅ Succès', 'Commande passée avec succès !'),
+        },
+      ],
     );
   };
 
@@ -95,10 +104,10 @@ export default function ProductDetailScreen() {
         {/* Product Image with thumbnails */}
         <View style={styles.imageContainer}>
           <Image source={{ uri: uiProduct.image }} style={styles.productImage} />
-          
+
           {/* Image thumbnails */}
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.thumbnailContainer}
             contentContainerStyle={styles.thumbnailContent}
@@ -113,15 +122,15 @@ export default function ProductDetailScreen() {
               <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
             </TouchableOpacity>
           </ScrollView>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.bookmarkButton}
             onPress={() => setIsBookmarked(!isBookmarked)}
           >
-            <FontAwesome 
-              name={isBookmarked ? "bookmark" : "bookmark-o"} 
-              size={24} 
-              color={isBookmarked ? "#FF8C42" : "#8B7355"} 
+            <FontAwesome
+              name={isBookmarked ? 'bookmark' : 'bookmark-o'}
+              size={24}
+              color={isBookmarked ? '#FF8C42' : '#8B7355'}
             />
           </TouchableOpacity>
         </View>
@@ -146,17 +155,17 @@ export default function ProductDetailScreen() {
 
           <Text style={styles.productNameLarge}>{uiProduct.name.toUpperCase()}</Text>
           <Text style={styles.productDescriptionLarge}>{uiProduct.description}</Text>
-          
+
           <View style={styles.priceSection}>
             <Text style={styles.currentPriceLarge}>{uiProduct.price.replace(',', ',')}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.bookmarkIcon}
               onPress={() => setIsBookmarked(!isBookmarked)}
             >
-              <FontAwesome 
-                name={isBookmarked ? "bookmark" : "bookmark-o"} 
-                size={24} 
-                color={isBookmarked ? "#FF8C42" : "#8B7355"} 
+              <FontAwesome
+                name={isBookmarked ? 'bookmark' : 'bookmark-o'}
+                size={24}
+                color={isBookmarked ? '#FF8C42' : '#8B7355'}
               />
             </TouchableOpacity>
           </View>
@@ -170,14 +179,16 @@ export default function ProductDetailScreen() {
                   key={color}
                   style={[
                     styles.optionButton,
-                    selectedColor === color && styles.selectedOptionButton
+                    selectedColor === color && styles.selectedOptionButton,
                   ]}
                   onPress={() => setSelectedColor(color)}
                 >
-                  <Text style={[
-                    styles.optionButtonText,
-                    selectedColor === color && styles.selectedOptionButtonText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.optionButtonText,
+                      selectedColor === color && styles.selectedOptionButtonText,
+                    ]}
+                  >
                     {color}
                   </Text>
                 </TouchableOpacity>
@@ -194,14 +205,16 @@ export default function ProductDetailScreen() {
                   key={size}
                   style={[
                     styles.optionButton,
-                    selectedSize === size && styles.selectedOptionButton
+                    selectedSize === size && styles.selectedOptionButton,
                   ]}
                   onPress={() => setSelectedSize(size)}
                 >
-                  <Text style={[
-                    styles.optionButtonText,
-                    selectedSize === size && styles.selectedOptionButtonText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.optionButtonText,
+                      selectedSize === size && styles.selectedOptionButtonText,
+                    ]}
+                  >
                     {size}
                   </Text>
                 </TouchableOpacity>
@@ -227,7 +240,9 @@ export default function ProductDetailScreen() {
           <View style={styles.featuresSection}>
             <Text style={styles.featuresTitle}>Caractéristiques:</Text>
             {uiProduct.features.map((feature, index) => (
-              <Text key={index} style={styles.featureItem}>• {feature}</Text>
+              <Text key={index} style={styles.featureItem}>
+                • {feature}
+              </Text>
             ))}
           </View>
 

@@ -19,7 +19,6 @@ import { postDetails, sampleComments } from '@/data/fixtures/posts';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams();
   const [isLiked, setIsLiked] = useState(false);
@@ -29,9 +28,10 @@ export default function PostDetailScreen() {
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
-    !!p && Object.prototype.hasOwnProperty.call(p as any, 'image') && typeof (p as any).image === 'string';
+    !!p &&
+    Object.prototype.hasOwnProperty.call(p as any, 'image') &&
+    typeof (p as any).image === 'string';
   const postHasImage = hasImage(post);
-
 
   console.log('Post ID requested:', id);
   console.log('Post found:', !!post);
@@ -64,7 +64,9 @@ export default function PostDetailScreen() {
         setLikeCount(post.likes);
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   const formatNumber = (num: number): string => {
@@ -78,10 +80,10 @@ export default function PostDetailScreen() {
     const wasLiked = isLiked;
     if (wasLiked) {
       setIsLiked(false);
-      setLikeCount(prev => prev - 1);
+      setLikeCount((prev) => prev - 1);
     } else {
       setIsLiked(true);
-      setLikeCount(prev => prev + 1);
+      setLikeCount((prev) => prev + 1);
     }
     const postId = id ? String(id) : null;
     if (postId) {
@@ -95,11 +97,12 @@ export default function PostDetailScreen() {
         id: `c${comments.length + 1}`,
         user: {
           name: 'Vous',
-          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
+          avatar:
+            'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
         },
         content: comment.trim(),
         timestamp: 'maintenant',
-        likes: 0
+        likes: 0,
       };
       setComments([newComment, ...comments]);
       setComment('');
@@ -141,14 +144,14 @@ export default function PostDetailScreen() {
         </TouchableOpacity>
       </View>
 
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
         <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
           {/* User Header */}
           <View style={styles.userHeader}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.userInfo}
               onPress={() => router.push(`/profile/${post.user.id}`)}
             >
@@ -161,7 +164,9 @@ export default function PostDetailScreen() {
                   )}
                 </View>
                 <Text style={styles.userHandle}>{post.user.handle}</Text>
-                <Text style={styles.postTimestamp}>{post.timestamp} • {post.location}</Text>
+                <Text style={styles.postTimestamp}>
+                  {post.timestamp} • {post.location}
+                </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.followButton}>
@@ -177,12 +182,9 @@ export default function PostDetailScreen() {
           )}
 
           {/* Post Content */}
-          <View style={[
-            styles.postContent,
-            !postHasImage && styles.postContentNoImage
-          ]}>
+          <View style={[styles.postContent, !postHasImage && styles.postContentNoImage]}>
             <Text style={styles.postText}>{post.content}</Text>
-            
+
             {/* Tags */}
             <View style={styles.tagsContainer}>
               {post.tags.map((tag: string, index: number) => (
@@ -195,10 +197,10 @@ export default function PostDetailScreen() {
             {/* Action Bar */}
             <View style={styles.actionBar}>
               <TouchableOpacity style={styles.actionButton} onPress={handleLike}>
-                <FontAwesome 
-                  name={isLiked ? "heart" : "heart-o"} 
-                  size={24} 
-                  color={isLiked ? "#FF4444" : "#8B7355"} 
+                <FontAwesome
+                  name={isLiked ? 'heart' : 'heart-o'}
+                  size={24}
+                  color={isLiked ? '#FF4444' : '#8B7355'}
                 />
                 <Text style={[styles.actionText, isLiked && styles.likedText]}>
                   {formatNumber(likeCount)}
@@ -226,9 +228,11 @@ export default function PostDetailScreen() {
 
         {/* Comment Input */}
         <View style={styles.commentInputContainer}>
-          <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face' }} 
-            style={styles.currentUserAvatar} 
+          <Image
+            source={{
+              uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
+            }}
+            style={styles.currentUserAvatar}
           />
           <TextInput
             style={styles.commentInput}
@@ -238,12 +242,12 @@ export default function PostDetailScreen() {
             onChangeText={setComment}
             multiline
           />
-          <TouchableOpacity 
-            style={[styles.sendButton, comment.trim() && styles.sendButtonActive]} 
+          <TouchableOpacity
+            style={[styles.sendButton, comment.trim() && styles.sendButtonActive]}
             onPress={handleAddComment}
             disabled={!comment.trim()}
           >
-            <FontAwesome name="send" size={16} color={comment.trim() ? "#FF8C42" : "#8B7355"} />
+            <FontAwesome name="send" size={16} color={comment.trim() ? '#FF8C42' : '#8B7355'} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

@@ -8,7 +8,7 @@ const KEY = 'profiles';
 export class LocalProfilesRepository implements ProfilesRepository {
   async getById(id: string): Promise<CreatorProfile | null> {
     const list = LocalStore.getJSON<CreatorProfile[]>(KEY, []);
-    const fromStore = list.find(p => p.id === id) ?? null;
+    const fromStore = list.find((p) => p.id === id) ?? null;
     if (fromStore) return fromStore;
     const fallback = creatorProfiles[id as keyof typeof creatorProfiles];
     if (!fallback) return null;
@@ -23,7 +23,10 @@ export class LocalProfilesRepository implements ProfilesRepository {
       coverImage: fallback.coverImage,
       followersCount,
       followingCount,
-      postsCount: typeof fallback.postsCount === 'string' ? parseFixtureCount(fallback.postsCount) : fallback.postsCount,
+      postsCount:
+        typeof fallback.postsCount === 'string'
+          ? parseFixtureCount(fallback.postsCount)
+          : fallback.postsCount,
       verified: !!fallback.verified,
       category: fallback.category,
       bio: fallback.bio,
@@ -33,11 +36,19 @@ export class LocalProfilesRepository implements ProfilesRepository {
   }
   async follow(id: string): Promise<void> {
     const list = LocalStore.getJSON<CreatorProfile[]>(KEY, []);
-    LocalStore.setJSON(KEY, list.map(p => p.id === id ? { ...p, followersCount: p.followersCount + 1 } : p));
+    LocalStore.setJSON(
+      KEY,
+      list.map((p) => (p.id === id ? { ...p, followersCount: p.followersCount + 1 } : p)),
+    );
   }
   async unfollow(id: string): Promise<void> {
     const list = LocalStore.getJSON<CreatorProfile[]>(KEY, []);
-    LocalStore.setJSON(KEY, list.map(p => p.id === id ? { ...p, followersCount: Math.max(0, p.followersCount - 1) } : p));
+    LocalStore.setJSON(
+      KEY,
+      list.map((p) =>
+        p.id === id ? { ...p, followersCount: Math.max(0, p.followersCount - 1) } : p,
+      ),
+    );
   }
 }
 
@@ -51,5 +62,3 @@ function parseFixtureCount(val: string | number | undefined): number {
   }
   return parseInt(trimmed.replace(/[^0-9]/g, ''), 10) || 0;
 }
-
-

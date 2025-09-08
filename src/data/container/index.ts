@@ -6,10 +6,16 @@ import { MessagingUseCases } from '@/domain/usecases/messaging/MessagingUseCases
 import { LocalMessagingRepository } from '@/data/repositories/LocalMessagingRepository.impl';
 import { ProductsUseCases } from '@/domain/usecases/product/ProductsUseCases';
 import { LocalProductsRepository } from '@/data/repositories/LocalProductsRepository.impl';
+import { OrdersUseCases } from '@/domain/usecases/order/OrdersUseCases';
+import { LocalOrdersRepository } from '@/data/repositories/LocalOrdersRepository.impl';
+import { SellerProductsUseCases } from '@/domain/usecases/product/SellerProductsUseCases';
+import { LocalSellerProductsRepository } from '@/data/repositories/LocalSellerProductsRepository.impl';
 
 export const postsUseCases = new PostsUseCases(new LocalPostsRepository());
 export const profilesUseCases = new ProfilesUseCases(new LocalProfilesRepository());
 export const messagingUseCases = new MessagingUseCases(new LocalMessagingRepository());
 export const productsUseCases = new ProductsUseCases(new LocalProductsRepository());
-
-
+export const ordersUseCases = new OrdersUseCases(new LocalOrdersRepository());
+export const sellerProductsUseCases = new SellerProductsUseCases(
+  new LocalSellerProductsRepository(),
+);

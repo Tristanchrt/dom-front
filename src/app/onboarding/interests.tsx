@@ -12,16 +12,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { availableInterests, type InterestFixture } from '@/data/fixtures/onboarding';
 
- 
-
 export default function InterestsSelectionScreen() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const minInterests = 3;
 
   const toggleInterest = (interestId: string) => {
-    setSelectedInterests(prev => {
+    setSelectedInterests((prev) => {
       if (prev.includes(interestId)) {
-        return prev.filter(id => id !== interestId);
+        return prev.filter((id) => id !== interestId);
       } else {
         return [...prev, interestId];
       }
@@ -32,7 +30,7 @@ export default function InterestsSelectionScreen() {
     if (selectedInterests.length < minInterests) {
       Alert.alert(
         'Sélection incomplète',
-        `Veuillez sélectionner au moins ${minInterests} centres d'intérêt pour personnaliser vos recommandations.`
+        `Veuillez sélectionner au moins ${minInterests} centres d'intérêt pour personnaliser vos recommandations.`,
       );
       return;
     }
@@ -41,28 +39,25 @@ export default function InterestsSelectionScreen() {
 
   const renderInterest = (interest: InterestFixture) => {
     const isSelected = selectedInterests.includes(interest.id);
-    
+
     return (
       <TouchableOpacity
         key={interest.id}
         style={[
           styles.interestCard,
           isSelected && styles.selectedInterestCard,
-          { borderColor: interest.color }
+          { borderColor: interest.color },
         ]}
         onPress={() => toggleInterest(interest.id)}
       >
         <View style={[styles.interestIcon, { backgroundColor: `${interest.color}20` }]}>
-          <FontAwesome 
-            name={interest.icon as any} 
-            size={24} 
-            color={isSelected ? interest.color : '#8B7355'} 
+          <FontAwesome
+            name={interest.icon as any}
+            size={24}
+            color={isSelected ? interest.color : '#8B7355'}
           />
         </View>
-        <Text style={[
-          styles.interestName,
-          isSelected && { color: interest.color }
-        ]}>
+        <Text style={[styles.interestName, isSelected && { color: interest.color }]}>
           {interest.name}
         </Text>
         {isSelected && (
@@ -93,21 +88,22 @@ export default function InterestsSelectionScreen() {
           </View>
           <Text style={styles.heroTitle}>Quels sont vos centres d'intérêt ?</Text>
           <Text style={styles.heroSubtitle}>
-            Sélectionnez au moins {minInterests} centres d'intérêt pour personnaliser votre expérience et découvrir du contenu qui vous correspond.
+            Sélectionnez au moins {minInterests} centres d'intérêt pour personnaliser votre
+            expérience et découvrir du contenu qui vous correspond.
           </Text>
         </View>
 
         {/* Progress Indicator */}
         <View style={styles.progressSection}>
           <View style={styles.progressBar}>
-            <View 
+            <View
               style={[
-                styles.progressFill, 
-                { 
+                styles.progressFill,
+                {
                   width: `${Math.min((selectedInterests.length / minInterests) * 100, 100)}%`,
-                  backgroundColor: selectedInterests.length >= minInterests ? '#4CAF50' : '#FF8C42'
-                }
-              ]} 
+                  backgroundColor: selectedInterests.length >= minInterests ? '#4CAF50' : '#FF8C42',
+                },
+              ]}
             />
           </View>
           <Text style={styles.progressText}>
@@ -116,25 +112,25 @@ export default function InterestsSelectionScreen() {
         </View>
 
         {/* Interests Grid */}
-        <View style={styles.interestsGrid}>
-          {availableInterests.map(renderInterest)}
-        </View>
+        <View style={styles.interestsGrid}>{availableInterests.map(renderInterest)}</View>
       </ScrollView>
 
       {/* Bottom Actions */}
       <View style={styles.bottomActions}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
             styles.continueButton,
-            selectedInterests.length < minInterests && styles.disabledButton
-          ]} 
+            selectedInterests.length < minInterests && styles.disabledButton,
+          ]}
           onPress={handleContinue}
           disabled={selectedInterests.length < minInterests}
         >
-          <Text style={[
-            styles.continueButtonText,
-            selectedInterests.length < minInterests && styles.disabledButtonText
-          ]}>
+          <Text
+            style={[
+              styles.continueButtonText,
+              selectedInterests.length < minInterests && styles.disabledButtonText,
+            ]}
+          >
             Continuer ({selectedInterests.length})
           </Text>
         </TouchableOpacity>
@@ -292,4 +288,3 @@ const styles = StyleSheet.create({
     color: '#8B7355',
   },
 });
-

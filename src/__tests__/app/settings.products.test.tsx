@@ -12,12 +12,9 @@ describe('ProductsScreen (app/settings/products)', () => {
     const { getByText } = render(<ProductsScreen />);
 
     // Default active tab
-    expect(getByText(/Actifs/)).toBeTruthy();
+    expect(getByText(/Active \(\d+\)/)).toBeTruthy();
 
-    fireEvent.press(getByText(/Brouillons/));
-    expect(getByText(/Brouillons/)).toBeTruthy();
+    fireEvent.press(getByText(/Draft \(\d+\)/));
+    expect(getByText(/Draft \(\d+\)/)).toBeTruthy();
   });
 });
-
-
-

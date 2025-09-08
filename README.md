@@ -5,6 +5,7 @@ A modern mobile social network application that combines social media features w
 ## 🌟 Features
 
 ### Social Media
+
 - **Feed System**: Browse posts from followed users and discover new content through the Explorer feed
 - **Content Creation**: Create rich posts with text, images, videos, product listings, and polls
 - **Interactions**: Like, comment, and share posts with smooth animations
@@ -12,12 +13,14 @@ A modern mobile social network application that combines social media features w
 - **Real-time Messaging**: Chat system with message notifications
 
 ### E-Commerce Integration
+
 - **Product Posts**: Share products directly in social feed with pricing
 - **Shopping Cart**: Browse and purchase items
 - **Order Management**: Track and manage orders through settings
 - **Product Management**: Sellers can manage their products
 
 ### User Experience
+
 - **Authentication**: Email and social login (Google, Facebook)
 - **Onboarding**: Smooth user setup flow for new accounts
 - **Search**: Discover users and content
@@ -35,8 +38,8 @@ A modern mobile social network application that combines social media features w
 - **Package Manager**: PNPM (10.15.1+)
 - **Code Formatting**: Prettier
 
-
 ### Key Components
+
 - **Post.tsx**: Interactive post component with like/comment/share functionality
 - **Themed Components**: Dark/light theme support
 - **Color System**: Consistent warm color palette with orange (#FF8C42) accent
@@ -44,6 +47,7 @@ A modern mobile social network application that combines social media features w
 ## 🛠 Installation & Setup
 
 ### Prerequisites
+
 - Node.js (18+ recommended)
 - PNPM package manager
 - Expo CLI
@@ -52,12 +56,14 @@ A modern mobile social network application that combines social media features w
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd dom-front
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
@@ -70,12 +76,13 @@ A modern mobile social network application that combines social media features w
 ### Platform-specific Development
 
 - **iOS**: `pnpm ios`
-- **Android**: `pnpm android`  
+- **Android**: `pnpm android`
 - **Web**: `pnpm web`
 
 ## 🧪 Testing
 
 Run the test suite:
+
 ```bash
 # Watch mode (development)
 pnpm test
@@ -87,6 +94,7 @@ pnpm test:ci
 ## 📝 Code Quality
 
 **Formatting**:
+
 ```bash
 # Format all files
 pnpm format
@@ -100,6 +108,7 @@ The project uses Prettier for consistent code formatting across the codebase.
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: #FF8C42 (Orange accent)
 - **Background Light**: #F5F0E8 (Warm beige)
 - **Background Dark**: #2C1810 (Dark brown)
@@ -107,12 +116,14 @@ The project uses Prettier for consistent code formatting across the codebase.
 - **Text Secondary**: #8B7355 (Muted brown)
 
 ### Typography
+
 - **Primary Font**: System default with SpaceMono for special cases
 - **Sizing**: Responsive text scaling for mobile devices
 
 ## 🌍 Internationalization
 
 The app currently features a **French interface** with:
+
 - French UI labels and placeholders
 - Localized content creation flows
 - French social interaction terms
@@ -120,6 +131,7 @@ The app currently features a **French interface** with:
 ## 📦 Key Dependencies
 
 ### Production
+
 - **expo**: ~53.0.22 (Core framework)
 - **react**: 19.0.0 (UI library)
 - **react-native**: 0.79.6 (Mobile platform)
@@ -127,6 +139,7 @@ The app currently features a **French interface** with:
 - **react-native-reanimated**: ~3.17.4 (Animations)
 
 ### Development
+
 - **typescript**: ~5.8.3 (Type checking)
 - **jest**: ^29.2.1 (Testing framework)
 - **prettier**: ^3.6.2 (Code formatting)
@@ -135,6 +148,7 @@ The app currently features a **French interface** with:
 ## 🔧 Configuration
 
 ### App Configuration (`app.json`)
+
 - **Name**: Dom
 - **Slug**: dom-social-network
 - **Scheme**: domfront
@@ -142,6 +156,7 @@ The app currently features a **French interface** with:
 - **Platform Support**: iOS, Android, Web
 
 ### TypeScript Configuration
+
 - **Strict Mode**: Enabled
 - **Path Mapping**: `@/*` for root imports
 - **Expo Types**: Included
@@ -163,6 +178,7 @@ The app currently features a **French interface** with:
 ## 🎯 Future Enhancements
 
 Based on the current codebase structure, planned features may include:
+
 - Enhanced e-commerce checkout flow
 - Advanced messaging features
 - Extended social features (stories, groups)

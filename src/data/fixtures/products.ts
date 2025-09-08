@@ -11,7 +11,8 @@ export const productDetails = {
     category: 'Poterie',
     rating: 4.8,
     sales: 234,
-    description: 'T-shirt artisanal en coton bio avec design unique fait main. Parfait pour un style décontracté et authentique.',
+    description:
+      'T-shirt artisanal en coton bio avec design unique fait main. Parfait pour un style décontracté et authentique.',
     colors: ['Beige', 'Blanc', 'Noir'],
     sizes: ['S', 'M', 'L', 'XL'],
     features: ['Coton bio', 'Fait main', 'Design unique', 'Lavable en machine'],
@@ -43,7 +44,8 @@ export const productDetails = {
     category: 'Livre Image',
     rating: 4.7,
     sales: 89,
-    description: 'Recettes traditionnelles françaises avec photos étape par étape et conseils de chef.',
+    description:
+      'Recettes traditionnelles françaises avec photos étape par étape et conseils de chef.',
     colors: ['Standard'],
     sizes: ['Format A4'],
     features: ['200 pages', 'Photos couleur', 'Reliure solide', 'Recettes testées'],
@@ -62,7 +64,12 @@ export const productDetails = {
     description: "Collection de cartes postales vintage d'Islande avec paysages authentiques.",
     colors: ['Vintage'],
     sizes: ['Standard'],
-    features: ['Papier de qualité', 'Impression haute définition', 'Collection limitée', 'Authentique'],
+    features: [
+      'Papier de qualité',
+      'Impression haute définition',
+      'Collection limitée',
+      'Authentique',
+    ],
     welcomeOffer: false,
     tvaCoprise: true,
   },
@@ -131,5 +138,3 @@ export const productDetails = {
     tvaCoprise: true,
   },
 };
-
-

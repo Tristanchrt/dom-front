@@ -7,5 +7,3 @@ export interface Comment {
   likesCount: number;
   createdAt: Date;
 }
-
-

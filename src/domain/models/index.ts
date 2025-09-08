@@ -5,5 +5,3 @@ export * from './Comment';
 export * from './Product';
 export * from './Order';
 export * from './Profile';
-
-

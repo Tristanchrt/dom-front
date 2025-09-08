@@ -22,7 +22,8 @@ const sampleCreators = [
     id: 'c1',
     name: 'Marie Dubois',
     handle: '@mariedubois',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
     followers: '12.5k',
     verified: true,
     category: 'Lifestyle',
@@ -31,7 +32,8 @@ const sampleCreators = [
     id: 'c2',
     name: 'Chef Antoine',
     handle: '@chefantoine',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
     followers: '8.9k',
     verified: false,
     category: 'Cuisine',
@@ -40,7 +42,8 @@ const sampleCreators = [
     id: 'c3',
     name: 'Travel Explorer',
     handle: '@travelexplorer',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     followers: '25.1k',
     verified: true,
     category: 'Voyage',
@@ -49,7 +52,8 @@ const sampleCreators = [
     id: 'c4',
     name: 'Tech Guru',
     handle: '@techguru',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     followers: '15.7k',
     verified: true,
     category: 'Technologie',
@@ -61,9 +65,11 @@ const samplePosts = [
     id: 'p1',
     user: {
       name: 'Art Studio',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Nouvelle œuvre terminée ! Peinture à l\'huile inspirée des couchers de soleil méditerranéens 🎨',
+    content:
+      "Nouvelle œuvre terminée ! Peinture à l'huile inspirée des couchers de soleil méditerranéens 🎨",
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
     likes: 1800,
     comments: 67,
@@ -72,7 +78,8 @@ const samplePosts = [
     id: 'p2',
     user: {
       name: 'Food Lover',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
     },
     content: 'Recette du jour : Tarte aux pommes traditionnelle française 🥧',
     image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=300&h=200&fit=crop',
@@ -83,9 +90,10 @@ const samplePosts = [
     id: 'p3',
     user: {
       name: 'Fitness Coach',
-      avatar: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
     },
-    content: 'Séance du matin terminée ! 45 minutes d\'entraînement intense 💪',
+    content: "Séance du matin terminée ! 45 minutes d'entraînement intense 💪",
     image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop',
     likes: 920,
     comments: 43,
@@ -148,7 +156,7 @@ export default function SearchScreen() {
 
   const filterData = (data: any[], query: string) => {
     if (!query.trim()) return data;
-    return data.filter(item => {
+    return data.filter((item) => {
       const searchText = query.toLowerCase();
       return (
         item.name?.toLowerCase().includes(searchText) ||
@@ -161,17 +169,12 @@ export default function SearchScreen() {
   };
 
   const renderCreator = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.creatorCard}
-      onPress={() => router.push(`/profile/${item.id}`)}
-    >
+    <TouchableOpacity style={styles.creatorCard} onPress={() => router.push(`/profile/${item.id}`)}>
       <Image source={{ uri: item.avatar }} style={styles.creatorAvatar} />
       <View style={styles.creatorInfo}>
         <View style={styles.creatorHeader}>
           <Text style={styles.creatorName}>{item.name}</Text>
-          {item.verified && (
-            <FontAwesome name="check-circle" size={16} color="#FF8C42" />
-          )}
+          {item.verified && <FontAwesome name="check-circle" size={16} color="#FF8C42" />}
         </View>
         <Text style={styles.creatorHandle}>{item.handle}</Text>
         <Text style={styles.creatorCategory}>{item.category}</Text>
@@ -184,10 +187,7 @@ export default function SearchScreen() {
   );
 
   const renderPost = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.postCard}
-      onPress={() => router.push(`/post/${item.id}`)}
-    >
+    <TouchableOpacity style={styles.postCard} onPress={() => router.push(`/post/${item.id}`)}>
       <Image source={{ uri: item.image }} style={styles.postImage} />
       <View style={styles.postContent}>
         <View style={styles.postHeader}>
@@ -212,10 +212,7 @@ export default function SearchScreen() {
   );
 
   const renderShopItem = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.shopCard}
-      onPress={() => router.push(`/product/${item.id}`)}
-    >
+    <TouchableOpacity style={styles.shopCard} onPress={() => router.push(`/product/${item.id}`)}>
       <Image source={{ uri: item.image }} style={styles.shopImage} />
       <View style={styles.shopContent}>
         <Text style={styles.shopName} numberOfLines={2}>
@@ -260,10 +257,9 @@ export default function SearchScreen() {
           <FontAwesome name="search" size={48} color="#E0E0E0" />
           <Text style={styles.emptyStateTitle}>Aucun résultat</Text>
           <Text style={styles.emptyStateText}>
-            {searchQuery 
-              ? `Aucun résultat pour "${searchQuery}"` 
-              : `Recherchez des ${activeTab === 'creators' ? 'créateurs' : activeTab === 'posts' ? 'publications' : 'produits'}`
-            }
+            {searchQuery
+              ? `Aucun résultat pour "${searchQuery}"`
+              : `Recherchez des ${activeTab === 'creators' ? 'créateurs' : activeTab === 'posts' ? 'publications' : 'produits'}`}
           </Text>
         </View>
       );
@@ -308,12 +304,20 @@ export default function SearchScreen() {
 
       {/* Search Tabs */}
       <View style={styles.tabsContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabs}
+        >
           <TouchableOpacity
             style={[styles.tab, activeTab === 'creators' && styles.activeTab]}
             onPress={() => setActiveTab('creators')}
           >
-            <FontAwesome name="users" size={16} color={activeTab === 'creators' ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome
+              name="users"
+              size={16}
+              color={activeTab === 'creators' ? '#FF8C42' : '#8B7355'}
+            />
             <Text style={[styles.tabText, activeTab === 'creators' && styles.activeTabText]}>
               Créateurs
             </Text>
@@ -323,7 +327,11 @@ export default function SearchScreen() {
             style={[styles.tab, activeTab === 'posts' && styles.activeTab]}
             onPress={() => setActiveTab('posts')}
           >
-            <FontAwesome name="file-text" size={16} color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome
+              name="file-text"
+              size={16}
+              color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'}
+            />
             <Text style={[styles.tabText, activeTab === 'posts' && styles.activeTabText]}>
               Publications
             </Text>
@@ -333,7 +341,11 @@ export default function SearchScreen() {
             style={[styles.tab, activeTab === 'shop' && styles.activeTab]}
             onPress={() => setActiveTab('shop')}
           >
-            <FontAwesome name="shopping-bag" size={16} color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome
+              name="shopping-bag"
+              size={16}
+              color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
+            />
             <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
               Boutique
             </Text>
@@ -342,9 +354,7 @@ export default function SearchScreen() {
       </View>
 
       {/* Search Results */}
-      <View style={styles.resultsSection}>
-        {renderSearchResults()}
-      </View>
+      <View style={styles.resultsSection}>{renderSearchResults()}</View>
     </SafeAreaView>
   );
 }

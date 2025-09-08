@@ -34,5 +34,3 @@ describe('PostDetailScreen (app/post/[id])', () => {
     expect(likeCount).toHaveStyle({ color: '#FF4444' });
   });
 });
-
-

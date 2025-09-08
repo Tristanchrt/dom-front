@@ -25,5 +25,3 @@ export function useProduct(productId?: string) {
 
   return { product, isLoading };
 }
-
-

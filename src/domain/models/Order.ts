@@ -1,20 +1,18 @@
 export type OrderStatus = 'Paid' | 'Pending' | 'Cancelled';
 
-export interface OrderItem {
-  productId: string;
+export interface OrderItemSnapshot {
+  productId?: string;
   productName: string;
+  imageUrl?: string;
+  unitPriceCents?: number; // optional if only label provided
+  currency?: string; // e.g., 'EUR'
   quantity: number;
-  priceCents: number;
-  currency: string;
 }
 
 export interface Order {
   id: string;
-  items: OrderItem[];
-  totalCents: number;
-  currency: string;
+  customerName: string;
   status: OrderStatus;
-  createdAt: Date;
+  placedAt: Date;
+  item: OrderItemSnapshot;
 }
-
-

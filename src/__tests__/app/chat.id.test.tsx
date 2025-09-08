@@ -30,5 +30,3 @@ describe('ChatScreen (app/chat/[id])', () => {
     expect(getByText('MICHEL PAGE')).toBeTruthy();
   });
 });
-
-

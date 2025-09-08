@@ -28,5 +28,3 @@ describe('ProfileSetupScreen (app/onboarding/profile-setup)', () => {
     expect(router.push).toHaveBeenCalledWith('/onboarding/interests');
   });
 });
-
-

@@ -7,7 +7,6 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 
-
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -61,15 +60,17 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color }) => (
-            <View style={{
-              backgroundColor: '#FF8C42',
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: -10,
-            }}>
+            <View
+              style={{
+                backgroundColor: '#FF8C42',
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: -10,
+              }}
+            >
               <FontAwesome name="plus" size={24} color="#FFFFFF" />
             </View>
           ),

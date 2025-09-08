@@ -68,74 +68,65 @@ export default function Post({ post }: PostProps) {
     // Toggle like state and update count
     if (isLiked) {
       setIsLiked(false);
-      setLikeCount(prev => prev - 1);
+      setLikeCount((prev) => prev - 1);
     } else {
       setIsLiked(true);
-      setLikeCount(prev => prev + 1);
+      setLikeCount((prev) => prev + 1);
     }
   };
 
   const handleComment = () => {
     // For now, show a placeholder alert
-    Alert.alert(
-      'Commentaires',
-      'Fonctionnalité des commentaires bientôt disponible !',
-      [
-        {
-          text: 'OK',
-          style: 'default',
+    Alert.alert('Commentaires', 'Fonctionnalité des commentaires bientôt disponible !', [
+      {
+        text: 'OK',
+        style: 'default',
+      },
+      {
+        text: 'Simuler un commentaire',
+        onPress: () => {
+          setCommentCount((prev) => prev + 1);
+          Alert.alert('Commentaire ajouté !', 'Votre commentaire a été publié.');
         },
-        {
-          text: 'Simuler un commentaire',
-          onPress: () => {
-            setCommentCount(prev => prev + 1);
-            Alert.alert('Commentaire ajouté !', 'Votre commentaire a été publié.');
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleShare = () => {
-    Alert.alert(
-      'Partager',
-      `Partager la publication de ${post.user.name} ?`,
-      [
-        {
-          text: 'Annuler',
-          style: 'cancel',
+    Alert.alert('Partager', `Partager la publication de ${post.user.name} ?`, [
+      {
+        text: 'Annuler',
+        style: 'cancel',
+      },
+      {
+        text: 'Copier le lien',
+        onPress: () => {
+          Alert.alert(
+            'Lien copié !',
+            'Le lien de la publication a été copié dans le presse-papier.',
+          );
         },
-        {
-          text: 'Copier le lien',
-          onPress: () => {
-            Alert.alert('Lien copié !', 'Le lien de la publication a été copié dans le presse-papier.');
-          },
+      },
+      {
+        text: 'Partager sur...',
+        onPress: () => {
+          Alert.alert('Partage', 'Fonctionnalité de partage bientôt disponible !');
         },
-        {
-          text: 'Partager sur...',
-          onPress: () => {
-            Alert.alert('Partage', 'Fonctionnalité de partage bientôt disponible !');
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleBuy = () => {
-    Alert.alert(
-      'Acheter',
-      'Redirection vers la page de commande...',
-      [
-        { text: 'OK', style: 'default' },
-      ]
-    );
+    Alert.alert('Acheter', 'Redirection vers la page de commande...', [
+      { text: 'OK', style: 'default' },
+    ]);
   };
 
   const handleDoubleTap = () => {
     const now = Date.now();
     const DOUBLE_PRESS_DELAY = 300;
-    
-    if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+
+    if (lastTap && now - lastTap < DOUBLE_PRESS_DELAY) {
       // Double tap detected - like the post if not already liked
       if (!isLiked) {
         handleLike();
@@ -171,13 +162,20 @@ export default function Post({ post }: PostProps) {
     <View style={styles.container}>
       {/* User Header */}
       <View style={styles.header}>
-        <TouchableOpacity testID="user-avatar" style={styles.userInfo} onPress={handleUserClick} activeOpacity={0.7}>
+        <TouchableOpacity
+          testID="user-avatar"
+          style={styles.userInfo}
+          onPress={handleUserClick}
+          activeOpacity={0.7}
+        >
           <Image source={{ uri: post.user.avatar }} style={styles.avatar} />
           <View style={styles.userText}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.userName}>{post.user.name}</Text>
               {post.user.verified && (
-                <Text testID="verified-badge" style={{ marginLeft: 6 }}>✓</Text>
+                <Text testID="verified-badge" style={{ marginLeft: 6 }}>
+                  ✓
+                </Text>
               )}
             </View>
             <Text style={styles.handle}>{post.user.handle}</Text>
@@ -196,10 +194,10 @@ export default function Post({ post }: PostProps) {
 
       {/* Post Image */}
       {post.image && (
-        <TouchableOpacity 
+        <TouchableOpacity
           testID="post-container"
-          style={styles.imageContainer} 
-          activeOpacity={0.9} 
+          style={styles.imageContainer}
+          activeOpacity={0.9}
           onPress={() => {
             handleDoubleTap();
             handlePostClick();
@@ -222,17 +220,17 @@ export default function Post({ post }: PostProps) {
 
       {/* Action Bar */}
       <View style={styles.actionBar}>
-        <TouchableOpacity 
+        <TouchableOpacity
           testID="like-button"
-          style={styles.actionButton} 
+          style={styles.actionButton}
           onPress={handleLike}
           activeOpacity={0.7}
         >
           <Animated.View style={{ transform: [{ scale: likeAnimation }] }}>
-            <FontAwesome 
-              name={isLiked ? "heart" : "heart-o"} 
-              size={18} 
-              color={isLiked ? "#FF4444" : "#FF8C42"} 
+            <FontAwesome
+              name={isLiked ? 'heart' : 'heart-o'}
+              size={18}
+              color={isLiked ? '#FF4444' : '#FF8C42'}
             />
           </Animated.View>
           <Text style={[styles.actionText, isLiked && styles.likedText]}>
@@ -240,28 +238,24 @@ export default function Post({ post }: PostProps) {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           testID="comment-button"
-          style={styles.actionButton} 
+          style={styles.actionButton}
           onPress={handleComment}
           activeOpacity={0.7}
         >
           <FontAwesome name="comment-o" size={18} color="#8B7355" />
-          {commentCount > 0 && (
-            <Text style={styles.actionText}>{formatNumber(commentCount)}</Text>
-          )}
+          {commentCount > 0 && <Text style={styles.actionText}>{formatNumber(commentCount)}</Text>}
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           testID="share-button"
-          style={styles.actionButton} 
+          style={styles.actionButton}
           onPress={handleShare}
           activeOpacity={0.7}
         >
           <FontAwesome name="share" size={18} color="#8B7355" />
-          {post.shares > 0 && (
-            <Text style={styles.actionText}>{formatNumber(post.shares)}</Text>
-          )}
+          {post.shares > 0 && <Text style={styles.actionText}>{formatNumber(post.shares)}</Text>}
         </TouchableOpacity>
       </View>
     </View>

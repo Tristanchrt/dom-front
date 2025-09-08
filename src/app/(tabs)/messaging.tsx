@@ -18,7 +18,8 @@ const conversations = [
     user: {
       id: 'u1',
       name: 'Michel blanc tussaf.com',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
       isOnline: true,
     },
     lastMessage: 'Salut ! Comment ça va ?',
@@ -31,7 +32,8 @@ const conversations = [
     user: {
       id: 'u2',
       name: 'michel.dukaer.non.ca.va',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       isOnline: false,
     },
     lastMessage: 'Merci pour les infos !',
@@ -44,7 +46,8 @@ const conversations = [
     user: {
       id: 'u3',
       name: 'Réseaux sociaux',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
       isOnline: true,
     },
     lastMessage: 'Parfait, on se parle demain',
@@ -57,12 +60,12 @@ const conversations = [
 export default function MessagingScreen() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredConversations = conversations.filter((conv) =>
+    conv.user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const renderConversation = ({ item }: { item: any }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.conversationItem}
       onPress={() => router.push(`/chat/${item.user.id}`)}
     >
@@ -70,7 +73,7 @@ export default function MessagingScreen() {
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
         {item.user.isOnline && <View style={styles.onlineIndicator} />}
       </View>
-      
+
       <View style={styles.conversationContent}>
         <View style={styles.conversationHeader}>
           <Text style={styles.userName} numberOfLines={1}>
@@ -78,14 +81,14 @@ export default function MessagingScreen() {
           </Text>
           <Text style={styles.timestamp}>{item.timestamp}</Text>
         </View>
-        <Text style={[
-          styles.lastMessage,
-          item.hasNewMessage && styles.unreadMessage
-        ]} numberOfLines={1}>
+        <Text
+          style={[styles.lastMessage, item.hasNewMessage && styles.unreadMessage]}
+          numberOfLines={1}
+        >
           {item.lastMessage}
         </Text>
       </View>
-      
+
       <View style={styles.conversationMeta}>
         <TouchableOpacity style={styles.actionButton}>
           <Text style={styles.actionButtonText}>Voir</Text>
@@ -275,5 +278,3 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
 });
-
-

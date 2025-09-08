@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,46 +10,63 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { ordersUseCases } from '@/data/container';
+import { settingsOrders } from '@/data/fixtures/settings';
 
-const myOrders = [
-  {
-    id: 'o1',
-    productName: 'T-shirt cousu main',
-    customerName: 'Marie Dubois',
-    price: '15 €',
-    status: 'Payé',
-    date: '2024-01-15',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop',
-    quantity: 1,
-  },
-  {
-    id: 'o2',
-    productName: 'T-shirt cousu main',
-    customerName: 'Pierre Martin',
-    price: '15 €',
-    status: 'Payé',
-    date: '2024-01-14',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop',
-    quantity: 1,
-  },
-];
+type UIOrder = (typeof settingsOrders)[number];
+const fallbackOrders: UIOrder[] = settingsOrders;
 
 export default function OrdersScreen() {
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'paid' | 'pending'>('all');
+  const [orders, setOrders] = useState<UIOrder[]>(fallbackOrders);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const list = await ordersUseCases.list();
+        if (!alive) return;
+        if (!list || list.length === 0) {
+          setOrders(fallbackOrders);
+        } else {
+          const mapped: UIOrder[] = list.map((o) => ({
+            id: o.id,
+            productName: o.item.productName,
+            customerName: o.customerName,
+            price: '—',
+            status: o.status,
+            date: o.placedAt.toISOString(),
+            image: o.item.imageUrl ?? '',
+            quantity: o.item.quantity,
+          }));
+          setOrders(mapped);
+        }
+      } catch (_e) {
+        if (alive) setOrders(fallbackOrders);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Payé': return '#4CAF50';
-      case 'En attente': return '#FF8C42';
-      case 'Annulé': return '#FF4444';
-      default: return '#8B7355';
+      case 'Paid':
+        return '#4CAF50';
+      case 'Pending':
+        return '#FF8C42';
+      case 'Cancelled':
+        return '#FF4444';
+      default:
+        return '#8B7355';
     }
   };
 
   const renderOrder = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.orderCard}>
       <Image source={{ uri: item.image }} style={styles.orderImage} />
-      
+
       <View style={styles.orderInfo}>
         <Text style={styles.orderProduct}>{item.productName}</Text>
         <Text style={styles.orderCustomer}>Client: {item.customerName}</Text>
@@ -59,7 +76,7 @@ export default function OrdersScreen() {
           <Text style={styles.orderPrice}>{item.price}</Text>
         </View>
       </View>
-      
+
       <View style={styles.orderActions}>
         <View style={[styles.statusBadge, { backgroundColor: `${getStatusColor(item.status)}20` }]}>
           <View style={[styles.statusDot, { backgroundColor: getStatusColor(item.status) }]} />
@@ -74,14 +91,17 @@ export default function OrdersScreen() {
     </TouchableOpacity>
   );
 
-  const filteredOrders = myOrders.filter(order => {
+  const filteredOrders = orders.filter((order) => {
     if (selectedFilter === 'all') return true;
-    if (selectedFilter === 'paid') return order.status === 'Payé';
-    if (selectedFilter === 'pending') return order.status === 'En attente';
+    if (selectedFilter === 'paid') return order.status === 'Paid';
+    if (selectedFilter === 'pending') return order.status === 'Pending';
     return true;
   });
 
-  const totalRevenue = myOrders.reduce((sum, order) => sum + parseInt(order.price.replace(' €', '')), 0);
+  const totalRevenue = orders.reduce(
+    (sum, order) => sum + (parseInt(order.price.replace(' €', '')) || 0),
+    0,
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -102,7 +122,7 @@ export default function OrdersScreen() {
             <Text style={styles.revenueLabel}>Chiffre d'affaires total</Text>
           </View>
           <View style={styles.revenueStats}>
-            <Text style={styles.revenueAmount}>{myOrders.length}</Text>
+            <Text style={styles.revenueAmount}>{orders.length}</Text>
             <Text style={styles.revenueLabel}>Commandes totales</Text>
           </View>
         </View>
@@ -110,28 +130,30 @@ export default function OrdersScreen() {
 
       {/* Filter Tabs */}
       <View style={styles.filterContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.filterTab, selectedFilter === 'all' && styles.activeFilter]}
           onPress={() => setSelectedFilter('all')}
         >
           <Text style={[styles.filterText, selectedFilter === 'all' && styles.activeFilterText]}>
-            Toutes ({myOrders.length})
+            Toutes ({orders.length})
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.filterTab, selectedFilter === 'paid' && styles.activeFilter]}
           onPress={() => setSelectedFilter('paid')}
         >
           <Text style={[styles.filterText, selectedFilter === 'paid' && styles.activeFilterText]}>
-            Payées ({myOrders.filter(o => o.status === 'Payé').length})
+            Paid ({orders.filter((o) => o.status === 'Paid').length})
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.filterTab, selectedFilter === 'pending' && styles.activeFilter]}
           onPress={() => setSelectedFilter('pending')}
         >
-          <Text style={[styles.filterText, selectedFilter === 'pending' && styles.activeFilterText]}>
-            En attente ({myOrders.filter(o => o.status === 'En attente').length})
+          <Text
+            style={[styles.filterText, selectedFilter === 'pending' && styles.activeFilterText]}
+          >
+            Pending ({orders.filter((o) => o.status === 'Pending').length})
           </Text>
         </TouchableOpacity>
       </View>
@@ -329,5 +351,3 @@ const styles = StyleSheet.create({
     color: '#B0B0B0',
   },
 });
-
-

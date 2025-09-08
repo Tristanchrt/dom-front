@@ -46,5 +46,3 @@ describe('CreatorProfileScreen (app/profile/[id])', () => {
     expect(getByText('Guide Voyage Islande')).toBeTruthy();
   });
 });
-
-

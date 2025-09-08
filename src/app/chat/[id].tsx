@@ -22,7 +22,8 @@ const users = {
     id: 'u1',
     name: 'MICHEL PAGE',
     username: 'michel.page',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     isOnline: true,
     specialty: 'Compétence de technique',
   },
@@ -30,7 +31,8 @@ const users = {
     id: 'u2',
     name: 'Marie Dubois',
     username: 'marie.dubois',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
     isOnline: false,
     specialty: 'Designer graphique',
   },
@@ -38,7 +40,8 @@ const users = {
     id: 'u3',
     name: 'Pierre Martin',
     username: 'pierre.martin',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
     isOnline: true,
     specialty: 'Développeur web',
   },
@@ -63,7 +66,7 @@ const sampleMessages = {
     },
     {
       id: 'm3',
-      text: 'Super ! J\'aimerais discuter de ton projet',
+      text: "Super ! J'aimerais discuter de ton projet",
       timestamp: '10:35',
       senderId: 'u1',
       isMe: false,
@@ -128,16 +131,23 @@ export default function ChatScreen() {
       const repoMessages = await messagingUseCases.getMessages(String(id));
       if (!mounted) return;
       if (repoMessages && repoMessages.length > 0) {
-        setMessages(repoMessages.map(m => ({
-          id: m.id,
-          text: m.content,
-          timestamp: new Date(m.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-          senderId: m.senderId,
-          isMe: m.senderId === 'me',
-        })));
+        setMessages(
+          repoMessages.map((m) => ({
+            id: m.id,
+            text: m.content,
+            timestamp: new Date(m.timestamp).toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+            senderId: m.senderId,
+            isMe: m.senderId === 'me',
+          })),
+        );
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   if (!user) {
@@ -160,15 +170,15 @@ export default function ChatScreen() {
       const newMessage = {
         id: `m${Date.now()}`,
         text: message.trim(),
-        timestamp: new Date().toLocaleTimeString('fr-FR', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        timestamp: new Date().toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
         }),
         senderId: 'me',
         isMe: true,
       };
 
-      setMessages(prev => [...prev, newMessage]);
+      setMessages((prev) => [...prev, newMessage]);
       setMessage('');
       const receiverId = id ? String(id) : null;
       if (receiverId) {
@@ -178,39 +188,38 @@ export default function ChatScreen() {
   };
 
   const handlePhotoPress = () => {
-    Alert.alert(
-      '📷 Envoyer une photo',
-      'Choisissez une option pour envoyer une photo',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        { text: 'Caméra', onPress: () => console.log('Open camera') },
-        { text: 'Galerie', onPress: () => console.log('Open gallery') }
-      ]
-    );
+    Alert.alert('📷 Envoyer une photo', 'Choisissez une option pour envoyer une photo', [
+      { text: 'Annuler', style: 'cancel' },
+      { text: 'Caméra', onPress: () => console.log('Open camera') },
+      { text: 'Galerie', onPress: () => console.log('Open gallery') },
+    ]);
   };
 
   const renderMessage = ({ item }: { item: any }) => (
-    <View style={[
-      styles.messageContainer,
-      item.isMe ? styles.myMessageContainer : styles.theirMessageContainer
-    ]}>
-      {!item.isMe && (
-        <Image source={{ uri: user.avatar }} style={styles.messageAvatar} />
-      )}
-      <View style={[
-        styles.messageBubble,
-        item.isMe ? styles.myMessageBubble : styles.theirMessageBubble
-      ]}>
-        <Text style={[
-          styles.messageText,
-          item.isMe ? styles.myMessageText : styles.theirMessageText
-        ]}>
+    <View
+      style={[
+        styles.messageContainer,
+        item.isMe ? styles.myMessageContainer : styles.theirMessageContainer,
+      ]}
+    >
+      {!item.isMe && <Image source={{ uri: user.avatar }} style={styles.messageAvatar} />}
+      <View
+        style={[
+          styles.messageBubble,
+          item.isMe ? styles.myMessageBubble : styles.theirMessageBubble,
+        ]}
+      >
+        <Text
+          style={[styles.messageText, item.isMe ? styles.myMessageText : styles.theirMessageText]}
+        >
           {item.text}
         </Text>
-        <Text style={[
-          styles.messageTimestamp,
-          item.isMe ? styles.myMessageTimestamp : styles.theirMessageTimestamp
-        ]}>
+        <Text
+          style={[
+            styles.messageTimestamp,
+            item.isMe ? styles.myMessageTimestamp : styles.theirMessageTimestamp,
+          ]}
+        >
           {item.timestamp}
         </Text>
       </View>
@@ -224,7 +233,7 @@ export default function ChatScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
-        
+
         <View style={styles.headerUserInfo}>
           <Image source={{ uri: user.avatar }} style={styles.headerAvatar} />
           <View style={styles.headerTextInfo}>
@@ -233,7 +242,7 @@ export default function ChatScreen() {
           </View>
           {user.isOnline && <View style={styles.headerOnlineIndicator} />}
         </View>
-        
+
         <TouchableOpacity style={styles.moreButton}>
           <FontAwesome name="ellipsis-v" size={20} color="#2C1810" />
         </TouchableOpacity>
@@ -259,7 +268,7 @@ export default function ChatScreen() {
           <TouchableOpacity style={styles.photoButton} onPress={handlePhotoPress}>
             <FontAwesome name="camera" size={20} color="#8B7355" />
           </TouchableOpacity>
-          
+
           <TextInput
             style={styles.messageInput}
             placeholder="Tapez votre message..."
@@ -269,7 +278,7 @@ export default function ChatScreen() {
             multiline
             maxLength={500}
           />
-          
+
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
             <FontAwesome name="send" size={18} color="#FFFFFF" />
           </TouchableOpacity>

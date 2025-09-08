@@ -23,11 +23,16 @@ export function useProfile(profileId?: string, initialFollowersCount: number | n
     };
   }, [profileId]);
 
-  const onFollowChange = useCallback((wasFollowing: boolean) => {
-    setFollowersCount((prev) => (prev === null ? null : Math.max(0, prev + (wasFollowing ? -1 : 1))));
-    if (!profileId) return;
-    profilesUseCases.toggleFollow(profileId, wasFollowing).catch(() => {});
-  }, [profileId]);
+  const onFollowChange = useCallback(
+    (wasFollowing: boolean) => {
+      setFollowersCount((prev) =>
+        prev === null ? null : Math.max(0, prev + (wasFollowing ? -1 : 1)),
+      );
+      if (!profileId) return;
+      profilesUseCases.toggleFollow(profileId, wasFollowing).catch(() => {});
+    },
+    [profileId],
+  );
 
   return {
     followersCount,
@@ -35,5 +40,3 @@ export function useProfile(profileId?: string, initialFollowersCount: number | n
     onFollowChange,
   };
 }
-
-

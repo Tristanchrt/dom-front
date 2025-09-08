@@ -40,21 +40,21 @@ describe('AuthUseCases', () => {
 
     it('should throw error when email is empty', async () => {
       await expect(authUseCases.login('', 'password')).rejects.toThrow(
-        'Email and password are required'
+        'Email and password are required',
       );
       expect(mockAuthRepository.login).not.toHaveBeenCalled();
     });
 
     it('should throw error when password is empty', async () => {
       await expect(authUseCases.login('john@example.com', '')).rejects.toThrow(
-        'Email and password are required'
+        'Email and password are required',
       );
       expect(mockAuthRepository.login).not.toHaveBeenCalled();
     });
 
     it('should throw error when email format is invalid', async () => {
       await expect(authUseCases.login('invalid-email', 'password')).rejects.toThrow(
-        'Invalid email format'
+        'Invalid email format',
       );
       expect(mockAuthRepository.login).not.toHaveBeenCalled();
     });
@@ -63,7 +63,7 @@ describe('AuthUseCases', () => {
       mockAuthRepository.login.mockRejectedValue(new Error('Network error'));
 
       await expect(authUseCases.login('john@example.com', 'password')).rejects.toThrow(
-        'Network error'
+        'Network error',
       );
     });
   });
@@ -86,27 +86,21 @@ describe('AuthUseCases', () => {
     it('should throw error when name is empty', async () => {
       const request = { ...validRequest, name: '' };
 
-      await expect(authUseCases.register(request)).rejects.toThrow(
-        'Name and email are required'
-      );
+      await expect(authUseCases.register(request)).rejects.toThrow('Name and email are required');
       expect(mockAuthRepository.register).not.toHaveBeenCalled();
     });
 
     it('should throw error when email is empty', async () => {
       const request = { ...validRequest, email: '' };
 
-      await expect(authUseCases.register(request)).rejects.toThrow(
-        'Name and email are required'
-      );
+      await expect(authUseCases.register(request)).rejects.toThrow('Name and email are required');
       expect(mockAuthRepository.register).not.toHaveBeenCalled();
     });
 
     it('should throw error when email format is invalid', async () => {
       const request = { ...validRequest, email: 'invalid-email' };
 
-      await expect(authUseCases.register(request)).rejects.toThrow(
-        'Invalid email format'
-      );
+      await expect(authUseCases.register(request)).rejects.toThrow('Invalid email format');
       expect(mockAuthRepository.register).not.toHaveBeenCalled();
     });
 
@@ -114,7 +108,7 @@ describe('AuthUseCases', () => {
       const request = { ...validRequest, name: 'A' };
 
       await expect(authUseCases.register(request)).rejects.toThrow(
-        'Name must be at least 2 characters long'
+        'Name must be at least 2 characters long',
       );
       expect(mockAuthRepository.register).not.toHaveBeenCalled();
     });

@@ -24,5 +24,3 @@ jest.mock('expo-router', () => {
   const useLocalSearchParams = jest.fn(() => ({}));
   return { __esModule: true, router, Stack, Link, useLocalSearchParams };
 });
-
-

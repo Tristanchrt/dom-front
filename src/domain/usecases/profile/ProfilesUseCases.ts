@@ -8,10 +8,10 @@ export interface ProfilesRepository {
 
 export class ProfilesUseCases {
   constructor(private repo: ProfilesRepository) {}
-  getById(id: string) { return this.repo.getById(id); }
+  getById(id: string) {
+    return this.repo.getById(id);
+  }
   toggleFollow(id: string, isFollowing: boolean) {
     return isFollowing ? this.repo.unfollow(id) : this.repo.follow(id);
   }
 }
-
-

@@ -16,7 +16,10 @@ describe('CreatePostScreen (tabs/create)', () => {
     fireEvent.press(getByText('Publier'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Erreur', 'Veuillez saisir du texte pour votre publication');
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Erreur',
+        'Veuillez saisir du texte pour votre publication',
+      );
     });
   });
 
@@ -27,9 +30,10 @@ describe('CreatePostScreen (tabs/create)', () => {
     fireEvent.press(getByText('Publier'));
 
     await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith('Erreur', 'Veuillez compléter la question et toutes les options du sondage');
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Erreur',
+        'Veuillez compléter la question et toutes les options du sondage',
+      );
     });
   });
 });
-
-

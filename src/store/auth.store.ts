@@ -25,20 +25,22 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isAuthenticated: false,
 
   // Actions
-  setUser: (user) => set({ 
-    user, 
-    isAuthenticated: !!user,
-    error: null 
-  }),
-  
+  setUser: (user) =>
+    set({
+      user,
+      isAuthenticated: !!user,
+      error: null,
+    }),
+
   setLoading: (isLoading) => set({ isLoading }),
-  
+
   setError: (error) => set({ error, isLoading: false }),
-  
-  logout: () => set({ 
-    user: null, 
-    isAuthenticated: false, 
-    error: null,
-    isLoading: false 
-  }),
+
+  logout: () =>
+    set({
+      user: null,
+      isAuthenticated: false,
+      error: null,
+      isLoading: false,
+    }),
 }));
