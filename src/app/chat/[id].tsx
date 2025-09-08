@@ -16,103 +16,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { messagingUseCases } from '@/data/container';
 
-// Sample users data
-const users = {
-  u1: {
-    id: 'u1',
-    name: 'MICHEL PAGE',
-    username: 'michel.page',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    isOnline: true,
-    specialty: 'Compétence de technique',
-  },
-  u2: {
-    id: 'u2',
-    name: 'Marie Dubois',
-    username: 'marie.dubois',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    isOnline: false,
-    specialty: 'Designer graphique',
-  },
-  u3: {
-    id: 'u3',
-    name: 'Pierre Martin',
-    username: 'pierre.martin',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    isOnline: true,
-    specialty: 'Développeur web',
-  },
-};
-
-// Sample messages data
-const sampleMessages = {
-  u1: [
-    {
-      id: 'm1',
-      text: 'Salut ! Comment ça va ?',
-      timestamp: '10:30',
-      senderId: 'u1',
-      isMe: false,
-    },
-    {
-      id: 'm2',
-      text: 'Ça va bien merci ! Et toi ?',
-      timestamp: '10:32',
-      senderId: 'me',
-      isMe: true,
-    },
-    {
-      id: 'm3',
-      text: "Super ! J'aimerais discuter de ton projet",
-      timestamp: '10:35',
-      senderId: 'u1',
-      isMe: false,
-    },
-    {
-      id: 'm4',
-      text: 'Parfait, je suis disponible maintenant',
-      timestamp: '10:36',
-      senderId: 'me',
-      isMe: true,
-    },
-    {
-      id: 'm5',
-      text: 'Remise en oeuvre rien que ça',
-      timestamp: '10:40',
-      senderId: 'u1',
-      isMe: false,
-    },
-  ],
-  u2: [
-    {
-      id: 'm6',
-      text: 'Merci pour les infos !',
-      timestamp: '09:15',
-      senderId: 'u2',
-      isMe: false,
-    },
-  ],
-  u3: [
-    {
-      id: 'm7',
-      text: 'Parfait, on se parle demain',
-      timestamp: 'Hier',
-      senderId: 'u3',
-      isMe: false,
-    },
-  ],
-};
+// Messages and user are now provided by the repository with fixture fallback
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState(sampleMessages[id as string] || []);
+  const [messages, setMessages] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
-
-  const user = users[id as string];
+  const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -124,26 +35,34 @@ export default function ChatScreen() {
   }, [messages]);
 
   useEffect(() => {
-    // Hydrate messages from repo if present
+    // Hydrate header user and messages from repo (with fixture fallback in repo)
     let mounted = true;
     (async () => {
       if (!id) return;
-      const repoMessages = await messagingUseCases.getMessages(String(id));
-      if (!mounted) return;
-      if (repoMessages && repoMessages.length > 0) {
-        setMessages(
-          repoMessages.map((m) => ({
-            id: m.id,
-            text: m.content,
-            timestamp: new Date(m.timestamp).toLocaleTimeString('fr-FR', {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
-            senderId: m.senderId,
-            isMe: m.senderId === 'me',
-          })),
-        );
-      }
+      try {
+        const conv = await messagingUseCases.getConversations();
+        if (!mounted) return;
+        const found = conv.conversations.find((c) => c.id === String(id));
+        if (found) setUser(found.user);
+      } catch {}
+      try {
+        const repoMessages = await messagingUseCases.getMessages(String(id));
+        if (!mounted) return;
+        if (repoMessages && repoMessages.length > 0) {
+          setMessages(
+            repoMessages.map((m) => ({
+              id: m.id,
+              text: m.content,
+              timestamp: new Date(m.timestamp).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+              senderId: m.senderId,
+              isMe: m.senderId === 'me',
+            })),
+          );
+        }
+      } catch {}
     })();
     return () => {
       mounted = false;
@@ -159,7 +78,7 @@ export default function ChatScreen() {
           </TouchableOpacity>
         </View>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Utilisateur non trouvé</Text>
+          <Text style={styles.errorText}>User not found</Text>
         </View>
       </SafeAreaView>
     );
@@ -170,7 +89,7 @@ export default function ChatScreen() {
       const newMessage = {
         id: `m${Date.now()}`,
         text: message.trim(),
-        timestamp: new Date().toLocaleTimeString('fr-FR', {
+        timestamp: new Date().toLocaleTimeString('en-US', {
           hour: '2-digit',
           minute: '2-digit',
         }),
@@ -188,10 +107,10 @@ export default function ChatScreen() {
   };
 
   const handlePhotoPress = () => {
-    Alert.alert('📷 Envoyer une photo', 'Choisissez une option pour envoyer une photo', [
-      { text: 'Annuler', style: 'cancel' },
-      { text: 'Caméra', onPress: () => console.log('Open camera') },
-      { text: 'Galerie', onPress: () => console.log('Open gallery') },
+    Alert.alert('📷 Send a photo', 'Choose an option to send a photo', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Camera', onPress: () => console.log('Open camera') },
+      { text: 'Gallery', onPress: () => console.log('Open gallery') },
     ]);
   };
 
@@ -271,7 +190,7 @@ export default function ChatScreen() {
 
           <TextInput
             style={styles.messageInput}
-            placeholder="Tapez votre message..."
+            placeholder="Type your message..."
             placeholderTextColor="#8B7355"
             value={message}
             onChangeText={setMessage}
@@ -279,7 +198,7 @@ export default function ChatScreen() {
             maxLength={500}
           />
 
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage} accessibilityLabel="Send">
             <FontAwesome name="send" size={18} color="#FFFFFF" />
           </TouchableOpacity>
         </View>

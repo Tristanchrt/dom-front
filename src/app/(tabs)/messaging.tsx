@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,54 +11,32 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { messagingUseCases } from '@/data/container';
+import { conversationsFixture } from '@/data/fixtures/messaging';
 
-const conversations = [
-  {
-    id: 'conv1',
-    user: {
-      id: 'u1',
-      name: 'Michel blanc tussaf.com',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-      isOnline: true,
-    },
-    lastMessage: 'Salut ! Comment ça va ?',
-    timestamp: '10:30',
-    unreadCount: 2,
-    hasNewMessage: true,
-  },
-  {
-    id: 'conv2',
-    user: {
-      id: 'u2',
-      name: 'michel.dukaer.non.ca.va',
-      avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-      isOnline: false,
-    },
-    lastMessage: 'Merci pour les infos !',
-    timestamp: '09:15',
-    unreadCount: 0,
-    hasNewMessage: false,
-  },
-  {
-    id: 'conv3',
-    user: {
-      id: 'u3',
-      name: 'Réseaux sociaux',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-      isOnline: true,
-    },
-    lastMessage: 'Parfait, on se parle demain',
-    timestamp: 'Hier',
-    unreadCount: 1,
-    hasNewMessage: true,
-  },
-];
+const fixtureConversations = conversationsFixture;
 
 export default function MessagingScreen() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [conversations, setConversations] = useState(fixtureConversations);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await messagingUseCases.getConversations();
+        if (!alive) return;
+        if (res && res.conversations && res.conversations.length > 0) {
+          setConversations(res.conversations);
+        } else {
+          setConversations(fixtureConversations);
+        }
+      } catch (_e) {
+        if (alive) setConversations(fixtureConversations);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
 
   const filteredConversations = conversations.filter((conv) =>
     conv.user.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -91,7 +69,7 @@ export default function MessagingScreen() {
 
       <View style={styles.conversationMeta}>
         <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>Voir</Text>
+          <Text style={styles.actionButtonText}>View</Text>
           <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
         </TouchableOpacity>
         {item.unreadCount > 0 && (
@@ -111,7 +89,7 @@ export default function MessagingScreen() {
           <FontAwesome name="search" size={18} color="#8B7355" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Rechercher"
+            placeholder="Search"
             placeholderTextColor="#8B7355"
             value={searchQuery}
             onChangeText={setSearchQuery}

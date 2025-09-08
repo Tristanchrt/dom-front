@@ -13,12 +13,12 @@ describe('ProfileEditScreen (app/settings/profile)', () => {
     jest.spyOn(Alert, 'alert');
 
     const { getByText } = render(<ProfileEditScreen />);
-    fireEvent.press(getByText('Sauvegarder les modifications'));
+    fireEvent.press(getByText('Save changes'));
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
-        '✅ Profil sauvegardé',
-        'Vos modifications ont été enregistrées avec succès',
+        '✅ Profile saved',
+        'Your changes have been saved successfully',
         [{ text: 'OK' }],
       );
     });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 import ChatScreen from '../../app/chat/[id]';
 
 jest.mock('expo-router', () => ({
@@ -21,12 +21,14 @@ describe('ChatScreen (app/chat/[id])', () => {
   it('renders error for unknown user', () => {
     setRouteId('unknown');
     const { getByText } = render(<ChatScreen />);
-    expect(getByText('Utilisateur non trouvé')).toBeTruthy();
+    expect(getByText('User not found')).toBeTruthy();
   });
 
-  it('renders header with user info for known user', () => {
+  it('renders header with user info for known user', async () => {
     setRouteId('u1');
     const { getByText } = render(<ChatScreen />);
-    expect(getByText('MICHEL PAGE')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('MICHEL PAGE')).toBeTruthy();
+    });
   });
 });

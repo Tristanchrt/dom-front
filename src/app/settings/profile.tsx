@@ -12,18 +12,19 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { profileEditDefaults } from '@/data/fixtures/settings';
 
 export default function ProfileEditScreen() {
   const [profile, setProfile] = useState({
-    name: 'Marilyn Aminoff',
-    language: 'en ligne',
-    description: '',
-    category: '',
-    socialNetworks: '',
+    name: profileEditDefaults.name,
+    language: profileEditDefaults.status,
+    description: profileEditDefaults.description,
+    category: profileEditDefaults.category,
+    socialNetworks: profileEditDefaults.socialLinks,
   });
 
   const handleSave = () => {
-    Alert.alert('✅ Profil sauvegardé', 'Vos modifications ont été enregistrées avec succès', [
+    Alert.alert('✅ Profile saved', 'Your changes have been saved successfully', [
       { text: 'OK' },
     ]);
   };
@@ -84,12 +85,7 @@ export default function ProfileEditScreen() {
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.profileImageContainer}>
-            <Image
-              source={{
-                uri: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-              }}
-              style={styles.profileImage}
-            />
+            <Image source={{ uri: profileEditDefaults.avatarUrl }} style={styles.profileImage} />
             <TouchableOpacity style={styles.editImageButton}>
               <FontAwesome name="camera" size={16} color="#FFFFFF" />
             </TouchableOpacity>
@@ -110,8 +106,8 @@ export default function ProfileEditScreen() {
         <View style={styles.profileBanner}>
           <View style={styles.bannerContent}>
             <View style={styles.bannerText}>
-              <Text style={styles.bannerTitle}>Profil complet</Text>
-              <Text style={styles.bannerSubtitle}>Optimisez votre visibilité</Text>
+              <Text style={styles.bannerTitle}>Complete your profile</Text>
+              <Text style={styles.bannerSubtitle}>Improve your visibility</Text>
             </View>
             <Image
               source={{
@@ -128,28 +124,28 @@ export default function ProfileEditScreen() {
             label="Description"
             value={profile.description}
             onChangeText={(text) => setProfile({ ...profile, description: text })}
-            placeholder="Décrivez-vous en quelques mots..."
+            placeholder="Describe yourself in a few words..."
             multiline
           />
 
           <EditableField
-            label="Catégorie"
+            label="Category"
             value={profile.category}
             onChangeText={(text) => setProfile({ ...profile, category: text })}
-            placeholder="Votre domaine d'expertise..."
+            placeholder="Your domain of expertise..."
           />
 
           <EditableField
-            label="Réseaux sociaux"
+            label="Social networks"
             value={profile.socialNetworks}
             onChangeText={(text) => setProfile({ ...profile, socialNetworks: text })}
-            placeholder="Vos liens de réseaux sociaux..."
+            placeholder="Your social links..."
           />
         </ProfileSection>
 
         {/* Save Button */}
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Sauvegarder les modifications</Text>
+          <Text style={styles.saveButtonText}>Save changes</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

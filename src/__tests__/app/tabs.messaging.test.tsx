@@ -10,16 +10,16 @@ describe('MessagingScreen (tabs/messaging)', () => {
   it('filters conversations by search query', () => {
     const { getByPlaceholderText, queryByText } = render(<MessagingScreen />);
 
-    const input = getByPlaceholderText('Rechercher');
+    const input = getByPlaceholderText('Search');
     fireEvent.changeText(input, 'Parfait');
 
-    expect(queryByText('Michel blanc tussaf.com')).toBeNull();
+    expect(queryByText('MICHEL PAGE')).toBeNull();
   });
 
   it('navigates to chat when pressing a conversation item', () => {
     const { getByText } = render(<MessagingScreen />);
 
-    fireEvent.press(getByText('Michel blanc tussaf.com'));
+    fireEvent.press(getByText('MICHEL PAGE'));
 
     const { router } = require('expo-router');
     expect(router.push).toHaveBeenCalledWith('/chat/u1');

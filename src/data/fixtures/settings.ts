@@ -64,3 +64,23 @@ export const settingsSellerProducts: SettingsSellerProduct[] = [
     views: 12,
   },
 ];
+
+
+export type ProfileDraft = {
+  name: string;
+  status: string;
+  description: string;
+  category: string;
+  socialLinks: string;
+  avatarUrl: string;
+};
+
+export const profileEditDefaults: ProfileDraft = {
+  name: 'Marilyn Aminoff',
+  status: 'online',
+  description: '',
+  category: '',
+  socialLinks: '',
+  avatarUrl:
+    'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+};
