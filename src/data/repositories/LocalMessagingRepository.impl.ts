@@ -42,7 +42,17 @@ export class LocalMessagingRepository implements MessagingRepository {
     return message;
   }
   async markAsRead(messageId: string): Promise<void> {
-    // naive: scan all threads
-    // In real impl, the server would handle this
+    // naive: scan all threads and mark as read
+    const conversations = LocalStore.getJSON<any[]>(CONV_KEY, []);
+    let updated = false;
+    for (const conv of conversations) {
+      const key = `${MSG_KEY_PREFIX}${conv.id}`;
+      const messages = LocalStore.getJSON<any[]>(key, []);
+      const next = messages.map((m) => (m.id === messageId ? { ...m, isRead: true } : m));
+      if (next !== messages) {
+        LocalStore.setJSON(key, next);
+        updated = true;
+      }
+    }
   }
 }

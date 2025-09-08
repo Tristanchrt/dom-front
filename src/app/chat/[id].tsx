@@ -61,6 +61,11 @@ export default function ChatScreen() {
               isMe: m.senderId === 'me',
             })),
           );
+          // mark latest message as read
+          const latest = repoMessages[repoMessages.length - 1];
+          if (latest && !latest.isRead) {
+            try { await messagingUseCases.markAsRead(latest.id); } catch {}
+          }
         }
       } catch {}
     })();
