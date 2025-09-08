@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -23,6 +23,26 @@ export default function ProfileEditScreen() {
     category: profileEditDefaults.category,
     socialNetworks: profileEditDefaults.socialLinks,
   });
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const draft = await usersUseCases.getProfileDraft();
+        if (!alive || !draft) return;
+        setProfile({
+          name: draft.name,
+          language: draft.status,
+          description: draft.description,
+          category: draft.category,
+          socialNetworks: draft.socialLinks,
+        });
+      } catch {
+        // ignore load errors; defaults already shown
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
 
   const handleSave = async () => {
     try {

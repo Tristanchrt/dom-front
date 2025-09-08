@@ -15,15 +15,15 @@ import { router } from 'expo-router';
 export default function SubscriptionScreen() {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('annual');
 
-  const features = ['Produits illimités', 'Commission réduite', 'Accès aux badges uniques'];
+  const features = ['Unlimited products', 'Reduced commission', 'Access to unique badges'];
 
   const handleSubscribe = () => {
     Alert.alert(
-      '✅ Abonnement',
-      `Vous allez souscrire au plan ${selectedPlan === 'monthly' ? 'mensuel' : 'annuel'}`,
+      '✅ Subscription',
+      `You are about to subscribe to the ${selectedPlan === 'monthly' ? 'monthly' : 'annual'} plan`,
       [
-        { text: 'Annuler', style: 'cancel' },
-        { text: "S'abonner maintenant", onPress: () => console.log('Subscribe') },
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Subscribe now', onPress: () => console.log('Subscribe') },
       ],
     );
   };
@@ -35,7 +35,7 @@ export default function SubscriptionScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Abonnement</Text>
+        <Text style={styles.headerTitle}>Subscription</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -43,8 +43,8 @@ export default function SubscriptionScreen() {
         {/* Promotion Banner */}
         <View style={styles.promotionBanner}>
           <View style={styles.promotionContent}>
-            <Text style={styles.promotionTitle}>60% de réduction maintenant</Text>
-            <Text style={styles.promotionSubtitle}>Économisez sur votre abonnement</Text>
+            <Text style={styles.promotionTitle}>60% off now</Text>
+            <Text style={styles.promotionSubtitle}>Save on your subscription</Text>
 
             {/* Countdown */}
             <View style={styles.countdown}>
@@ -72,7 +72,7 @@ export default function SubscriptionScreen() {
 
         {/* Community Development */}
         <View style={styles.communitySection}>
-          <Text style={styles.communityTitle}>Développez votre communauté</Text>
+          <Text style={styles.communityTitle}>Grow your community</Text>
 
           {/* Features */}
           <View style={styles.featuresContainer}>
@@ -94,10 +94,10 @@ export default function SubscriptionScreen() {
           >
             <View style={styles.planHeader}>
               <Text style={styles.planPrice}>29 €</Text>
-              <Text style={styles.planPeriod}>/mois</Text>
+              <Text style={styles.planPeriod}>/month</Text>
             </View>
-            <Text style={styles.planSubtext}>Facturation mensuelle</Text>
-            <Text style={styles.planLabel}>Mensuel</Text>
+            <Text style={styles.planSubtext}>Monthly billing</Text>
+            <Text style={styles.planLabel}>Monthly</Text>
           </TouchableOpacity>
 
           {/* Annual Plan */}
@@ -106,46 +106,46 @@ export default function SubscriptionScreen() {
             onPress={() => setSelectedPlan('annual')}
           >
             <View style={styles.popularBadge}>
-              <Text style={styles.popularText}>Le plus populaire</Text>
+              <Text style={styles.popularText}>Most popular</Text>
             </View>
             <View style={styles.planHeader}>
               <Text style={styles.planPrice}>19 €</Text>
-              <Text style={styles.planPeriod}>/mois</Text>
+              <Text style={styles.planPeriod}>/month</Text>
             </View>
-            <Text style={styles.planSubtext}>Facturation annuelle</Text>
-            <Text style={styles.planOriginalPrice}>15 € /mois</Text>
-            <Text style={styles.planLabel}>Annuel</Text>
+            <Text style={styles.planSubtext}>Annual billing</Text>
+            <Text style={styles.planOriginalPrice}>15 € /month</Text>
+            <Text style={styles.planLabel}>Annual</Text>
             <View style={styles.savingsBadge}>
-              <Text style={styles.savingsText}>2 ans</Text>
+              <Text style={styles.savingsText}>2 years</Text>
             </View>
           </TouchableOpacity>
         </View>
 
         {/* Subscribe Button */}
         <TouchableOpacity style={styles.subscribeButton} onPress={handleSubscribe}>
-          <Text style={styles.subscribeButtonText}>S'abonner maintenant</Text>
+          <Text style={styles.subscribeButtonText}>Subscribe now</Text>
         </TouchableOpacity>
 
         {/* Footer Info */}
         <View style={styles.footerInfo}>
           <View style={styles.infoRow}>
             <FontAwesome name="shield" size={16} color="#8B7355" />
-            <Text style={styles.infoText}>Paiement sécurisé</Text>
+            <Text style={styles.infoText}>Secure payment</Text>
           </View>
           <View style={styles.infoRow}>
             <FontAwesome name="refresh" size={16} color="#8B7355" />
-            <Text style={styles.infoText}>Annuler à tout moment</Text>
+            <Text style={styles.infoText}>Cancel anytime</Text>
           </View>
         </View>
 
         {/* Terms */}
         <View style={styles.termsSection}>
           <TouchableOpacity>
-            <Text style={styles.termsLink}>Conditions de service</Text>
+            <Text style={styles.termsLink}>Terms of service</Text>
           </TouchableOpacity>
           <Text style={styles.termsSeparator}> • </Text>
           <TouchableOpacity>
-            <Text style={styles.termsLink}>Politique de confidentialité</Text>
+            <Text style={styles.termsLink}>Privacy policy</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
