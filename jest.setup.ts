@@ -18,7 +18,8 @@ jest.mock('expo-status-bar', () => ({
 
 jest.mock('expo-router', () => {
   const router = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
-  const Stack = ({ children }: any) => children;
+  const Stack: any = ({ children }: any) => children;
+  Stack.Screen = () => null;
   const Link = ({ children }: any) => children;
   const useLocalSearchParams = jest.fn(() => ({}));
   return { __esModule: true, router, Stack, Link, useLocalSearchParams };

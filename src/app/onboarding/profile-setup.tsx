@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { profileSetupDefaults } from '@/data/fixtures/onboarding';
 
 export default function ProfileSetupScreen() {
   const [profileData, setProfileData] = useState({
@@ -33,8 +34,8 @@ export default function ProfileSetupScreen() {
           text: 'Caméra', 
           onPress: () => {
             const imageUrl = type === 'profile' 
-              ? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face'
-              : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop';
+              ? profileSetupDefaults.defaultProfileCameraUrl
+              : profileSetupDefaults.defaultBannerCameraUrl;
             setProfileData(prev => ({
               ...prev,
               [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl
@@ -45,8 +46,8 @@ export default function ProfileSetupScreen() {
           text: 'Galerie', 
           onPress: () => {
             const imageUrl = type === 'profile' 
-              ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'
-              : 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=200&fit=crop';
+              ? profileSetupDefaults.defaultProfileGalleryUrl
+              : profileSetupDefaults.defaultBannerGalleryUrl;
             setProfileData(prev => ({
               ...prev,
               [type === 'profile' ? 'profileImage' : 'bannerImage']: imageUrl
@@ -105,7 +106,7 @@ export default function ProfileSetupScreen() {
   }) => (
     <View style={styles.fieldContainer}>
       <View style={styles.fieldHeader}>
-        <FontAwesome name={icon} size={16} color="#FF8C42" />
+        <FontAwesome name={icon as any} size={16} color="#FF8C42" />
         <Text style={styles.fieldLabel}>{label}</Text>
         <TouchableOpacity style={styles.fillButton}>
           <Text style={styles.fillButtonText}>remplir</Text>
@@ -136,7 +137,7 @@ export default function ProfileSetupScreen() {
         <View style={styles.heroSection}>
           <View style={styles.heroIllustration}>
             <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&h=150&fit=crop' }}
+              source={{ uri: profileSetupDefaults.heroImage }}
               style={styles.heroImage}
             />
           </View>

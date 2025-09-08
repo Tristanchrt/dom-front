@@ -10,34 +10,9 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { availableInterests, type InterestFixture } from '@/data/fixtures/onboarding';
 
-interface Interest {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-}
-
-const availableInterests: Interest[] = [
-  { id: '1', name: 'Art & Design', icon: 'paint-brush', color: '#E91E63' },
-  { id: '2', name: 'Photographie', icon: 'camera', color: '#9C27B0' },
-  { id: '3', name: 'Cuisine', icon: 'cutlery', color: '#FF5722' },
-  { id: '4', name: 'Voyage', icon: 'plane', color: '#2196F3' },
-  { id: '5', name: 'Mode', icon: 'shopping-bag', color: '#795548' },
-  { id: '6', name: 'Sport', icon: 'futbol-o', color: '#4CAF50' },
-  { id: '7', name: 'Musique', icon: 'music', color: '#FF9800' },
-  { id: '8', name: 'Technologie', icon: 'laptop', color: '#607D8B' },
-  { id: '9', name: 'Lecture', icon: 'book', color: '#3F51B5' },
-  { id: '10', name: 'Jardinage', icon: 'leaf', color: '#8BC34A' },
-  { id: '11', name: 'Fitness', icon: 'heartbeat', color: '#F44336' },
-  { id: '12', name: 'Cinéma', icon: 'film', color: '#9E9E9E' },
-  { id: '13', name: 'Gaming', icon: 'gamepad', color: '#673AB7' },
-  { id: '14', name: 'Beauté', icon: 'star', color: '#E91E63' },
-  { id: '15', name: 'Animaux', icon: 'paw', color: '#FF5722' },
-  { id: '16', name: 'Architecture', icon: 'building', color: '#795548' },
-  { id: '17', name: 'Écriture', icon: 'pencil', color: '#FF9800' },
-  { id: '18', name: 'Danse', icon: 'music', color: '#E91E63' },
-];
+ 
 
 export default function InterestsSelectionScreen() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -64,7 +39,7 @@ export default function InterestsSelectionScreen() {
     router.replace('/(tabs)');
   };
 
-  const renderInterest = (interest: Interest) => {
+  const renderInterest = (interest: InterestFixture) => {
     const isSelected = selectedInterests.includes(interest.id);
     
     return (
@@ -79,7 +54,7 @@ export default function InterestsSelectionScreen() {
       >
         <View style={[styles.interestIcon, { backgroundColor: `${interest.color}20` }]}>
           <FontAwesome 
-            name={interest.icon} 
+            name={interest.icon as any} 
             size={24} 
             color={isSelected ? interest.color : '#8B7355'} 
           />
@@ -240,7 +215,6 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 4,
-    transition: 'width 0.3s ease',
   },
   progressText: {
     fontSize: 14,
