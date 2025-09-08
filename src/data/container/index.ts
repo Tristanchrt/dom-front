@@ -4,9 +4,12 @@ import { ProfilesUseCases } from '@/domain/usecases/profile/ProfilesUseCases';
 import { LocalProfilesRepository } from '@/data/repositories/LocalProfilesRepository.impl';
 import { MessagingUseCases } from '@/domain/usecases/messaging/MessagingUseCases';
 import { LocalMessagingRepository } from '@/data/repositories/LocalMessagingRepository.impl';
+import { ProductsUseCases } from '@/domain/usecases/product/ProductsUseCases';
+import { LocalProductsRepository } from '@/data/repositories/LocalProductsRepository.impl';
 
 export const postsUseCases = new PostsUseCases(new LocalPostsRepository());
 export const profilesUseCases = new ProfilesUseCases(new LocalProfilesRepository());
 export const messagingUseCases = new MessagingUseCases(new LocalMessagingRepository());
+export const productsUseCases = new ProductsUseCases(new LocalProductsRepository());
 
 

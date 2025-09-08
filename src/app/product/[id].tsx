@@ -1,170 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-  Alert,
-} from 'react-native';
+import { StyleSheet, SafeAreaView, Text, View, TouchableOpacity, Image, ScrollView, Dimensions, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
+import { useProduct } from '@/hooks/useProduct';
+import { productDetails } from '@/data/fixtures/products';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-// Detailed product data
-const productDetails = {
-  p1: {
-    id: 'p1',
-    name: 'T-shirt coutumain',
-    price: '30,80€',
-    originalPrice: '45,00€',
-    discount: '2,00 € de réduction',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop',
-    seller: 'Marin',
-    category: 'Poterie',
-    rating: 4.8,
-    sales: 234,
-    description: 'T-shirt artisanal en coton bio avec design unique fait main. Parfait pour un style décontracté et authentique.',
-    colors: ['Beige', 'Blanc', 'Noir'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    features: ['Coton bio', 'Fait main', 'Design unique', 'Lavable en machine'],
-    welcomeOffer: true,
-    tvaCoprise: true,
-  },
-  p2: {
-    id: 'p2',
-    name: 'Vase en céramique',
-    price: '45,00€',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop',
-    seller: 'Art Studio',
-    category: 'Poterie',
-    rating: 4.9,
-    sales: 156,
-    description: 'Vase artisanal en céramique peint à la main avec motifs traditionnels.',
-    colors: ['Terre cuite', 'Bleu', 'Vert'],
-    sizes: ['Petit', 'Moyen', 'Grand'],
-    features: ['Céramique artisanale', 'Peint à la main', 'Résistant', 'Unique'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p3: {
-    id: 'p3',
-    name: 'Livre de recettes',
-    price: '25,00€',
-    image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&h=600&fit=crop',
-    seller: 'Chef Antoine',
-    category: 'Livre Image',
-    rating: 4.7,
-    sales: 89,
-    description: 'Recettes traditionnelles françaises avec photos étape par étape et conseils de chef.',
-    colors: ['Standard'],
-    sizes: ['Format A4'],
-    features: ['200 pages', 'Photos couleur', 'Reliure solide', 'Recettes testées'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p4: {
-    id: 'p4',
-    name: 'Carte postale vintage',
-    price: '5,00€',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
-    seller: 'Travel Explorer',
-    category: 'Carte custom',
-    rating: 4.6,
-    sales: 345,
-    description: 'Collection de cartes postales vintage d\'Islande avec paysages authentiques.',
-    colors: ['Vintage'],
-    sizes: ['Standard'],
-    features: ['Papier de qualité', 'Impression haute définition', 'Collection limitée', 'Authentique'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p5: {
-    id: 'p5',
-    name: 'Carnet de voyage',
-    price: '18,00€',
-    image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&h=600&fit=crop',
-    seller: 'Travel Explorer',
-    category: 'Carnet',
-    rating: 4.8,
-    sales: 167,
-    description: 'Carnet de voyage en cuir avec pages lignées et cartes pour noter vos aventures.',
-    colors: ['Marron', 'Noir', 'Cognac'],
-    sizes: ['A5', 'A6'],
-    features: ['Cuir véritable', 'Pages lignées', 'Cartes incluses', 'Fermeture élastique'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p6: {
-    id: 'p6',
-    name: 'Bol artisanal',
-    price: '35,00€',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop',
-    seller: 'Art Studio',
-    category: 'Poterie',
-    rating: 4.9,
-    sales: 78,
-    description: 'Bol en grès émaillé, parfait pour les petits déjeuners et repas quotidiens.',
-    colors: ['Blanc', 'Beige', 'Bleu'],
-    sizes: ['Petit', 'Moyen'],
-    features: ['Grès émaillé', 'Fait main', 'Lave-vaisselle', 'Micro-ondes'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p7: {
-    id: 'p7',
-    name: 'Guide de cuisine',
-    price: '32,00€',
-    image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=600&h=600&fit=crop',
-    seller: 'Chef Antoine',
-    category: 'Livre Image',
-    rating: 4.8,
-    sales: 234,
-    description: 'Guide complet de la cuisine française moderne avec techniques et astuces.',
-    colors: ['Standard'],
-    sizes: ['Format A4'],
-    features: ['300 pages', 'Illustrations', 'Techniques pro', 'Index détaillé'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-  p8: {
-    id: 'p8',
-    name: 'Carte personnalisée',
-    price: '12,00€',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
-    seller: 'Design Studio',
-    category: 'Carte custom',
-    rating: 4.7,
-    sales: 445,
-    description: 'Carte personnalisée avec votre photo et message pour toutes occasions.',
-    colors: ['Personnalisable'],
-    sizes: ['A6', 'A5'],
-    features: ['Personnalisation', 'Papier premium', 'Finition mate', 'Livraison rapide'],
-    welcomeOffer: false,
-    tvaCoprise: true,
-  },
-};
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { product } = useProduct(id ? String(id) : undefined);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const product = productDetails[id as string];
+  const fixture = productDetails[id as keyof typeof productDetails];
+  const uiProduct = fixture; // keep UI using fixture structure for now
 
   useEffect(() => {
-    if (product) {
-      setSelectedColor(product.colors[0]);
-      setSelectedSize(product.sizes[0]);
+    if (uiProduct) {
+      setSelectedColor(uiProduct.colors[0] ?? '');
+      setSelectedSize(uiProduct.sizes[0] ?? '');
     }
-  }, [product]);
+  }, [uiProduct]);
 
-  if (!product) {
+  if (!uiProduct) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -182,7 +43,7 @@ export default function ProductDetailScreen() {
   const handleAddToCart = () => {
     Alert.alert(
       '🛒 Ajouté au panier',
-      `${product.name} (${selectedColor}, ${selectedSize}) a été ajouté à votre panier avec succès !`,
+      `${uiProduct.name} (${selectedColor}, ${selectedSize}) a été ajouté à votre panier avec succès !`,
       [
         { text: 'Continuer les achats', style: 'cancel' },
         { text: 'Voir le panier', onPress: () => console.log('Navigate to cart') }
@@ -193,7 +54,7 @@ export default function ProductDetailScreen() {
   const handlePurchase = () => {
     Alert.alert(
       '💳 Confirmer l\'achat',
-      `Acheter: ${product.name}\nCouleur: ${selectedColor}\nTaille: ${selectedSize}\nPrix: ${product.price}`,
+      `Acheter: ${uiProduct.name}\nCouleur: ${selectedColor}\nTaille: ${selectedSize}\nPrix: ${uiProduct.price}`,
       [
         { text: 'Annuler', style: 'cancel' },
         { 
@@ -233,7 +94,7 @@ export default function ProductDetailScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Product Image with thumbnails */}
         <View style={styles.imageContainer}>
-          <Image source={{ uri: product.image }} style={styles.productImage} />
+          <Image source={{ uri: uiProduct.image }} style={styles.productImage} />
           
           {/* Image thumbnails */}
           <ScrollView 
@@ -243,13 +104,13 @@ export default function ProductDetailScreen() {
             contentContainerStyle={styles.thumbnailContent}
           >
             <TouchableOpacity style={[styles.thumbnail, styles.activeThumbnail]}>
-              <Image source={{ uri: product.image }} style={styles.thumbnailImage} />
+              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.thumbnail}>
-              <Image source={{ uri: product.image }} style={styles.thumbnailImage} />
+              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.thumbnail}>
-              <Image source={{ uri: product.image }} style={styles.thumbnailImage} />
+              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
             </TouchableOpacity>
           </ScrollView>
           
@@ -266,7 +127,7 @@ export default function ProductDetailScreen() {
         </View>
 
         {/* Welcome Offer Banner */}
-        {product.welcomeOffer && (
+        {uiProduct.welcomeOffer && (
           <View style={styles.welcomeBanner}>
             <Text style={styles.welcomeText}>Offre de bienvenue</Text>
             <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
@@ -277,17 +138,17 @@ export default function ProductDetailScreen() {
         <View style={styles.productInfo}>
           <View style={styles.sellerInfoTop}>
             <FontAwesome name="user-circle" size={16} color="#FF8C42" />
-            <Text style={styles.sellerNameTop}>Vendu par {product.seller}</Text>
+            <Text style={styles.sellerNameTop}>Vendu par {uiProduct.seller}</Text>
             <View style={styles.userIcon}>
               <FontAwesome name="user" size={12} color="#FFFFFF" />
             </View>
           </View>
 
-          <Text style={styles.productNameLarge}>{product.name.toUpperCase()}</Text>
-          <Text style={styles.productDescriptionLarge}>{product.description}</Text>
+          <Text style={styles.productNameLarge}>{uiProduct.name.toUpperCase()}</Text>
+          <Text style={styles.productDescriptionLarge}>{uiProduct.description}</Text>
           
           <View style={styles.priceSection}>
-            <Text style={styles.currentPriceLarge}>{product.price.replace(',', ',')}</Text>
+            <Text style={styles.currentPriceLarge}>{uiProduct.price.replace(',', ',')}</Text>
             <TouchableOpacity 
               style={styles.bookmarkIcon}
               onPress={() => setIsBookmarked(!isBookmarked)}
@@ -304,7 +165,7 @@ export default function ProductDetailScreen() {
           <View style={styles.optionSection}>
             <Text style={styles.optionTitle}>Couleur: {selectedColor}</Text>
             <View style={styles.optionButtons}>
-              {product.colors.map((color) => (
+              {uiProduct.colors.map((color) => (
                 <TouchableOpacity
                   key={color}
                   style={[
@@ -328,7 +189,7 @@ export default function ProductDetailScreen() {
           <View style={styles.optionSection}>
             <Text style={styles.optionTitle}>Taille: {selectedSize}</Text>
             <View style={styles.optionButtons}>
-              {product.sizes.map((size) => (
+              {uiProduct.sizes.map((size) => (
                 <TouchableOpacity
                   key={size}
                   style={[
@@ -365,7 +226,7 @@ export default function ProductDetailScreen() {
           {/* Features */}
           <View style={styles.featuresSection}>
             <Text style={styles.featuresTitle}>Caractéristiques:</Text>
-            {product.features.map((feature, index) => (
+            {uiProduct.features.map((feature, index) => (
               <Text key={index} style={styles.featureItem}>• {feature}</Text>
             ))}
           </View>
@@ -373,10 +234,10 @@ export default function ProductDetailScreen() {
           {/* Seller Info */}
           <View style={styles.sellerSection}>
             <FontAwesome name="user-circle" size={16} color="#FF8C42" />
-            <Text style={styles.sellerText}>Vendu par {product.seller}</Text>
+            <Text style={styles.sellerText}>Vendu par {uiProduct.seller}</Text>
             <View style={styles.ratingContainer}>
               <FontAwesome name="star" size={12} color="#FFD700" />
-              <Text style={styles.ratingText}>{product.rating}</Text>
+              <Text style={styles.ratingText}>{uiProduct.rating}</Text>
             </View>
           </View>
         </View>
