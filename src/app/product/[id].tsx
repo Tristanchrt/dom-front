@@ -27,6 +27,16 @@ export default function ProductDetailScreen() {
   const fixture = productDetails[id as keyof typeof productDetails];
   const uiProduct = fixture; // keep UI using fixture structure for now
 
+  const centsToLabel = (cents: number, currency: string) => {
+    const euros = (cents / 100).toFixed(2).replace('.', ',');
+    return `${euros}€`;
+  };
+
+  const displayName = product?.name ?? uiProduct?.name ?? '';
+  const displayPrice = product?.priceCents && product.currency
+    ? centsToLabel(product.priceCents, product.currency)
+    : uiProduct?.price ?? '';
+
   useEffect(() => {
     if (uiProduct) {
       setSelectedColor(uiProduct.colors[0] ?? '');
@@ -52,7 +62,7 @@ export default function ProductDetailScreen() {
   const handleAddToCart = () => {
     Alert.alert(
       '🛒 Added to cart',
-      `${uiProduct.name} (${selectedColor}, ${selectedSize}) has been added to your cart successfully!`,
+      `${displayName} (${selectedColor}, ${selectedSize}) has been added to your cart successfully!`,
       [
         { text: 'Continue shopping', style: 'cancel' },
         { text: 'View cart', onPress: () => console.log('Navigate to cart') },
@@ -63,7 +73,7 @@ export default function ProductDetailScreen() {
   const handlePurchase = () => {
     Alert.alert(
       '💳 Confirm purchase',
-      `Buy: ${uiProduct.name}\nColor: ${selectedColor}\nSize: ${selectedSize}\nPrice: ${uiProduct.price}`,
+      `Buy: ${displayName}\nColor: ${selectedColor}\nSize: ${selectedSize}\nPrice: ${displayPrice}`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -153,11 +163,11 @@ export default function ProductDetailScreen() {
             </View>
           </View>
 
-          <Text style={styles.productNameLarge}>{uiProduct.name.toUpperCase()}</Text>
+          <Text style={styles.productNameLarge}>{displayName.toUpperCase()}</Text>
           <Text style={styles.productDescriptionLarge}>{uiProduct.description}</Text>
 
           <View style={styles.priceSection}>
-            <Text style={styles.currentPriceLarge}>{uiProduct.price.replace(',', ',')}</Text>
+            <Text style={styles.currentPriceLarge}>{displayPrice}</Text>
             <TouchableOpacity
               style={styles.bookmarkIcon}
               onPress={() => setIsBookmarked(!isBookmarked)}

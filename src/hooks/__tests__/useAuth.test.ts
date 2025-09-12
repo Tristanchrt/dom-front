@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useAuth } from './useAuth';
+import { useAuth } from '../useAuth';
 import { useAuthStore } from '@store/auth.store';
 import { User, CreateUserRequest } from '@domain/models/User';
 
