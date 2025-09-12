@@ -86,11 +86,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="myprofile"
         options={{
           title: '',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           headerTitle: 'Mon Profil',
+          headerShown: true,
+          headerRight: () => (
+            <Link href="/settings" asChild>
+              <Pressable
+                style={{ paddingHorizontal: 16, paddingVertical: 8 }}
+                accessibilityLabel="Settings"
+              >
+                {({ pressed }) => (
+                  <FontAwesome name="cog" size={20} color={Colors['light'].tabIconDefault} />
+                )}
+              </Pressable>
+            </Link>
+          ),
         }}
       />
     </Tabs>

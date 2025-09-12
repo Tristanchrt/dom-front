@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
+import { useAuthStore } from '@/store/auth.store';
 import { profilesUseCases } from '@/data/container';
 import { creatorProfiles } from '@/data/fixtures/creators';
 import { useProfile } from '@/hooks/useProfile';
@@ -24,10 +25,13 @@ type ProfileTab = 'posts' | 'shop';
 
 export default function CreatorProfileScreen() {
   const { id } = useLocalSearchParams();
+  const currentUserId = useAuthStore((s) => s.user?.id);
+  const routeId = (id ? String(id) : (currentUserId ?? 'c1')) as string;
+  const isOwnProfile = !id || routeId === currentUserId;
   const [activeTab, setActiveTab] = useState<ProfileTab>('posts');
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const creator = creatorProfiles[id as keyof typeof creatorProfiles];
+  const creator = creatorProfiles[routeId as keyof typeof creatorProfiles];
 
   if (!creator) {
     return (
@@ -54,10 +58,7 @@ export default function CreatorProfileScreen() {
       })()
     : null;
 
-  const { followersCount, isLoading, onFollowChange } = useProfile(
-    id ? String(id) : undefined,
-    initialFollowers,
-  );
+  const { followersCount, isLoading, onFollowChange } = useProfile(routeId, initialFollowers);
 
   const parseCount = (val: string): number => {
     const trimmed = val.trim().toLowerCase();
@@ -153,16 +154,18 @@ export default function CreatorProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backIcon} onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={24} color="#2C1810" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{creator.name}</Text>
-        <TouchableOpacity style={styles.moreIcon}>
-          <FontAwesome name="ellipsis-v" size={24} color="#2C1810" />
-        </TouchableOpacity>
-      </View>
+      {/* Header (hidden when shown inside myprofile tab which has its own header) */}
+      {!isOwnProfile && (
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backIcon} onPress={() => router.back()}>
+            <FontAwesome name="arrow-left" size={24} color="#2C1810" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{creator.name}</Text>
+          <TouchableOpacity style={styles.moreIcon}>
+            <FontAwesome name="ellipsis-v" size={24} color="#2C1810" />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Cover Image */}
@@ -215,21 +218,23 @@ export default function CreatorProfileScreen() {
               </View>
             </View>
 
-            {/* Action Buttons */}
-            <View style={styles.actionButtons}>
-              <TouchableOpacity
-                style={[styles.followButton, isFollowing && styles.followingButton]}
-                onPress={handleFollow}
-              >
-                <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
-                  {isFollowing ? 'Abonné' : 'Suivre'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.messageButton}>
-                <FontAwesome name="envelope" size={16} color="#FF8C42" />
-                <Text style={styles.messageButtonText}>Message</Text>
-              </TouchableOpacity>
-            </View>
+            {/* Action Buttons (hidden on myprofile) */}
+            {!isOwnProfile && (
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={[styles.followButton, isFollowing && styles.followingButton]}
+                  onPress={handleFollow}
+                >
+                  <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
+                    {isFollowing ? 'Abonné' : 'Suivre'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.messageButton}>
+                  <FontAwesome name="envelope" size={16} color="#FF8C42" />
+                  <Text style={styles.messageButtonText}>Message</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
 
