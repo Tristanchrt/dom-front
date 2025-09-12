@@ -49,7 +49,7 @@ export default function MessagingScreen() {
     >
       <View style={styles.avatarContainer}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
-        {item.user.isOnline && <View style={styles.onlineIndicator} />}
+        {/* Online indicator removed for now */}
       </View>
 
       <View style={styles.conversationContent}>
@@ -68,10 +68,6 @@ export default function MessagingScreen() {
       </View>
 
       <View style={styles.conversationMeta}>
-        <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>View</Text>
-          <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
-        </TouchableOpacity>
         {item.unreadCount > 0 && (
           <View style={styles.unreadBadge}>
             <Text style={styles.unreadBadgeText}>{item.unreadCount}</Text>
@@ -83,6 +79,14 @@ export default function MessagingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.headerBack} onPress={() => router.back()}>
+          <FontAwesome name="arrow-left" size={20} color="#2C1810" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Messagerie</Text>
+        <View style={styles.headerSpacer} />
+      </View>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -117,19 +121,34 @@ export default function MessagingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F5F0E8',
   },
-  searchContainer: {
-    backgroundColor: '#FFFFFF',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+  },
+  headerBack: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C1810',
+  },
+  headerSpacer: { width: 32 },
+  searchContainer: {
+    backgroundColor: '#F7EFE6',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 0,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -141,20 +160,18 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   conversationsList: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 100,
   },
   conversationItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFF7F0',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F0E2D4',
   },
   avatarContainer: {
     position: 'relative',
@@ -213,7 +230,7 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF4E6',
+    backgroundColor: '#FFEEDC',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 15,
@@ -254,5 +271,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  newConversationLabelWrapper: {
+    position: 'absolute',
+    bottom: 28,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  newConversationLabel: {
+    color: '#8B7355',
+    fontSize: 12,
   },
 });

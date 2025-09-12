@@ -7,7 +7,6 @@ export const messagingUsers = {
     username: 'michel.page',
     avatar:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    isOnline: true,
     email: 'michel@example.com',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -18,7 +17,6 @@ export const messagingUsers = {
     username: 'marie.dubois',
     avatar:
       'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    isOnline: false,
     email: 'marie@example.com',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -29,7 +27,6 @@ export const messagingUsers = {
     username: 'pierre.martin',
     avatar:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    isOnline: true,
     email: 'pierre@example.com',
     createdAt: new Date(),
     updatedAt: new Date(),

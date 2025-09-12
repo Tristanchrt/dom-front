@@ -164,7 +164,6 @@ export default function ChatScreen() {
             <Text style={styles.headerUserName}>{user.name}</Text>
             <Text style={styles.headerUserSpecialty}>{user.specialty}</Text>
           </View>
-          {user.isOnline && <View style={styles.headerOnlineIndicator} />}
         </View>
 
         <TouchableOpacity style={styles.moreButton}>

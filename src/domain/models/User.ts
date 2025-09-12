@@ -5,7 +5,7 @@ export interface User {
   avatar?: string;
   username?: string;
   specialty?: string;
-  isOnline: boolean;
+  isOnline?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
