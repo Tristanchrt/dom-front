@@ -14,10 +14,10 @@ describe('InterestsSelectionScreen (app/onboarding/interests)', () => {
     // Initially disabled
     expect(getByText(/Continuer \(0\)/)).toBeTruthy();
 
-    // Select 3 interests
-    fireEvent.press(getByText('Art & Design'));
-    fireEvent.press(getByText('Photographie'));
-    fireEvent.press(getByText('Cuisine'));
+    // Select 3 interests (updated labels)
+    fireEvent.press(getByText('Livres & Écriture'));
+    fireEvent.press(getByText('Art Visuel'));
+    fireEvent.press(getByText('Musique & Son'));
 
     // Button displays current count
     expect(getByText(/Continuer \(3\)/)).toBeTruthy();

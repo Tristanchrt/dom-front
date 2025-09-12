@@ -185,7 +185,7 @@ export default function HomeScreen() {
         activeOpacity={0.7}
       >
         <Text style={[styles.tabText, activeFeed === 'following' && styles.activeTabText]}>
-          Abonnements
+          Following
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -194,7 +194,7 @@ export default function HomeScreen() {
         activeOpacity={0.7}
       >
         <Text style={[styles.tabText, activeFeed === 'explorer' && styles.activeTabText]}>
-          Explorer
+          Explore
         </Text>
       </TouchableOpacity>
     </View>

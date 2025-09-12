@@ -10,8 +10,8 @@ describe('HomeScreen (tabs/index)', () => {
   it('switches feeds when tapping tabs', () => {
     const { getByText } = render(<HomeScreen />);
 
-    fireEvent.press(getByText('Explorer'));
+    fireEvent.press(getByText('Explore'));
 
-    expect(getByText('Explorer')).toBeTruthy();
+    expect(getByText('Explore')).toBeTruthy();
   });
 });

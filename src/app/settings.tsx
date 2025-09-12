@@ -10,37 +10,38 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { t } from '@/i18n';
 
 export default function SettingsScreen() {
   const settingsOptions = [
     {
       id: 'products',
-      title: 'My products',
-      subtitle: 'Manage my products',
+      title: t('settings.productsTitle'),
+      subtitle: t('settings.productsSubtitle'),
       icon: 'shopping-bag',
       color: '#FF8C42',
       route: '/settings/products',
     },
     {
       id: 'personalization',
-      title: 'Personalization',
-      subtitle: 'Customize your profile',
+      title: t('settings.personalizationTitle'),
+      subtitle: t('settings.personalizationSubtitle'),
       icon: 'user',
       color: '#FF8C42',
       route: '/settings/profile',
     },
     {
       id: 'orders',
-      title: 'My orders',
-      subtitle: 'Order history',
+      title: t('settings.ordersTitle'),
+      subtitle: t('settings.ordersSubtitle'),
       icon: 'list',
       color: '#FF8C42',
       route: '/settings/orders',
     },
     {
       id: 'purchases',
-      title: 'My purchases',
-      subtitle: 'Your recent purchases',
+      title: t('settings.purchasesTitle'),
+      subtitle: t('settings.purchasesSubtitle'),
       icon: 'credit-card',
       color: '#FF8C42',
       route: '/settings/purchases',
@@ -50,7 +51,7 @@ export default function SettingsScreen() {
   const accountOptions = [
     {
       id: 'contact',
-      title: 'Contact us',
+      title: t('settings.header'),
       icon: 'envelope',
       color: '#FF8C42',
     },
@@ -92,7 +93,7 @@ export default function SettingsScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>{t('settings.header')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -118,13 +119,13 @@ export default function SettingsScreen() {
 
         {/* General Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>General</Text>
+          <Text style={styles.sectionTitle}>{t('settings.sectionGeneral')}</Text>
           {settingsOptions.map(renderSettingItem)}
         </View>
 
         {/* Account Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>For you</Text>
+          <Text style={styles.sectionTitle}>{t('settings.sectionForYou')}</Text>
           {accountOptions.map(renderSettingItem)}
         </View>
       </ScrollView>
