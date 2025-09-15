@@ -14,7 +14,8 @@ const config: Config = {
     '^@expo/vector-icons/(.*)$': '<rootDir>/__mocks__/expo-vector-icons.tsx',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|@react-native|@react-navigation|expo(nent)?|@expo(nent)?|unimodules|native-base|react-clone-referenced-element|@sentry|sentry-expo)',
+    // Allow transpiling RN/Expo packages even when nested under pnpm's .pnpm structure
+    'node_modules/(?!(?:\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native|@react-native|react-native-.*|@react-navigation|expo(nent)?|@expo(nent)?|unimodules|native-base|react-clone-referenced-element|@sentry|sentry-expo))',
   ],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{ts,tsx,js,jsx}', '!src/**/*.d.ts'],
