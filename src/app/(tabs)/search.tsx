@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -144,8 +146,8 @@ type SearchTab = 'creators' | 'posts' | 'shop';
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<SearchTab>('creators');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchInputRef = useRef<TextInput>(null);
+  const insets = useSafeAreaInsets();
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -280,25 +282,18 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Search Header */}
-      <View style={styles.searchHeader}>
-        <View style={[styles.searchBar, isSearchFocused && styles.searchBarFocused]}>
+      {/* Search Header (match Messaging style) */}
+      <View style={[styles.searchHeader, computeHeaderPaddings(insets), { paddingTop: Math.max(insets.top, 8) + 24 }]}>
+        <View style={styles.searchBar}>
           <FontAwesome name="search" size={18} color="#8B7355" />
           <TextInput
             ref={searchInputRef}
             style={styles.searchInput}
-            placeholder="Search..."
+            placeholder="Search"
             placeholderTextColor="#8B7355"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
           />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <FontAwesome name="times-circle" size={18} color="#8B7355" />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
 
@@ -365,37 +360,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
   searchHeader: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F7EFE6',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomWidth: 0,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  searchBarFocused: {
-    borderColor: '#FF8C42',
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#FF8C42',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
     color: '#2C1810',
     marginLeft: 12,
-    marginRight: 8,
   },
   tabsContainer: {
     backgroundColor: '#FFFFFF',

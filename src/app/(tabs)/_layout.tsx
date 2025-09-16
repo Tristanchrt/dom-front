@@ -39,9 +39,7 @@ function TabBarIcon(props: {
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-      <Animated.View style={{ transform: [{ scale }, { translateY }] }}>
-        <FontAwesome name={name} size={iconSize} color={color} style={{ marginBottom: -2 }} />
-      </Animated.View>
+        <FontAwesome name={name} size={iconSize} color={color} style={{ marginBottom: -3 }} />
       {focused ? (
         <View
           style={{
@@ -49,7 +47,7 @@ function TabBarIcon(props: {
             height: 3,
             borderRadius: 2,
             backgroundColor: '#FF8C42',
-            marginTop: 2,
+            marginTop: 4,
           }}
         />
       ) : null}
