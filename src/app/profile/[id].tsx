@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -125,32 +124,10 @@ export default function CreatorProfileScreen() {
     </TouchableOpacity>
   );
 
-  const renderContent = () => {
-    if (activeTab === 'posts') {
-      return (
-        <FlatList
-          data={creator.posts}
-          renderItem={renderPost}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.postsGrid}
-        />
-      );
-    } else {
-      return (
-        <FlatList
-          data={creator.shop}
-          renderItem={renderShopItem}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.shopGrid}
-          columnWrapperStyle={styles.shopRow}
-        />
-      );
-    }
-  };
+  const listData = activeTab === 'posts' ? creator.posts : creator.shop;
+  const listRenderItem = activeTab === 'posts' ? renderPost : renderShopItem;
+  const listContentContainerStyle = activeTab === 'posts' ? styles.postsGrid : styles.shopGrid;
+  const listColumnWrapperStyle = activeTab === 'posts' ? undefined : styles.shopRow;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -166,111 +143,122 @@ export default function CreatorProfileScreen() {
           </TouchableOpacity>
         </View>
       )}
-
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Cover Image */}
-        <View style={styles.coverContainer}>
-          <Image source={{ uri: creator.coverImage }} style={styles.coverImage} />
-        </View>
-
-        {/* Profile Info */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarContainer}>
-            <Image source={{ uri: creator.avatar }} style={styles.avatar} />
-          </View>
-
-          <View style={styles.profileInfo}>
-            <View style={styles.nameContainer}>
-              <Text style={styles.name}>{creator.name}</Text>
-              {creator.verified && <FontAwesome name="check-circle" size={20} color="#FF8C42" />}
-            </View>
-            <Text style={styles.handle}>{creator.handle}</Text>
-            <Text style={styles.category}>{creator.category}</Text>
-
-            <Text style={styles.bio}>{creator.bio}</Text>
-
-            <View style={styles.metaInfo}>
-              <View style={styles.metaItem}>
-                <FontAwesome name="map-marker" size={14} color="#8B7355" />
-                <Text style={styles.metaText}>{creator.location}</Text>
-              </View>
-              <View style={styles.metaItem}>
-                <FontAwesome name="calendar" size={14} color="#8B7355" />
-                <Text style={styles.metaText}>Rejoint en {creator.joinDate}</Text>
-              </View>
+      <FlatList
+        key={activeTab}
+        data={listData}
+        renderItem={listRenderItem}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={listContentContainerStyle}
+        columnWrapperStyle={listColumnWrapperStyle}
+        style={styles.contentContainer}
+        ListHeaderComponent={
+          <View>
+            {/* Cover Image */}
+            <View style={styles.coverContainer}>
+              <Image source={{ uri: creator.coverImage }} style={styles.coverImage} />
             </View>
 
-            {/* Stats */}
-            <View style={styles.stats}>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>{creator.postsCount}</Text>
-                <Text style={styles.statLabel}>Publications</Text>
+            {/* Profile Info */}
+            <View style={styles.profileSection}>
+              <View style={styles.avatarContainer}>
+                <Image source={{ uri: creator.avatar }} style={styles.avatar} />
               </View>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>
-                  {followersCount !== null ? formatCount(followersCount) : creator.followers}
+
+              <View style={styles.profileInfo}>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.name}>{creator.name}</Text>
+                  {creator.verified && (
+                    <FontAwesome name="check-circle" size={20} color="#FF8C42" />
+                  )}
+                </View>
+                <Text style={styles.handle}>{creator.handle}</Text>
+                <Text style={styles.category}>{creator.category}</Text>
+
+                <Text style={styles.bio}>{creator.bio}</Text>
+
+                <View style={styles.metaInfo}>
+                  <View style={styles.metaItem}>
+                    <FontAwesome name="map-marker" size={14} color="#8B7355" />
+                    <Text style={styles.metaText}>{creator.location}</Text>
+                  </View>
+                  <View style={styles.metaItem}>
+                    <FontAwesome name="calendar" size={14} color="#8B7355" />
+                    <Text style={styles.metaText}>Rejoint en {creator.joinDate}</Text>
+                  </View>
+                </View>
+
+                {/* Stats */}
+                <View style={styles.stats}>
+                  <View style={styles.stat}>
+                    <Text style={styles.statNumber}>{creator.postsCount}</Text>
+                    <Text style={styles.statLabel}>Publications</Text>
+                  </View>
+                  <View style={styles.stat}>
+                    <Text style={styles.statNumber}>
+                      {followersCount !== null ? formatCount(followersCount) : creator.followers}
+                    </Text>
+                    <Text style={styles.statLabel}>Abonnés</Text>
+                  </View>
+                  <View style={styles.stat}>
+                    <Text style={styles.statNumber}>{creator.following}</Text>
+                    <Text style={styles.statLabel}>Abonnements</Text>
+                  </View>
+                </View>
+
+                {/* Action Buttons (hidden on myprofile) */}
+                {!isOwnProfile && (
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity
+                      style={[styles.followButton, isFollowing && styles.followingButton]}
+                      onPress={handleFollow}
+                    >
+                      <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
+                        {isFollowing ? 'Abonné' : 'Suivre'}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.messageButton}>
+                      <FontAwesome name="envelope" size={16} color="#FF8C42" />
+                      <Text style={styles.messageButtonText}>Message</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            </View>
+
+            {/* Content Tabs */}
+            <View style={styles.tabsContainer}>
+              <TouchableOpacity
+                style={[styles.tab, activeTab === 'posts' && styles.activeTab]}
+                onPress={() => setActiveTab('posts')}
+              >
+                <FontAwesome
+                  name="th-large"
+                  size={16}
+                  color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'}
+                />
+                <Text style={[styles.tabText, activeTab === 'posts' && styles.activeTabText]}>
+                  Posts
                 </Text>
-                <Text style={styles.statLabel}>Abonnés</Text>
-              </View>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>{creator.following}</Text>
-                <Text style={styles.statLabel}>Abonnements</Text>
-              </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab, activeTab === 'shop' && styles.activeTab]}
+                onPress={() => setActiveTab('shop')}
+              >
+                <FontAwesome
+                  name="shopping-bag"
+                  size={16}
+                  color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
+                />
+                <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
+                  Products
+                </Text>
+              </TouchableOpacity>
             </View>
-
-            {/* Action Buttons (hidden on myprofile) */}
-            {!isOwnProfile && (
-              <View style={styles.actionButtons}>
-                <TouchableOpacity
-                  style={[styles.followButton, isFollowing && styles.followingButton]}
-                  onPress={handleFollow}
-                >
-                  <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
-                    {isFollowing ? 'Abonné' : 'Suivre'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.messageButton}>
-                  <FontAwesome name="envelope" size={16} color="#FF8C42" />
-                  <Text style={styles.messageButtonText}>Message</Text>
-                </TouchableOpacity>
-              </View>
-            )}
           </View>
-        </View>
-
-        {/* Content Tabs */}
-        <View style={styles.tabsContainer}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'posts' && styles.activeTab]}
-            onPress={() => setActiveTab('posts')}
-          >
-            <FontAwesome
-              name="th-large"
-              size={16}
-              color={activeTab === 'posts' ? '#FF8C42' : '#8B7355'}
-            />
-            <Text style={[styles.tabText, activeTab === 'posts' && styles.activeTabText]}>
-              Posts
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'shop' && styles.activeTab]}
-            onPress={() => setActiveTab('shop')}
-          >
-            <FontAwesome
-              name="shopping-bag"
-              size={16}
-              color={activeTab === 'shop' ? '#FF8C42' : '#8B7355'}
-            />
-            <Text style={[styles.tabText, activeTab === 'shop' && styles.activeTabText]}>
-              Products
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Content */}
-        <View style={styles.contentContainer}>{renderContent()}</View>
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 }
