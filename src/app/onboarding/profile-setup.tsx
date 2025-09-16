@@ -10,8 +10,8 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FontAwesome } from '@expo/vector-icons';
 import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { profileSetupDefaults } from '@/data/fixtures/onboarding';
@@ -220,7 +220,7 @@ export default function ProfileSetupScreen() {
       </ScrollView>
 
       {/* Bottom Actions */}
-      <View style={styles.bottomActions}>
+      <View style={[styles.bottomActions, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
           <Text style={styles.skipButtonText}>Passer</Text>
         </TouchableOpacity>

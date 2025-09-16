@@ -110,7 +110,7 @@ export default function MessagingScreen() {
       />
 
       {/* New Conversation Button */}
-      <TouchableOpacity style={styles.newConversationButton}>
+      <TouchableOpacity style={[styles.newConversationButton, { bottom: Math.max(insets.bottom, 20) }]}>
         <FontAwesome name="plus" size={24} color="#FFFFFF" />
       </TouchableOpacity>
     </SafeAreaView>

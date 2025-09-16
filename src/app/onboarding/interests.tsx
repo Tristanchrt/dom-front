@@ -123,7 +123,7 @@ export default function InterestsSelectionScreen() {
       </ScrollView>
 
       {/* Bottom Actions */}
-      <View style={styles.bottomActions}>
+      <View style={[styles.bottomActions, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <TouchableOpacity
           style={[
             styles.continueButton,
