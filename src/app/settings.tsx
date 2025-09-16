@@ -13,9 +13,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { t } from '@/i18n';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
+  const logout = useAuthStore((s) => s.logout);
+  const handleLogout = () => {
+    logout();
+    router.replace('/login');
+  };
   const settingsOptions = [
     {
       id: 'products',
@@ -70,13 +76,24 @@ export default function SettingsScreen() {
       icon: 'info-circle',
       color: '#FF8C42',
     },
+    {
+      id: 'logout',
+      title: 'Disconnect',
+      icon: 'sign-out',
+      color: '#FF4444',
+      onPress: handleLogout,
+    },
   ];
 
   const renderSettingItem = (item: any) => (
     <TouchableOpacity
       key={item.id}
       style={styles.settingItem}
-      onPress={() => (item.route ? router.push(item.route) : console.log(`Navigate to ${item.id}`))}
+      onPress={() => {
+        if (item.onPress) return item.onPress();
+        if (item.route) return router.push(item.route);
+        console.log(`Navigate to ${item.id}`);
+      }}
     >
       <View style={[styles.iconContainer, { backgroundColor: `${item.color}20` }]}>
         <FontAwesome name={item.icon} size={20} color={item.color} />
