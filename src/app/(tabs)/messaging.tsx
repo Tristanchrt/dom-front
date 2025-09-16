@@ -23,6 +23,27 @@ export default function MessagingScreen() {
   const [conversations, setConversations] = useState(fixtureConversations);
   const insets = useSafeAreaInsets();
 
+  const formatTimestamp = (input: Date | string): string => {
+    const now = new Date();
+    const d = typeof input === 'string' ? new Date(input) : input;
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+
+    if (d >= startOfToday) {
+      return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+    if (d >= startOfYesterday && d < startOfToday) {
+      return 'Hier';
+    }
+    if (d.getFullYear() === now.getFullYear()) {
+      const str = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+      return str.replace('.', '');
+    }
+    const str = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    return str.replace('.', '');
+  };
+
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -30,7 +51,25 @@ export default function MessagingScreen() {
         const res = await messagingUseCases.getConversations();
         if (!alive) return;
         if (res && res.conversations && res.conversations.length > 0) {
-          setConversations(res.conversations);
+          // Enrich with latest message per conversation
+          const enriched = await Promise.all(
+            res.conversations.map(async (c: any) => {
+              try {
+                const msgs = await messagingUseCases.getMessages(c.id);
+                if (msgs && msgs.length > 0) {
+                  const last = msgs[msgs.length - 1]!;
+                  return {
+                    ...c,
+                    lastMessage: last?.content ?? c.lastMessage,
+                    lastFromMe: last?.senderId === 'me',
+                    timestamp: formatTimestamp(last?.timestamp ?? new Date()),
+                  };
+                }
+              } catch {}
+              return c;
+            }),
+          );
+          setConversations(enriched);
         } else {
           setConversations(fixtureConversations);
         }
@@ -63,10 +102,14 @@ export default function MessagingScreen() {
           <Text style={styles.timestamp}>{item.timestamp}</Text>
         </View>
         <Text
-          style={[styles.lastMessage, item.hasNewMessage && styles.unreadMessage]}
+          style={[
+            styles.lastMessage,
+            item.lastFromMe && styles.lastMessageMine,
+            item.hasNewMessage && styles.unreadMessage,
+          ]}
           numberOfLines={1}
         >
-          {item.lastMessage}
+          {item.lastFromMe ? `You: ${item.lastMessage}` : item.lastMessage}
         </Text>
       </View>
 
@@ -218,6 +261,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#8B7355',
     lineHeight: 18,
+  },
+  lastMessageMine: {
+    fontStyle: 'italic',
+    color: '#B0A090',
   },
   unreadMessage: {
     fontWeight: '600',

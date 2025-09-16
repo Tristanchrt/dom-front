@@ -18,14 +18,17 @@ export class LocalMessagingRepository implements MessagingRepository {
     const list = LocalStore.getJSON<Message[]>(`${MSG_KEY_PREFIX}${conversationId}`, []);
     if (list.length > 0) return list;
     const fallback = messagesFixture[conversationId] || [];
-    return fallback.map(m => ({
+    const initial = fallback.map((m) => ({
       id: m.id,
       content: m.content,
       senderId: m.senderId,
       receiverId: conversationId,
-      timestamp: m.timestamp,
+      timestamp: new Date(m.timestamp),
       isRead: m.senderId !== 'me',
-    }));
+    } as Message));
+    // Persist the initial thread so subsequent loads include both sides + new messages
+    LocalStore.setJSON(`${MSG_KEY_PREFIX}${conversationId}`, initial);
+    return initial;
   }
   async sendMessage(request: CreateMessageRequest): Promise<Message> {
     const conversationId = request.receiverId;

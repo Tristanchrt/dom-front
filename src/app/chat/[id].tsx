@@ -26,6 +26,27 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [user, setUser] = useState<any | null>(null);
+
+  const formatTimestamp = (input: Date | string): string => {
+    const now = new Date();
+    const d = typeof input === 'string' ? new Date(input) : input;
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+
+    if (d >= startOfToday) {
+      return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+    if (d >= startOfYesterday && d < startOfToday) {
+      return 'Hier';
+    }
+    if (d.getFullYear() === now.getFullYear()) {
+      const str = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+      return str.replace('.', '');
+    }
+    const str = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    return str.replace('.', '');
+  };
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
@@ -147,7 +168,7 @@ export default function ChatScreen() {
             item.isMe ? styles.myMessageTimestamp : styles.theirMessageTimestamp,
           ]}
         >
-          {item.timestamp}
+          {formatTimestamp(item.timestamp)}
         </Text>
       </View>
     </View>
