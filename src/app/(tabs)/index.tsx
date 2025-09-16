@@ -309,11 +309,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    justifyContent: 'center',
   },
   tab: {
     paddingVertical: 16,
     paddingHorizontal: 20,
-    marginRight: 20,
+    marginHorizontal: 10,
   },
   activeTab: {
     borderBottomWidth: 2,
