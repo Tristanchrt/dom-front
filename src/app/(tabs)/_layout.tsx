@@ -1,7 +1,8 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable, View, Image } from 'react-native';
+import { Pressable, View, Image, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -11,11 +12,19 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  const isSmallScreen = Dimensions.get('window').height < 700;
+  const iconSize = isSmallScreen ? 22 : 28;
+  return <FontAwesome size={iconSize} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
+  const isSmallScreen = Dimensions.get('window').height < 700;
+
+  const tabBarHeight = (isSmallScreen ? 56 : 64) + Math.max(insets.bottom, 6);
+  const tabBarPaddingBottom = Math.max(insets.bottom, 6);
+  const tabBarPaddingTop = 6;
 
   return (
     <Tabs
@@ -25,9 +34,9 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 0,
-          height: 70,
-          paddingBottom: 20,
-          paddingTop: 10,
+          height: tabBarHeight,
+          paddingBottom: tabBarPaddingBottom,
+          paddingTop: tabBarPaddingTop,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.06,
@@ -35,9 +44,11 @@ export default function TabLayout() {
           elevation: 12,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: isSmallScreen ? 0 : 12,
           fontWeight: '500',
         },
+        tabBarShowLabel: !isSmallScreen,
+        tabBarHideOnKeyboard: true,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -117,6 +128,12 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           headerTitle: 'Mon Profil',
           headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#FFFFFF',
+          },
+          // Ensure comfortable safe-area spacing on small screens
+          headerStatusBarHeight: Math.max(insets.top, 8),
           headerRight: () => (
             <Link href="/settings" asChild>
               <Pressable

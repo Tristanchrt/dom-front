@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useAuthStore } from '@/store/auth.store';
@@ -29,6 +30,7 @@ export default function CreatorProfileScreen() {
   const isOwnProfile = !id || routeId === currentUserId;
   const [activeTab, setActiveTab] = useState<ProfileTab>('posts');
   const [isFollowing, setIsFollowing] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const creator = creatorProfiles[routeId as keyof typeof creatorProfiles];
 
@@ -150,7 +152,7 @@ export default function CreatorProfileScreen() {
         keyExtractor={(item) => item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={listContentContainerStyle}
+        contentContainerStyle={[listContentContainerStyle, { paddingBottom: Math.max(insets.bottom, 8) + 8 }]}
         columnWrapperStyle={listColumnWrapperStyle}
         style={styles.contentContainer}
         ListHeaderComponent={
@@ -258,6 +260,7 @@ export default function CreatorProfileScreen() {
             </View>
           </View>
         }
+        ListFooterComponent={<View style={{ height: Math.max(insets.bottom, 8) }} />}
       />
     </SafeAreaView>
   );

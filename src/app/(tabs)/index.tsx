@@ -11,6 +11,8 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Post from '@/components/specific/Post';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
 
 const followingPosts = [
   {
@@ -156,6 +158,8 @@ type FeedType = 'following' | 'explorer';
 
 export default function HomeScreen() {
   const [activeFeed, setActiveFeed] = useState<FeedType>('following');
+  const insets = useSafeAreaInsets();
+  const isSmallScreen = Dimensions.get('window').height < 700;
 
   const handleFeedSwitch = (feedType: FeedType) => {
     if (feedType !== activeFeed) {
@@ -165,9 +169,19 @@ export default function HomeScreen() {
   const renderPost = ({ item }: { item: any }) => <Post post={item} />;
 
   const renderHeader = () => (
-    <View style={styles.header}>
-      <View style={styles.headerCenter}>
-        <Text style={styles.logo}>DÖM</Text>
+    <View
+      style={[
+        styles.header,
+        {
+          paddingTop: Math.max(insets.top, isSmallScreen ? 22 : 26),
+          paddingBottom: isSmallScreen ? 24 : 28,
+        },
+      ]}
+    >
+      <View style={[styles.headerCenter, { top: isSmallScreen ? 10 : 14 }]}>
+        <Text style={[styles.logo, { fontSize: isSmallScreen ? 20 : 24, letterSpacing: isSmallScreen ? 0.5 : 1 }]}>
+          DÖM
+        </Text>
       </View>
      {/*  <View style={styles.headerActions}>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
@@ -214,6 +228,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         style={styles.feed}
+        contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 8) + 8 }}
         key={activeFeed} // Force re-render when feed changes
       />
     </SafeAreaView>
@@ -230,11 +245,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 24,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 6,
   },
   headerCenter: {
     position: 'absolute',
@@ -246,10 +265,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   logo: {
-    fontSize: 24,
     fontWeight: 'bold',
     color: '#2C1810',
-    letterSpacing: 1,
   },
   headerActions: {
     flexDirection: 'row',
