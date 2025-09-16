@@ -12,6 +12,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { shopProducts as fixtureProducts, shopCategories } from '@/data/fixtures/shop';
 import type { ShopProductCard } from '@/data/fixtures/shop';
@@ -23,6 +25,7 @@ const { width: screenWidth } = Dimensions.get('window');
 const categories = shopCategories;
 
 export default function ShopScreen() {
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [likedProducts, setLikedProducts] = useState<string[]>(['p2', 'p5', 'p8']);
@@ -220,7 +223,7 @@ export default function ShopScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

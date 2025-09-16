@@ -3,6 +3,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, View, Image, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -18,12 +19,11 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
   const isSmallScreen = Dimensions.get('window').height < 700;
 
-  const tabBarHeight = (isSmallScreen ? 56 : 64) + Math.max(insets.bottom, 6);
-  const tabBarPaddingBottom = Math.max(insets.bottom, 6);
+  const tabBarHeight = (isSmallScreen ? 56 : 64) + Math.max(insets.bottom, 4);
+  const tabBarPaddingBottom = Math.max(insets.bottom, 4);
   const tabBarPaddingTop = 6;
 
   return (
@@ -132,7 +132,7 @@ export default function TabLayout() {
           headerStyle: {
             backgroundColor: '#FFFFFF',
           },
-          // Ensure comfortable safe-area spacing on small screens
+          // Use consistent safe-area-aware top padding
           headerStatusBarHeight: Math.max(insets.top, 8),
           headerRight: () => (
             <Link href="/settings" asChild>

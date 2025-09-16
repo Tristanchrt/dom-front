@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings, HEADER_HORIZONTAL_PADDING } from '@/constants/Layout';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useAuthStore } from '@/store/auth.store';
@@ -135,8 +136,12 @@ export default function CreatorProfileScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header (hidden when shown inside myprofile tab which has its own header) */}
       {!isOwnProfile && (
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backIcon} onPress={() => router.back()}>
+        <View style={[styles.header, computeHeaderPaddings(insets)]}>
+          <TouchableOpacity
+            style={styles.backIcon}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            onPress={() => router.back()}
+          >
             <FontAwesome name="arrow-left" size={24} color="#2C1810" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{creator.name}</Text>
@@ -275,8 +280,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',

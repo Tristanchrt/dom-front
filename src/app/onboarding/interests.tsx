@@ -9,12 +9,15 @@ import {
   Alert,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { availableInterests, type InterestFixture } from '@/data/fixtures/onboarding';
 
 export default function InterestsSelectionScreen() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const minInterests = 3;
+  const insets = useSafeAreaInsets();
 
   const toggleInterest = (interestId: string) => {
     setSelectedInterests((prev) => {
@@ -72,8 +75,12 @@ export default function InterestsSelectionScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={() => router.back()}
+        >
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Centres d'intérêt</Text>

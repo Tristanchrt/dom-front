@@ -11,6 +11,8 @@ import {
   Alert,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { profileSetupDefaults } from '@/data/fixtures/onboarding';
 
@@ -23,6 +25,7 @@ export default function ProfileSetupScreen() {
     profileImage: null as string | null,
     bannerImage: null as string | null,
   });
+  const insets = useSafeAreaInsets();
 
   const handleImageSelection = (type: 'profile' | 'banner') => {
     Alert.alert(
@@ -130,7 +133,7 @@ export default function ProfileSetupScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <Text style={styles.headerTitle}>Sign Up page</Text>
       </View>
 

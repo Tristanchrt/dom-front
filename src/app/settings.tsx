@@ -9,10 +9,13 @@ import {
   Image,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { t } from '@/i18n';
 
 export default function SettingsScreen() {
+  const insets = useSafeAreaInsets();
   const settingsOptions = [
     {
       id: 'products',
@@ -89,7 +92,7 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

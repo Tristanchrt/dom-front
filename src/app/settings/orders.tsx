@@ -9,6 +9,8 @@ import {
   Image,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { ordersUseCases } from '@/data/container';
 import { settingsOrders } from '@/data/fixtures/settings';
@@ -17,6 +19,7 @@ type UIOrder = (typeof settingsOrders)[number];
 const fallbackOrders: UIOrder[] = settingsOrders;
 
 export default function OrdersScreen() {
+  const insets = useSafeAreaInsets();
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'paid' | 'pending'>('all');
   const [orders, setOrders] = useState<UIOrder[]>(fallbackOrders);
 
@@ -106,7 +109,7 @@ export default function OrdersScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

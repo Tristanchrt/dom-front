@@ -12,6 +12,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -24,6 +26,7 @@ interface PollOption {
 }
 
 export default function CreatePostScreen() {
+  const insets = useSafeAreaInsets();
   const [postType, setPostType] = useState<PostType>('text');
   const [postText, setPostText] = useState('');
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
@@ -309,7 +312,7 @@ export default function CreatePostScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
           <Text style={styles.cancelText}>Annuler</Text>
         </TouchableOpacity>

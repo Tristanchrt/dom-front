@@ -13,12 +13,15 @@ import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { messagingUseCases } from '@/data/container';
 import { conversationsFixture } from '@/data/fixtures/messaging';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 
 const fixtureConversations = conversationsFixture;
 
 export default function MessagingScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [conversations, setConversations] = useState(fixtureConversations);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     let alive = true;
@@ -80,11 +83,7 @@ export default function MessagingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBack} onPress={() => router.back()}>
-          <FontAwesome name="arrow-left" size={20} color="#2C1810" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Messagerie</Text>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <View style={styles.headerSpacer} />
       </View>
       {/* Search Bar */}

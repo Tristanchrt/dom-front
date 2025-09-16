@@ -11,6 +11,8 @@ import {
   Alert,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useProduct } from '@/hooks/useProduct';
 import { productDetails } from '@/data/fixtures/products';
@@ -18,6 +20,7 @@ import { productDetails } from '@/data/fixtures/products';
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function ProductDetailScreen() {
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
   const { product } = useProduct(id ? String(id) : undefined);
   const [selectedColor, setSelectedColor] = useState('');
@@ -87,7 +90,7 @@ export default function ProductDetailScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 import Post from '@/components/specific/Post';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Dimensions } from 'react-native';
+import { computeHeaderPaddings } from '@/constants/Layout';
 
 const followingPosts = [
   {
@@ -172,18 +173,23 @@ export default function HomeScreen() {
     <View
       style={[
         styles.header,
-        {
-          paddingTop: Math.max(insets.top, isSmallScreen ? 22 : 26),
-          paddingBottom: isSmallScreen ? 24 : 28,
-        },
+        computeHeaderPaddings(insets),
+        { justifyContent: 'center', alignItems: 'center' },
       ]}
     >
-      <View style={[styles.headerCenter, { top: isSmallScreen ? 10 : 14 }]}>
-        <Text style={[styles.logo, { fontSize: isSmallScreen ? 20 : 24, letterSpacing: isSmallScreen ? 0.5 : 1 }]}>
-          DÖM
-        </Text>
-      </View>
-     {/*  <View style={styles.headerActions}>
+      <Text
+        style={[
+          styles.logo,
+          {
+            fontSize: isSmallScreen ? 20 : 24,
+            letterSpacing: isSmallScreen ? 0.5 : 1,
+            marginTop: 2,
+          },
+        ]}
+      >
+        DÖM
+      </Text>
+      {/*  <View style={styles.headerActions}>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
           <FontAwesome name="shopping-cart" size={24} color="#2C1810" />
         </TouchableOpacity>

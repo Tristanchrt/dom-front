@@ -13,6 +13,8 @@ import {
   Platform,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { useLocalSearchParams, router } from 'expo-router';
 import { postsUseCases } from '@/data/container';
 import { postDetails, sampleComments } from '@/data/fixtures/posts';
@@ -20,6 +22,7 @@ import { postDetails, sampleComments } from '@/data/fixtures/posts';
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function PostDetailScreen() {
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -134,7 +137,7 @@ export default function PostDetailScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backIcon} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

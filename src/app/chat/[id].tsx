@@ -15,6 +15,8 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { messagingUseCases } from '@/data/container';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 
 // Messages and user are now provided by the repository with fixture fallback
 
@@ -24,6 +26,7 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [user, setUser] = useState<any | null>(null);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -153,7 +156,7 @@ export default function ChatScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
