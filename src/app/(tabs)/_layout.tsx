@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable, View, Image, Dimensions } from 'react-native';
+import { Pressable, View, Image, Dimensions, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
 
@@ -12,10 +12,49 @@ import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
+  focused?: boolean;
 }) {
+  const { name, color, focused } = props;
   const isSmallScreen = Dimensions.get('window').height < 700;
   const iconSize = isSmallScreen ? 22 : 28;
-  return <FontAwesome size={iconSize} style={{ marginBottom: -3 }} {...props} />;
+
+  const scale = React.useRef(new Animated.Value(1)).current;
+  const translateY = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scale, {
+        toValue: focused ? 1.12 : 1,
+        useNativeDriver: true,
+        friction: 6,
+        tension: 200,
+      }),
+      Animated.timing(translateY, {
+        toValue: focused ? -2 : 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [focused, scale, translateY]);
+
+  return (
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <Animated.View style={{ transform: [{ scale }, { translateY }] }}>
+        <FontAwesome name={name} size={iconSize} color={color} style={{ marginBottom: -2 }} />
+      </Animated.View>
+      {focused ? (
+        <View
+          style={{
+            width: 6,
+            height: 3,
+            borderRadius: 2,
+            backgroundColor: '#FF8C42',
+            marginTop: 2,
+          }}
+        />
+      ) : null}
+    </View>
+  );
 }
 
 export default function TabLayout() {
@@ -58,7 +97,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="home" color={color} focused={focused} />,
           headerShown: false,
         }}
       />
@@ -66,7 +105,7 @@ export default function TabLayout() {
         name="search"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="search" color={color} focused={focused} />,
           headerShown: false,
         }}
       />
@@ -117,7 +156,7 @@ export default function TabLayout() {
         name="messaging"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <TabBarIcon name="comment" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="comment" color={color} focused={focused} />,
           headerShown: false,
         }}
       />
@@ -125,7 +164,7 @@ export default function TabLayout() {
         name="myprofile"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="user" color={color} focused={focused} />,
           headerTitle: 'Mon Profil',
           headerShown: true,
           headerTitleAlign: 'center',
