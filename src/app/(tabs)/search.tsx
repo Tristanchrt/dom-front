@@ -13,133 +13,13 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { profilesUseCases, postsUseCases, productsUseCases } from '@/data/container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-// Sample data
-const sampleCreators = [
-  {
-    id: 'c1',
-    name: 'Marie Dubois',
-    handle: '@mariedubois',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    followers: '12.5k',
-    verified: true,
-    category: 'Lifestyle',
-  },
-  {
-    id: 'c2',
-    name: 'Chef Antoine',
-    handle: '@chefantoine',
-    avatar:
-      'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
-    followers: '8.9k',
-    verified: false,
-    category: 'Cuisine',
-  },
-  {
-    id: 'c3',
-    name: 'Travel Explorer',
-    handle: '@travelexplorer',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    followers: '25.1k',
-    verified: true,
-    category: 'Voyage',
-  },
-  {
-    id: 'c4',
-    name: 'Tech Guru',
-    handle: '@techguru',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    followers: '15.7k',
-    verified: true,
-    category: 'Technologie',
-  },
-];
-
-const samplePosts = [
-  {
-    id: 'p1',
-    user: {
-      name: 'Art Studio',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "Nouvelle œuvre terminée ! Peinture à l'huile inspirée des couchers de soleil méditerranéens 🎨",
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
-    likes: 1800,
-    comments: 67,
-  },
-  {
-    id: 'p2',
-    user: {
-      name: 'Food Lover',
-      avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    },
-    content: 'Recette du jour : Tarte aux pommes traditionnelle française 🥧',
-    image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=300&h=200&fit=crop',
-    likes: 2400,
-    comments: 89,
-  },
-  {
-    id: 'p3',
-    user: {
-      name: 'Fitness Coach',
-      avatar:
-        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
-    },
-    content: "Séance du matin terminée ! 45 minutes d'entraînement intense 💪",
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop',
-    likes: 920,
-    comments: 43,
-  },
-];
-
-const sampleShop = [
-  {
-    id: 'p1',
-    name: 'T-shirt coutumain',
-    price: '30 €',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop',
-    seller: 'Marin',
-    rating: 4.8,
-    category: 'Poterie',
-  },
-  {
-    id: 'p2',
-    name: 'Vase en céramique',
-    price: '45 €',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop',
-    seller: 'Art Studio',
-    rating: 4.9,
-    category: 'Poterie',
-  },
-  {
-    id: 'p3',
-    name: 'Livre de recettes',
-    price: '25 €',
-    image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=200&h=200&fit=crop',
-    seller: 'Chef Antoine',
-    rating: 4.7,
-    category: 'Livre Image',
-  },
-  {
-    id: 'p4',
-    name: 'Carte postale vintage',
-    price: '5 €',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
-    seller: 'Travel Explorer',
-    rating: 4.6,
-    category: 'Carte custom',
-  },
-];
+// Data is loaded from use cases via container (profiles, posts, products)
 
 type SearchTab = 'creators' | 'posts' | 'shop';
 
@@ -148,6 +28,64 @@ export default function SearchScreen() {
   const [activeTab, setActiveTab] = useState<SearchTab>('creators');
   const searchInputRef = useRef<TextInput>(null);
   const insets = useSafeAreaInsets();
+  const [creators, setCreators] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [shop, setShop] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const [creatorList, postList, productList] = await Promise.all([
+          profilesUseCases.list().catch(() => []),
+          postsUseCases.list().catch(() => []),
+          productsUseCases.list().catch(() => []),
+        ]);
+        if (!mounted) return;
+        if (creatorList && creatorList.length > 0) {
+          setCreators(
+            creatorList.map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              handle: c.handle ?? '',
+              avatar: c.avatar,
+              followers: `${c.followersCount}`,
+              verified: c.verified,
+              category: c.category ?? '',
+            })),
+          );
+        }
+        if (postList && postList.length > 0) {
+          setPosts(
+            postList.map((p: any) => ({
+              id: p.id,
+              user: { name: p.author?.name ?? 'User', avatar: p.author?.avatar ?? '' },
+              content: p.content,
+              image: p.imageUrls?.[0],
+              likes: p.likesCount ?? 0,
+              comments: p.commentsCount ?? 0,
+            })),
+          );
+        }
+        if (productList && productList.length > 0) {
+          setShop(
+            productList.map((pr: any) => ({
+              id: pr.id,
+              name: pr.name,
+              price: `${(pr.priceCents / 100).toFixed(0)} €`,
+              image: pr.imageUrls?.[0] ?? '',
+              seller: pr.sellerName,
+              rating: pr.rating ?? 0,
+              category: pr.category ?? 'Autre',
+            })),
+          );
+        }
+      } catch {}
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -233,21 +171,21 @@ export default function SearchScreen() {
   );
 
   const renderSearchResults = () => {
-    let data = [];
-    let renderItem = () => null;
+    let data: any[] = [];
+    let renderItem: ({ item }: { item: any }) => React.ReactElement = renderCreator;
     let numColumns = 1;
 
     switch (activeTab) {
       case 'creators':
-        data = filterData(sampleCreators, searchQuery);
+        data = filterData(creators, searchQuery);
         renderItem = renderCreator;
         break;
       case 'posts':
-        data = filterData(samplePosts, searchQuery);
+        data = filterData(posts, searchQuery);
         renderItem = renderPost;
         break;
       case 'shop':
-        data = filterData(sampleShop, searchQuery);
+        data = filterData(shop, searchQuery);
         renderItem = renderShopItem;
         numColumns = 2;
         break;

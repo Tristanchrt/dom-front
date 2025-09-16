@@ -6,6 +6,26 @@ import { creatorProfiles } from '@data/fixtures/creators';
 const KEY = 'profiles';
 
 export class LocalProfilesRepository implements ProfilesRepository {
+  async list(): Promise<CreatorProfile[]> {
+    const list = LocalStore.getJSON<CreatorProfile[]>(KEY, []);
+    if (list.length > 0) return list;
+    // fallback to fixtures converted to domain model
+    return Object.values(creatorProfiles).map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      handle: p.handle,
+      avatar: p.avatar,
+      coverImage: p.coverImage,
+      followersCount: parseFixtureCount(p.followers),
+      followingCount: parseFixtureCount(p.following),
+      postsCount: typeof p.postsCount === 'string' ? parseFixtureCount(p.postsCount) : p.postsCount,
+      verified: !!p.verified,
+      category: p.category,
+      bio: p.bio,
+      location: p.location,
+      joinDate: p.joinDate,
+    }));
+  }
   async getById(id: string): Promise<CreatorProfile | null> {
     const list = LocalStore.getJSON<CreatorProfile[]>(KEY, []);
     const fromStore = list.find((p) => p.id === id) ?? null;
