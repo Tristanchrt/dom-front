@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -27,6 +28,7 @@ export default function ChatScreen() {
   const flatListRef = useRef<FlatList>(null);
   const [user, setUser] = useState<any | null>(null);
   const insets = useSafeAreaInsets();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const formatTimestamp = (input: Date | string): string => {
     const now = new Date();
@@ -210,7 +212,7 @@ export default function ChatScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.moreButton}>
+        <TouchableOpacity style={styles.moreButton} onPress={() => setIsMenuOpen(true)}>
           <FontAwesome name="ellipsis-v" size={20} color="#2C1810" />
         </TouchableOpacity>
       </View>
@@ -252,6 +254,58 @@ export default function ChatScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Header Action Menu */}
+      <Modal
+        visible={isMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsMenuOpen(false)}
+      >
+        <View style={styles.menuOverlay}>
+          <TouchableOpacity style={styles.menuBackdrop} activeOpacity={1} onPress={() => setIsMenuOpen(false)} />
+          <View style={[styles.menuCard, { top: insets.top + 12, right: 12 }]}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Signaler', `Signaler ${user?.name} ?`, [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Signaler', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="flag" size={14} color="#FF4444" />
+              <Text style={[styles.menuItemText, { color: '#FF4444' }]}>Signaler</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Bloquer', `Bloquer ${user?.name} ?`, [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Bloquer', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="ban" size={14} color="#D9534F" />
+              <Text style={[styles.menuItemText, { color: '#D9534F' }]}>Bloquer le profil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Mettre en sourdine', 'La conversation a été mise en sourdine.');
+              }}
+            >
+              <FontAwesome name="bell-slash" size={14} color="#8B7355" />
+              <Text style={styles.menuItemText}>Mettre en sourdine</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -417,5 +471,37 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 18,
     color: '#8B7355',
+  },
+  menuOverlay: {
+    flex: 1,
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'transparent',
+  },
+  menuCard: {
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 6,
+    minWidth: 200,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  menuItemText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: '#2C1810',
+    fontWeight: '500',
   },
 });
