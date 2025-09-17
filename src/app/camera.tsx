@@ -34,9 +34,10 @@ export default function CameraScreen() {
   const onOpenGallery = async () => {
     try {
       const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.9 });
-      if (!res.canceled && res.assets && res.assets.length > 0) {
-        setPreviewUri(res.assets[0].uri);
-        console.log('Gallery image:', res.assets[0].uri);
+      if (!res.canceled && Array.isArray(res.assets) && res.assets.length > 0 && res.assets[0]?.uri) {
+        const uri = res.assets[0].uri as string;
+        setPreviewUri(uri);
+        console.log('Gallery image:', uri);
       }
     } catch (e) {
       console.warn('image picker error', e);
@@ -65,6 +66,12 @@ export default function CameraScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={[styles.topBar, { paddingTop: Math.max(insets.top, 10) }]}> 
+        <TouchableOpacity style={styles.topButton} onPress={() => router.back()}>
+          <FontAwesome name="arrow-left" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
+        <View style={{ width: 40 }} />
+      </View>
       {previewUri ? (
         <View style={{ flex: 1 }}>
           <Image source={{ uri: previewUri }} style={{ flex: 1 }} resizeMode="cover" />
@@ -81,7 +88,7 @@ export default function CameraScreen() {
       ) : (
         <>
           <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing={facing} />
-          <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 6), paddingTop: 6 }]}> 
+          <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 6), paddingTop: 6, opacity: 1 }]}> 
             <TouchableOpacity style={styles.smallButton} onPress={onOpenGallery}>
               <FontAwesome name="image" size={20} color="#2C1810" />
             </TouchableOpacity>
@@ -101,22 +108,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  topBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    paddingHorizontal: 12,
+    paddingBottom: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+  },
+  topButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topTitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
   bottomBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingTop: 10,
+    paddingTop: 0,
   },
   smallButton: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255,255,255,0.85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -128,7 +163,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255,255,255,0.85)',
     borderWidth: 4,
     borderColor: '#FF8C42',
   },
