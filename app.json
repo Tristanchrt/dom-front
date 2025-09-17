@@ -37,7 +37,9 @@
       "expo-router",
       "expo-font",
       "expo-localization",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-camera",
+      "expo-image-picker"
     ],
     "experiments": {
       "typedRoutes": true

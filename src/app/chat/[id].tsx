@@ -235,7 +235,7 @@ export default function ChatScreen() {
         style={[styles.inputContainer, { paddingBottom: Math.max(insets.bottom, 8) }]}
       >
         <View style={styles.inputBar}>
-          <TouchableOpacity style={styles.photoButton} onPress={handlePhotoPress}>
+          <TouchableOpacity style={styles.photoButton} onPress={() => router.push('/camera')}>
             <FontAwesome name="camera" size={20} color="#8B7355" />
           </TouchableOpacity>
 
