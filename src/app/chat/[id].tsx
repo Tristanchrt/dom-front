@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
-import { messagingUseCases } from '@/data/container';
+import { messagingUseCases, profilesUseCases } from '@/data/container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
 
@@ -26,6 +26,7 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [user, setUser] = useState<any | null>(null);
+  const insets = useSafeAreaInsets();
 
   const formatTimestamp = (input: Date | string): string => {
     const now = new Date();
@@ -47,7 +48,7 @@ export default function ChatScreen() {
     const str = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
     return str.replace('.', '');
   };
-  const insets = useSafeAreaInsets();
+  
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -67,7 +68,26 @@ export default function ChatScreen() {
         const conv = await messagingUseCases.getConversations();
         if (!mounted) return;
         const found = conv.conversations.find((c) => c.id === String(id));
-        if (found) setUser(found.user);
+        if (found) {
+          setUser(found.user);
+        } else {
+          // Fallback: load profile by id when no conversation exists yet
+          try {
+            const profile = await profilesUseCases.getById(String(id));
+            if (profile) {
+              setUser({
+                id: profile.id,
+                name: profile.name,
+                avatar: profile.avatar,
+                specialty: profile.category ?? '',
+                email: '',
+                username: profile.handle ?? '',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              } as any);
+            }
+          } catch {}
+        }
       } catch {}
       try {
         const repoMessages = await messagingUseCases.getMessages(String(id));
@@ -202,14 +222,15 @@ export default function ChatScreen() {
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.messagesList}
+        contentContainerStyle={[styles.messagesList, { paddingBottom: Math.max(insets.bottom, 8) }]}
         style={styles.messagesContainer}
       />
 
       {/* Input Bar */}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.inputContainer}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? Math.max(insets.bottom, 0) : 0}
+        style={[styles.inputContainer, { paddingBottom: Math.max(insets.bottom, 8) }]}
       >
         <View style={styles.inputBar}>
           <TouchableOpacity style={styles.photoButton} onPress={handlePhotoPress}>

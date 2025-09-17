@@ -8,10 +8,11 @@ import {
   FlatList,
   Image,
   TextInput,
+  Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { messagingUseCases } from '@/data/container';
+import { messagingUseCases, profilesUseCases } from '@/data/container';
 import { conversationsFixture } from '@/data/fixtures/messaging';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
@@ -22,6 +23,32 @@ export default function MessagingScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [conversations, setConversations] = useState(fixtureConversations);
   const insets = useSafeAreaInsets();
+  const [isNewOpen, setIsNewOpen] = useState(false);
+  const [people, setPeople] = useState<any[]>([]);
+  const [peopleQuery, setPeopleQuery] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const list = await profilesUseCases.list().catch(() => []);
+        if (!active) return;
+        setPeople(
+          (list || []).map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            handle: p.handle ?? '',
+            avatar: p.avatar,
+          })),
+        );
+      } catch {
+        if (active) setPeople([]);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const formatTimestamp = (input: Date | string): string => {
     const now = new Date();
@@ -83,6 +110,12 @@ export default function MessagingScreen() {
   const filteredConversations = conversations.filter((conv) =>
     conv.user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const filteredPeople = people.filter((p) => {
+    const q = peopleQuery.toLowerCase();
+    if (!q) return true;
+    return p.name.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q);
+  });
 
   const renderConversation = ({ item }: { item: any }) => (
     <TouchableOpacity
@@ -153,9 +186,65 @@ export default function MessagingScreen() {
       />
 
       {/* New Conversation Button */}
-      <TouchableOpacity style={[styles.newConversationButton, { bottom: Math.max(insets.bottom, 20) }]}>
+      <TouchableOpacity
+        style={[styles.newConversationButton, { bottom: Math.max(insets.bottom, 20) }]}
+        onPress={() => setIsNewOpen(true)}
+      >
         <FontAwesome name="plus" size={24} color="#FFFFFF" />
       </TouchableOpacity>
+
+      <Modal
+        visible={isNewOpen}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setIsNewOpen(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setIsNewOpen(false)} />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+            <View style={styles.sheetHeader}>
+              <Text style={styles.sheetTitle}>Nouveau message</Text>
+              <TouchableOpacity onPress={() => setIsNewOpen(false)} style={styles.sheetClose}>
+                <FontAwesome name="times" size={20} color="#8B7355" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.modalSearchContainer}>
+              <View style={styles.modalSearchBar}>
+                <FontAwesome name="search" size={18} color="#8B7355" />
+                <TextInput
+                  style={styles.modalSearchInput}
+                  placeholder="Rechercher une personne"
+                  placeholderTextColor="#8B7355"
+                  value={peopleQuery}
+                  onChangeText={setPeopleQuery}
+                />
+              </View>
+            </View>
+            <FlatList
+              data={filteredPeople}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.peopleList}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.personRow}
+                  onPress={() => {
+                    setIsNewOpen(false);
+                    router.push(`/chat/${item.id}`);
+                  }}
+                >
+                  <Image source={{ uri: item.avatar }} style={styles.personAvatar} />
+                  <View style={styles.personInfo}>
+                    <Text style={styles.personName}>{item.name}</Text>
+                    {!!item.handle && <Text style={styles.personHandle}>{item.handle}</Text>}
+                  </View>
+                  <FontAwesome name="chevron-right" size={14} color="#8B7355" />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -328,5 +417,82 @@ const styles = StyleSheet.create({
   newConversationLabel: {
     color: '#8B7355',
     fontSize: 12,
+  },
+  // New conversation modal
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  sheet: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingTop: 12,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  sheetTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C1810',
+  },
+  sheetClose: {
+    padding: 6,
+  },
+  modalSearchContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  modalSearchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 25,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  modalSearchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#2C1810',
+    marginLeft: 12,
+  },
+  peopleList: {
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+  },
+  personRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  personAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    marginRight: 12,
+  },
+  personInfo: {
+    flex: 1,
+  },
+  personName: {
+    fontSize: 16,
+    color: '#2C1810',
+    fontWeight: '600',
+  },
+  personHandle: {
+    fontSize: 12,
+    color: '#8B7355',
+    marginTop: 2,
   },
 });
