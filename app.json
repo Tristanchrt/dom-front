@@ -39,7 +39,8 @@
       "expo-localization",
       "expo-web-browser",
       "expo-camera",
-      "expo-image-picker"
+      "expo-image-picker",
+      "expo-media-library"
     ],
     "experiments": {
       "typedRoutes": true
