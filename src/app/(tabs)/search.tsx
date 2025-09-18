@@ -12,6 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import SearchBar from '@/components/common/SearchBar';
 import { router } from 'expo-router';
 import { profilesUseCases, postsUseCases, productsUseCases } from '@/data/container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,7 +27,7 @@ type SearchTab = 'creators' | 'posts' | 'shop';
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<SearchTab>('creators');
-  const searchInputRef = useRef<TextInput>(null);
+  const searchInputRef = useRef<TextInput | null>(null);
   const insets = useSafeAreaInsets();
   const [creators, setCreators] = useState<any[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
@@ -222,17 +223,13 @@ export default function SearchScreen() {
     <SafeAreaView style={styles.container}>
       {/* Search Header (match Messaging style) */}
       <View style={[styles.searchHeader, computeHeaderPaddings(insets), { paddingTop: Math.max(insets.top, 8) + 24 }]}>
-        <View style={styles.searchBar}>
-          <FontAwesome name="search" size={18} color="#8B7355" />
-          <TextInput
-            ref={searchInputRef}
-            style={styles.searchInput}
-            placeholder="Search"
-            placeholderTextColor="#8B7355"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
+        <SearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          inputRef={searchInputRef}
+          containerStyle={styles.searchBar}
+          inputStyle={styles.searchInput}
+        />
       </View>
 
       {/* Search Tabs */}

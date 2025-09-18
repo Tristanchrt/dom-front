@@ -11,6 +11,7 @@ import {
   Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import SearchBar from '@/components/common/SearchBar';
 import { router } from 'expo-router';
 import { messagingUseCases, profilesUseCases } from '@/data/container';
 import { conversationsFixture } from '@/data/fixtures/messaging';
@@ -164,16 +165,12 @@ export default function MessagingScreen() {
       </View>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <FontAwesome name="search" size={18} color="#8B7355" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search"
-            placeholderTextColor="#8B7355"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
+        <SearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          containerStyle={styles.searchBar}
+          inputStyle={styles.searchInput}
+        />
       </View>
 
       {/* Conversations List */}
