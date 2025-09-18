@@ -138,11 +138,11 @@ export default function PostDetailScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={[styles.header, computeHeaderPaddings(insets)]}>
-        <TouchableOpacity style={styles.backIcon} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Publication</Text>
-        <TouchableOpacity style={styles.moreIcon}>
+        <TouchableOpacity style={styles.headerIcon} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <FontAwesome name="ellipsis-v" size={24} color="#2C1810" />
         </TouchableOpacity>
       </View>
@@ -276,16 +276,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
   },
-  backIcon: {
+  headerIcon: {
     padding: 8,
+    width: 40,
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2C1810',
-  },
-  moreIcon: {
-    padding: 8,
+    textAlign: 'center',
+    flex: 1,
   },
   errorContainer: {
     flex: 1,

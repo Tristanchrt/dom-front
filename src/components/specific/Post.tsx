@@ -8,9 +8,11 @@ import {
   Dimensions,
   Animated,
   Alert,
+  Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface PostType {
   id: string;
@@ -42,6 +44,9 @@ export default function Post({ post }: PostProps) {
   const [commentCount, setCommentCount] = useState(post.comments);
   const [likeAnimation] = useState(new Animated.Value(1));
   const [lastTap, setLastTap] = useState<number>(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [anchorY, setAnchorY] = useState<number | null>(null);
+  const insets = useSafeAreaInsets();
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -182,8 +187,17 @@ export default function Post({ post }: PostProps) {
             <Text style={styles.timestamp}>{post.timestamp}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.moreButton}>
-          <FontAwesome name="ellipsis-h" size={16} color="#8B7355" />
+        <TouchableOpacity
+          style={styles.moreButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPressIn={(e) => {
+            // capture Y position to anchor popover
+            const y = e.nativeEvent.pageY;
+            setAnchorY(y);
+          }}
+          onPress={() => setIsMenuOpen(true)}
+        >
+          <FontAwesome name="ellipsis-h" size={18} color="#8B7355" />
         </TouchableOpacity>
       </View>
 
@@ -258,6 +272,61 @@ export default function Post({ post }: PostProps) {
           {post.shares > 0 && <Text style={styles.actionText}>{formatNumber(post.shares)}</Text>}
         </TouchableOpacity>
       </View>
+
+      {/* Action Menu Modal */}
+      <Modal
+        visible={isMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsMenuOpen(false)}
+      >
+        <View style={styles.menuOverlay}>
+          <TouchableOpacity style={styles.menuBackdrop} activeOpacity={1} onPress={() => setIsMenuOpen(false)} />
+          <View style={[
+            styles.menuCard,
+            { right: 12, top: Math.max(insets.top + 12, (anchorY ?? (insets.top + 60)) - 10) },
+          ]}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Signaler', `Signaler ${post.user.name} ?`, [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Signaler', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="flag" size={14} color="#FF4444" />
+              <Text style={[styles.menuItemText, { color: '#FF4444' }]}>Signaler {post.user.name}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Bloquer', `Bloquer le profil ${post.user.name} ?`, [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Bloquer', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="ban" size={14} color="#D9534F" />
+              <Text style={[styles.menuItemText, { color: '#D9534F' }]}>Bloquer le profil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Mettre en sourdine', 'Ce post sera masqué de votre fil.');
+              }}
+            >
+              <FontAwesome name="bell-slash" size={14} color="#8B7355" />
+              <Text style={styles.menuItemText}>Mettre en sourdine</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -266,7 +335,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     marginBottom: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     paddingVertical: 12,
   },
   header: {
@@ -274,6 +343,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 12,
+  },
+  // Reserve a bit more space around the top-right button
+  moreButton: {
+    marginBottom: 24,
   },
   userInfo: {
     flexDirection: 'row',
@@ -303,9 +376,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#8B7355',
   },
-  moreButton: {
-    padding: 8,
-  },
+  
   content: {
     fontSize: 16,
     lineHeight: 22,
@@ -372,5 +443,37 @@ const styles = StyleSheet.create({
   likedText: {
     color: '#FF4444',
     fontWeight: '600',
+  },
+  menuOverlay: {
+    flex: 1,
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'transparent',
+  },
+  menuCard: {
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 6,
+    minWidth: 220,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  menuItemText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: '#2C1810',
+    fontWeight: '500',
   },
 });
