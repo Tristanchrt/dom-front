@@ -147,7 +147,7 @@ export default function ChatScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/messaging')}>
             <FontAwesome name="arrow-left" size={24} color="#2C1810" />
           </TouchableOpacity>
         </View>
@@ -227,7 +227,7 @@ export default function ChatScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={[styles.header, computeHeaderPaddings(insets)]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/messaging')}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
 
