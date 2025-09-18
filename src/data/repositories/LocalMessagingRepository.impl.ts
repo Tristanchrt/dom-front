@@ -25,6 +25,7 @@ export class LocalMessagingRepository implements MessagingRepository {
       receiverId: conversationId,
       timestamp: new Date(m.timestamp),
       isRead: m.senderId !== 'me',
+      imageUri: (m as any).imageUri,
     } as Message));
     // Persist the initial thread so subsequent loads include both sides + new messages
     LocalStore.setJSON(`${MSG_KEY_PREFIX}${conversationId}`, initial);
@@ -35,11 +36,12 @@ export class LocalMessagingRepository implements MessagingRepository {
     const list = LocalStore.getJSON<Message[]>(`${MSG_KEY_PREFIX}${conversationId}`, []);
     const message: Message = {
       id: `m_${Date.now()}`,
-      content: request.content,
+      content: request.content ?? '',
       senderId: 'me',
       receiverId: request.receiverId,
       timestamp: new Date(),
       isRead: false,
+      ...(request.imageUri ? { imageUri: request.imageUri } : {}),
     };
     LocalStore.setJSON(`${MSG_KEY_PREFIX}${conversationId}`, [...list, message]);
     return message;

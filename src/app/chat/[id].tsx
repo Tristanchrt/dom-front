@@ -22,13 +22,14 @@ import { computeHeaderPaddings } from '@/constants/Layout';
 // Messages and user are now provided by the repository with fixture fallback
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, image } = useLocalSearchParams() as { id?: string; image?: string };
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [user, setUser] = useState<any | null>(null);
   const insets = useSafeAreaInsets();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [viewerUri, setViewerUri] = useState<string | null>(null);
 
   const formatTimestamp = (input: Date | string): string => {
     const now = new Date();
@@ -96,15 +97,13 @@ export default function ChatScreen() {
         if (!mounted) return;
         if (repoMessages && repoMessages.length > 0) {
           setMessages(
-            repoMessages.map((m) => ({
+            repoMessages.map((m: any) => ({
               id: m.id,
               text: m.content,
-              timestamp: new Date(m.timestamp).toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-              }),
+              timestamp: m.timestamp instanceof Date ? m.timestamp : new Date(m.timestamp),
               senderId: m.senderId,
               isMe: m.senderId === 'me',
+              imageUri: m.imageUri,
             })),
           );
           // mark latest message as read
@@ -119,6 +118,30 @@ export default function ChatScreen() {
       mounted = false;
     };
   }, [id]);
+
+  // Handle image shared back from camera screen via route params
+  useEffect(() => {
+    if (typeof image === 'string' && image.length > 0) {
+      const imgMsg = {
+        id: `img_${Date.now()}`,
+        text: '',
+        timestamp: new Date(),
+        senderId: 'me',
+        isMe: true,
+        imageUri: image,
+      };
+      setMessages((prev) => [...prev, imgMsg]);
+      // Persist the image message to repository so it survives reloads
+      const receiverId = id ? String(id) : null;
+      if (receiverId) {
+        messagingUseCases.sendMessage({ receiverId, imageUri: image }).catch(() => {});
+      }
+      // Clean the param from the URL
+      if (id) {
+        router.replace(`/chat/${id}`);
+      }
+    }
+  }, [id, image]);
 
   if (!user) {
     return (
@@ -140,12 +163,10 @@ export default function ChatScreen() {
       const newMessage = {
         id: `m${Date.now()}`,
         text: message.trim(),
-        timestamp: new Date().toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
+        timestamp: new Date(),
         senderId: 'me',
         isMe: true,
+        imageUri: undefined,
       };
 
       setMessages((prev) => [...prev, newMessage]);
@@ -179,11 +200,17 @@ export default function ChatScreen() {
           item.isMe ? styles.myMessageBubble : styles.theirMessageBubble,
         ]}
       >
-        <Text
-          style={[styles.messageText, item.isMe ? styles.myMessageText : styles.theirMessageText]}
-        >
-          {item.text}
-        </Text>
+        {item.imageUri ? (
+          <TouchableOpacity onPress={() => setViewerUri(item.imageUri)}>
+            <Image source={{ uri: item.imageUri }} style={styles.messageImage} />
+          </TouchableOpacity>
+        ) : (
+          <Text
+            style={[styles.messageText, item.isMe ? styles.myMessageText : styles.theirMessageText]}
+          >
+            {item.text}
+          </Text>
+        )}
         <Text
           style={[
             styles.messageTimestamp,
@@ -235,7 +262,7 @@ export default function ChatScreen() {
         style={[styles.inputContainer, { paddingBottom: Math.max(insets.bottom, 8) }]}
       >
         <View style={styles.inputBar}>
-          <TouchableOpacity style={styles.photoButton} onPress={() => router.push('/camera')}>
+          <TouchableOpacity style={styles.photoButton} onPress={() => router.push(`/camera?chatId=${id ?? ''}`)}>
             <FontAwesome name="camera" size={20} color="#8B7355" />
           </TouchableOpacity>
 
@@ -304,6 +331,16 @@ export default function ChatScreen() {
               <Text style={styles.menuItemText}>Mettre en sourdine</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+
+      {/* Image Viewer */}
+      <Modal visible={!!viewerUri} transparent animationType="fade" onRequestClose={() => setViewerUri(null)}>
+        <View style={styles.viewerBackdrop}>
+          <TouchableOpacity style={StyleSheet.absoluteFill} onPress={() => setViewerUri(null)} />
+          {viewerUri && (
+            <Image source={{ uri: viewerUri }} style={styles.viewerImage} resizeMode="contain" />
+          )}
         </View>
       </Modal>
     </SafeAreaView>
@@ -407,6 +444,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  messageImage: {
+    width: 220,
+    height: 220,
+    borderRadius: 12,
+    backgroundColor: '#EAEAEA',
+  },
   messageText: {
     fontSize: 16,
     lineHeight: 20,
@@ -471,6 +514,16 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 18,
     color: '#8B7355',
+  },
+  viewerBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerImage: {
+    width: '92%',
+    height: '80%',
   },
   menuOverlay: {
     flex: 1,

@@ -27,22 +27,24 @@ export class MessagingUseCases {
   }
 
   async sendMessage(request: CreateMessageRequest): Promise<Message> {
-    if (!request.content || request.content.trim().length === 0) {
-      throw new Error('Message content cannot be empty');
+    if ((!request.content || request.content.trim().length === 0) && !request.imageUri) {
+      throw new Error('Message must have text or image');
     }
 
     if (!request.receiverId) {
       throw new Error('Receiver ID is required');
     }
 
-    if (request.content.length > 1000) {
+    if (request.content && request.content.length > 1000) {
       throw new Error('Message content cannot exceed 1000 characters');
     }
 
-    return this.messagingRepository.sendMessage({
-      ...request,
-      content: request.content.trim(),
-    });
+    const payload: CreateMessageRequest = {
+      receiverId: request.receiverId,
+      ...(request.content ? { content: request.content.trim() } : {}),
+      ...(request.imageUri ? { imageUri: request.imageUri } : {}),
+    };
+    return this.messagingRepository.sendMessage(payload);
   }
 
   async markAsRead(messageId: string): Promise<void> {

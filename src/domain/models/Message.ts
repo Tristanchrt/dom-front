@@ -7,6 +7,7 @@ export interface Message {
   receiverId: string;
   timestamp: Date;
   isRead: boolean;
+  imageUri?: string;
 }
 
 export interface Conversation {
@@ -19,8 +20,9 @@ export interface Conversation {
 }
 
 export interface CreateMessageRequest {
-  content: string;
+  content?: string;
   receiverId: string;
+  imageUri?: string;
 }
 
 export interface ConversationsResponse {

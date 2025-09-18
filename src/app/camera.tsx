@@ -4,7 +4,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -12,6 +12,7 @@ export default function CameraScreen() {
   const cameraRef = useRef<CameraView>(null);
   const insets = useSafeAreaInsets();
   const [previewUri, setPreviewUri] = useState<string | null>(null);
+  const { chatId } = useLocalSearchParams() as { chatId?: string };
 
   const canUseCamera = useMemo(() => {
     if (!permission) return false;
@@ -79,7 +80,16 @@ export default function CameraScreen() {
             <TouchableOpacity style={[styles.smallButton, { backgroundColor: '#FFFFFF' }]} onPress={() => setPreviewUri(null)}>
               <FontAwesome name="arrow-left" size={18} color="#2C1810" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mainButton} onPress={() => { router.back(); }}>
+            <TouchableOpacity
+              style={styles.mainButton}
+              onPress={() => {
+                if (previewUri && chatId) {
+                  router.replace(`/chat/${chatId}?image=${encodeURIComponent(previewUri)}`);
+                } else {
+                  router.back();
+                }
+              }}
+            >
               <Text style={styles.saveText}>Envoyer</Text>
             </TouchableOpacity>
             <View style={styles.smallButtonPlaceholder} />
