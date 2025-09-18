@@ -73,7 +73,7 @@ export default function CameraScreen() {
         <View style={{ width: 40 }} />
       </View>
       {previewUri ? (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginBottom: 6 }}>
           <Image source={{ uri: previewUri }} style={{ flex: 1 }} resizeMode="cover" />
           <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 6), paddingTop: 6}]}> 
             <TouchableOpacity style={[styles.smallButton, { backgroundColor: '#FFFFFF' }]} onPress={() => setPreviewUri(null)}>
