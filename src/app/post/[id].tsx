@@ -149,6 +149,7 @@ export default function PostDetailScreen() {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? Math.max(insets.bottom, 0) : 0}
         style={styles.keyboardView}
       >
         <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
@@ -230,7 +231,7 @@ export default function PostDetailScreen() {
         </ScrollView>
 
         {/* Comment Input */}
-        <View style={styles.commentInputContainer}>
+        <View style={[styles.commentInputContainer, { paddingBottom: Math.max(insets.bottom, 8) }]}>
           <Image
             source={{
               uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
