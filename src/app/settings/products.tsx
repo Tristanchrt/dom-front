@@ -11,12 +11,15 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { sellerProductsUseCases } from '@/data/container';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { computeHeaderPaddings } from '@/constants/Layout';
 import { settingsSellerProducts } from '@/data/fixtures/settings';
 
 type UISellerProduct = (typeof settingsSellerProducts)[number];
 const fallbackProducts: UISellerProduct[] = settingsSellerProducts;
 
 export default function ProductsScreen() {
+  const insets = useSafeAreaInsets();
   const [selectedTab, setSelectedTab] = useState<'active' | 'draft'>('active');
   const [products, setProducts] = useState<UISellerProduct[]>(fallbackProducts);
 
@@ -95,7 +98,7 @@ export default function ProductsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, computeHeaderPaddings(insets)]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>

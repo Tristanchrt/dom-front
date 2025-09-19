@@ -178,7 +178,7 @@ export default function TabLayout() {
                 accessibilityLabel="Settings"
               >
                 {({ pressed }) => (
-                  <FontAwesome name="cog" size={20} color={Colors['light'].tabIconDefault} />
+                  <FontAwesome name="cog" size={24} color={Colors['light'].tabIconDefault} />
                 )}
               </Pressable>
             </Link>
