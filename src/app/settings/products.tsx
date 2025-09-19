@@ -44,13 +44,26 @@ export default function ProductsScreen() {
   const [selectedTab, setSelectedTab] = useState<'active' | 'draft'>('active');
   const [products, setProducts] = useState<UISellerProduct[]>(fallbackProducts);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newCategory, setNewCategory] = useState<string | null>(null);
+  const [newStatus, setNewStatus] = useState<'Active' | 'Draft'>('Draft');
   const [newImages, setNewImages] = useState<string[]>([]);
   const [newDescription, setNewDescription] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagDraft, setTagDraft] = useState('');
+
+  // Edit modal state
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editPrice, setEditPrice] = useState('');
+  const [editCategory, setEditCategory] = useState<string | null>(null);
+  const [editStatus, setEditStatus] = useState<'Active' | 'Draft'>('Draft');
+  const [editImages, setEditImages] = useState<string[]>([]);
+  const [editDescription, setEditDescription] = useState('');
+  const [editTags, setEditTags] = useState<string[]>([]);
+  const [editTagDraft, setEditTagDraft] = useState('');
 
   useEffect(() => {
     let alive = true;
@@ -82,7 +95,22 @@ export default function ProductsScreen() {
   }, []);
 
   const renderProduct = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.productCard}>
+    <TouchableOpacity
+      style={styles.productCard}
+      onPress={() => {
+        setEditId(item.id);
+        setIsEditOpen(true);
+        setEditName(item.name);
+        setEditPrice(item.price);
+        setEditCategory(null);
+        setEditStatus((item.status as 'Active' | 'Draft') || 'Draft');
+        setEditImages(item.image ? [item.image] : []);
+        setEditDescription('');
+        setEditTags([]);
+        setEditTagDraft('');
+      }}
+      activeOpacity={0.8}
+    >
       <Image source={{ uri: item.image }} style={styles.productImage} />
 
       <View style={styles.productInfo}>
@@ -95,12 +123,6 @@ export default function ProductsScreen() {
       </View>
 
       <View style={styles.productActions}>
-        <TouchableOpacity style={styles.actionButton}>
-          <FontAwesome name="edit" size={16} color="#FF8C42" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-          <FontAwesome name="trash" size={16} color="#FF4444" />
-        </TouchableOpacity>
         <View
           style={[
             styles.statusBadge,
@@ -308,9 +330,24 @@ export default function ProductsScreen() {
                     />
                   </View>
                 </View>
-                <View style={{ width: 100, alignItems: 'center', justifyContent: 'flex-end' }}>
+                <View style={{ width: 150, alignItems: 'center', justifyContent: 'flex-end' }}>
                   <Text style={[styles.fieldLabel, { marginBottom: 6 }]}>Statut</Text>
-                  <View style={styles.statusPill}><Text style={styles.statusPillText}>Draft</Text></View>
+                  <View style={styles.statusSeg}>
+                    <TouchableOpacity
+                      style={[styles.statusOpt, newStatus === 'Draft' && styles.statusOptSelected]}
+                      onPress={() => setNewStatus('Draft')}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={[styles.statusOptText, newStatus === 'Draft' && styles.statusOptTextSelected]}>Draft</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.statusOpt, newStatus === 'Active' && styles.statusOptSelected]}
+                      onPress={() => setNewStatus('Active')}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={[styles.statusOptText, newStatus === 'Active' && styles.statusOptTextSelected]}>Active</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
 
@@ -409,7 +446,7 @@ export default function ProductsScreen() {
                   id: `tmp_${Date.now()}`,
                   name: newName.trim(),
                   price: priceLabel,
-                  status: 'Draft' as any,
+                  status: newStatus as any,
                   image: newImages[0] as string,
                   sales: 0,
                   views: 0,
@@ -427,6 +464,256 @@ export default function ProductsScreen() {
             >
               <Text style={styles.primaryButtonText}>Créer</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Edit Product Modal */}
+      <Modal
+        visible={isEditOpen}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setIsEditOpen(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setIsEditOpen(false)}
+          />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 12), maxHeight: '85%' }]}>
+            <View style={styles.sheetHandle} />
+            <View style={styles.sheetHeader}>
+              <Text style={styles.sheetTitle}>Modifier le produit</Text>
+              <TouchableOpacity onPress={() => setIsEditOpen(false)} style={styles.sheetClose}>
+                <FontAwesome name="times" size={20} color="#8B7355" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView contentContainerStyle={{ paddingBottom: 12 }} showsVerticalScrollIndicator={false}>
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Nom</Text>
+                <View style={styles.inputRow}>
+                  <FontAwesome name="pencil" size={16} color="#8B7355" style={{ marginRight: 10 }} />
+                  <TextInput
+                    style={[styles.textInput, { flex: 1 }]}
+                    placeholder="Nom du produit"
+                    placeholderTextColor="#8B7355"
+                    value={editName}
+                    onChangeText={setEditName}
+                    maxLength={80}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Photos</Text>
+                <View style={styles.photosRow}>
+                  {editImages.map((uri) => (
+                    <View key={uri} style={styles.photoItem}>
+                      <Image source={{ uri }} style={styles.photoThumb} />
+                      <TouchableOpacity
+                        style={styles.photoRemove}
+                        onPress={() => setEditImages((prev) => prev.filter((u) => u !== uri))}
+                      >
+                        <Text style={styles.photoRemoveText}>×</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                  <TouchableOpacity
+                    style={styles.photoAdd}
+                    onPress={async () => {
+                      try {
+                        const res = await ImagePicker.launchImageLibraryAsync({
+                          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                          allowsMultipleSelection: true,
+                          selectionLimit: 10,
+                          quality: 0.85,
+                        });
+                        if (!res.canceled) {
+                          const picked = (res as any).assets?.map((a: any) => a.uri).filter(Boolean) || [];
+                          if (picked.length > 0) {
+                            setEditImages((prev) => Array.from(new Set([...(prev || []), ...picked])));
+                          }
+                        }
+                      } catch (e) {
+                        Alert.alert('Erreur', "Impossible d'ouvrir la galerie");
+                      }
+                    }}
+                  >
+                    <FontAwesome name="image" size={18} color="#FF8C42" />
+                    <Text style={styles.photoAddText}>Ajouter</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Description (optionnel)</Text>
+                <View style={styles.inputRow}>
+                  <FontAwesome name="align-left" size={16} color="#8B7355" style={{ marginRight: 10 }} />
+                  <TextInput
+                    style={[styles.textInput, { flex: 1, height: 90, textAlignVertical: 'top' }]}
+                    placeholder="Décrivez votre produit..."
+                    placeholderTextColor="#8B7355"
+                    value={editDescription}
+                    onChangeText={setEditDescription}
+                    multiline
+                    maxLength={500}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.fieldRow}>
+                <View style={[styles.fieldGroup, { flex: 1, marginRight: 8 }]}>
+                  <Text style={styles.fieldLabel}>Prix</Text>
+                  <View style={styles.inputRow}>
+                    <FontAwesome name="tag" size={16} color="#8B7355" style={{ marginRight: 10 }} />
+                    <TextInput
+                      style={[styles.textInput, { flex: 1 }]}
+                      placeholder="Ex: 25 €"
+                      placeholderTextColor="#8B7355"
+                      value={editPrice}
+                      onChangeText={setEditPrice}
+                      keyboardType="decimal-pad"
+                      maxLength={12}
+                    />
+                  </View>
+                </View>
+                <View style={{ width: 150, alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <Text style={[styles.fieldLabel, { marginBottom: 6 }]}>Statut</Text>
+                  <View style={styles.statusSeg}>
+                    <TouchableOpacity
+                      style={[styles.statusOpt, editStatus === 'Draft' && styles.statusOptSelected]}
+                      onPress={() => setEditStatus('Draft')}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={[styles.statusOptText, editStatus === 'Draft' && styles.statusOptTextSelected]}>Draft</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.statusOpt, editStatus === 'Active' && styles.statusOptSelected]}
+                      onPress={() => setEditStatus('Active')}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={[styles.statusOptText, editStatus === 'Active' && styles.statusOptTextSelected]}>Active</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Catégorie</Text>
+                <View style={styles.categoriesWrap}>
+                  {CATEGORIES.map((cat) => {
+                    const selected = editCategory === cat;
+                    return (
+                      <TouchableOpacity
+                        key={cat}
+                        style={[styles.categoryChip, selected && styles.categoryChipSelected]}
+                        onPress={() => setEditCategory(cat)}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={[styles.categoryChipText, selected && styles.categoryChipTextSelected]}>
+                          {cat}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>#hashtags (max 10)</Text>
+                <View style={styles.tagsWrap}>
+                  {editTags.map((t) => (
+                    <View key={t} style={styles.tagChip}>
+                      <Text style={styles.tagChipText}>{t}</Text>
+                      <TouchableOpacity onPress={() => setEditTags((prev) => prev.filter((x) => x !== t))}>
+                        <Text style={styles.tagRemove}>×</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.tagInputRow}>
+                  <View style={[styles.inputRow, { flex: 1 }]}>
+                    <FontAwesome name="hashtag" size={16} color="#8B7355" style={{ marginRight: 10 }} />
+                    <TextInput
+                      style={[styles.textInput, { flex: 1 }]}
+                      placeholder="#ajouter-un-hashtag"
+                      placeholderTextColor="#8B7355"
+                      value={editTagDraft}
+                      onChangeText={setEditTagDraft}
+                      maxLength={40}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.secondaryButton, { marginLeft: 8 }]}
+                    onPress={() => {
+                      const raw = editTagDraft.trim();
+                      if (!raw) return;
+                      let norm = raw.startsWith('#') ? raw : `#${raw}`;
+                      norm = norm.replace(/\s+/g, '-');
+                      if (editTags.includes(norm)) {
+                        setEditTagDraft('');
+                        return;
+                      }
+                      if (editTags.length >= 10) {
+                        Alert.alert('Maximum atteint', 'Vous pouvez ajouter jusqu\'à 10 hashtags.');
+                        return;
+                      }
+                      setEditTags((prev) => [...prev, norm]);
+                      setEditTagDraft('');
+                    }}
+                  >
+                    <Text style={styles.secondaryButtonText}>Ajouter</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ScrollView>
+
+            <View style={styles.footerRow}>
+              <TouchableOpacity
+                style={styles.dangerGhostButton}
+                onPress={() => {
+                  Alert.alert('Supprimer', 'Confirmer la suppression de ce produit ?', [
+                    { text: 'Annuler', style: 'cancel' },
+                    {
+                      text: 'Supprimer',
+                      style: 'destructive' as any,
+                      onPress: () => {
+                        setProducts((prev) => prev.filter((p) => p.id !== editId));
+                        setIsEditOpen(false);
+                      },
+                    },
+                  ]);
+                }}
+              >
+                <Text style={styles.dangerGhostText}>Supprimer</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.primarySmallButton}
+                onPress={() => {
+                  if (!editName.trim()) {
+                    Alert.alert('Nom requis', 'Veuillez saisir un nom de produit.');
+                    return;
+                  }
+                  setProducts((prev) => prev.map((p) => (
+                    p.id === editId
+                      ? {
+                          ...p,
+                          name: editName.trim(),
+                          price: editPrice || p.price,
+                          image: (editImages[0] || p.image) as string,
+                          status: editStatus as any,
+                        }
+                      : p
+                  )));
+                  setIsEditOpen(false);
+                }}
+              >
+                <Text style={styles.primaryButtonText}>Enregistrer</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -694,6 +981,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  statusSeg: {
+    flexDirection: 'row',
+    backgroundColor: '#F7EFE6',
+    borderRadius: 20,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: '#E8DCCF',
+  },
+  statusOpt: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+  },
+  statusOptSelected: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#FF8C42',
+  },
+  statusOptText: {
+    fontSize: 12,
+    color: '#8B7355',
+    fontWeight: '600',
+  },
+  statusOptTextSelected: {
+    color: '#FF8C42',
+  },
   categoriesWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -781,6 +1094,38 @@ const styles = StyleSheet.create({
     color: '#FF8C42',
     fontSize: 14,
     fontWeight: '600',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 6,
+    paddingBottom: 10,
+  },
+  dangerGhostButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    backgroundColor: '#FFF1F1',
+    borderWidth: 1,
+    borderColor: '#FFCCCC',
+  },
+  dangerGhostText: {
+    color: '#FF4444',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  primarySmallButton: {
+    backgroundColor: '#FF8C42',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
   },
   photosRow: {
     flexDirection: 'row',
