@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,6 +24,7 @@ export default function OrdersScreen() {
   const insets = useSafeAreaInsets();
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'paid' | 'pending'>('all');
   const [orders, setOrders] = useState<UIOrder[]>(fallbackOrders);
+  const [opened, setOpened] = useState<UIOrder | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -67,7 +70,7 @@ export default function OrdersScreen() {
   };
 
   const renderOrder = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.orderCard}>
+    <TouchableOpacity style={styles.orderCard} activeOpacity={0.85} onPress={() => setOpened(item)}>
       <Image source={{ uri: item.image }} style={styles.orderImage} />
 
       <View style={styles.orderInfo}>
@@ -176,6 +179,81 @@ export default function OrdersScreen() {
           </View>
         }
       />
+
+      {/* Order Details Modal */}
+      <Modal
+        visible={!!opened}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setOpened(null)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setOpened(null)} />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+            <View style={styles.sheetHeader}>
+              <Text style={styles.sheetTitle}>Détails de la commande</Text>
+              <TouchableOpacity onPress={() => setOpened(null)} style={styles.sheetClose}>
+                <FontAwesome name="times" size={20} color="#8B7355" />
+              </TouchableOpacity>
+            </View>
+            <ScrollView contentContainerStyle={{ paddingBottom: 8 }} showsVerticalScrollIndicator={false}>
+              {opened && (
+                <View style={{ paddingHorizontal: 16 }}>
+                  <View style={styles.detailRow}>
+                    <Image source={{ uri: opened.image }} style={styles.detailImage} />
+                    <View style={{ flex: 1, marginLeft: 12 }}>
+                      <Text style={styles.detailProduct}>{opened.productName}</Text>
+                      <Text style={styles.detailLine}>Commande #{opened.id}</Text>
+                      <Text style={styles.detailLine}>Statut: {opened.status}</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.sectionBlock}>
+                    <Text style={styles.sectionTitle}>Client</Text>
+                    <Text style={styles.detailLine}>{opened.customerName}</Text>
+                    <Text style={styles.detailSub}>Email: client@example.com</Text>
+                    <Text style={styles.detailSub}>Téléphone: +33 6 12 34 56 78</Text>
+                  </View>
+
+                  <View style={styles.sectionBlock}>
+                    <Text style={styles.sectionTitle}>Livraison</Text>
+                    <Text style={styles.detailLine}>Adresse: 12 rue des Fleurs, 75002 Paris</Text>
+                    <Text style={styles.detailSub}>Mode: Colissimo</Text>
+                    <Text style={styles.detailSub}>Suivi: 6A1234567890</Text>
+                    <TouchableOpacity style={styles.trackButton}>
+                      <Text style={styles.trackButtonText}>Suivre le colis</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.sectionBlock}>
+                    <Text style={styles.sectionTitle}>Récapitulatif</Text>
+                    <View style={styles.summaryRow}>
+                      <Text style={styles.summaryLabel}>Quantité</Text>
+                      <Text style={styles.summaryValue}>{opened.quantity}</Text>
+                    </View>
+                    <View style={styles.summaryRow}>
+                      <Text style={styles.summaryLabel}>Prix</Text>
+                      <Text style={styles.summaryValue}>{opened.price}</Text>
+                    </View>
+                    <View style={styles.summaryRow}>
+                      <Text style={styles.summaryLabel}>Frais de port</Text>
+                      <Text style={styles.summaryValue}>3 €</Text>
+                    </View>
+                    <View style={[styles.summaryRow, { borderTopWidth: 1, borderTopColor: '#F0E0D0', paddingTop: 8, marginTop: 4 }] }>
+                      <Text style={[styles.summaryLabel, { fontWeight: '700' }]}>Total</Text>
+                      <Text style={[styles.summaryValue, { color: '#FF8C42', fontWeight: '700' }]}>
+                        {opened.price}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={{ height: 8 }} />
+                </View>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -338,6 +416,104 @@ const styles = StyleSheet.create({
   },
   moreButton: {
     padding: 4,
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  sheet: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingTop: 12,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  sheetTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C1810',
+  },
+  sheetClose: {
+    padding: 6,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  detailImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+    backgroundColor: '#F0F0F0',
+  },
+  detailProduct: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C1810',
+    marginBottom: 4,
+  },
+  detailLine: {
+    fontSize: 14,
+    color: '#2C1810',
+  },
+  detailSub: {
+    fontSize: 12,
+    color: '#8B7355',
+    marginTop: 2,
+  },
+  sectionBlock: {
+    backgroundColor: '#FFF7F0',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#2C1810',
+    marginBottom: 8,
+  },
+  trackButton: {
+    marginTop: 8,
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFF4E6',
+    borderColor: '#FF8C42',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  trackButtonText: {
+    color: '#FF8C42',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  summaryLabel: {
+    fontSize: 13,
+    color: '#8B7355',
+  },
+  summaryValue: {
+    fontSize: 14,
+    color: '#2C1810',
+    fontWeight: '600',
   },
   emptyState: {
     alignItems: 'center',
