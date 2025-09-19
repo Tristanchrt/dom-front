@@ -21,10 +21,13 @@ export default function ProfileEditScreen() {
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: profileEditDefaults.name,
-    language: profileEditDefaults.status,
+    language: 'en',
     description: profileEditDefaults.description,
     category: profileEditDefaults.category,
-    socialNetworks: profileEditDefaults.socialLinks,
+    instagram: '',
+    facebook: '',
+    linkedin: '',
+    website: '',
   });
 
   useEffect(() => {
@@ -33,13 +36,18 @@ export default function ProfileEditScreen() {
       try {
         const draft = await usersUseCases.getProfileDraft();
         if (!alive || !draft) return;
-        setProfile({
-          name: draft.name,
-          language: draft.status,
-          description: draft.description,
-          category: draft.category,
-          socialNetworks: draft.socialLinks,
-        });
+        setProfile((prev) => ({
+          ...prev,
+          name: draft.name ?? prev.name,
+          language: draft.status === 'fr' || draft.status === 'en' ? draft.status : prev.language,
+          description: draft.description ?? prev.description,
+          category: draft.category ?? prev.category,
+          // Attempt best-effort parse if socialLinks provided as a string
+          instagram: prev.instagram,
+          facebook: prev.facebook,
+          linkedin: prev.linkedin,
+          website: prev.website,
+        }));
       } catch {
         // ignore load errors; defaults already shown
       }
@@ -49,16 +57,19 @@ export default function ProfileEditScreen() {
 
   const handleSave = async () => {
     try {
+      const links = [profile.instagram, profile.facebook, profile.linkedin, profile.website]
+        .filter((x) => x && x.trim().length > 0)
+        .join(', ');
       await usersUseCases.saveProfileDraft({
         name: profile.name,
-        status: profile.language,
+        status: profile.language, // 'en' | 'fr'
         description: profile.description,
         category: profile.category,
-        socialLinks: profile.socialNetworks,
+        socialLinks: links,
         avatarUrl: profileEditDefaults.avatarUrl,
       });
       Alert.alert('✅ Profile saved', 'Your changes have been saved successfully', [
-        { text: 'OK' },
+        { text: 'OK', onPress: () => router.replace('/settings') },
       ]);
     } catch {
       Alert.alert('Error', 'Failed to save your profile');
@@ -89,10 +100,6 @@ export default function ProfileEditScreen() {
       <View style={styles.fieldHeader}>
         <FontAwesome name="lock" size={14} color="#FF8C42" />
         <Text style={styles.fieldLabel}>{label}</Text>
-        <TouchableOpacity style={styles.modifyButton}>
-          <Text style={styles.modifyText}>modifier</Text>
-          <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
-        </TouchableOpacity>
       </View>
       <TextInput
         style={[styles.fieldInput, multiline && styles.multilineInput]}
@@ -117,7 +124,7 @@ export default function ProfileEditScreen() {
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 16) + 72 }}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.profileImageContainer}>
@@ -131,9 +138,14 @@ export default function ProfileEditScreen() {
             <Text style={styles.profileStatus}>{profile.language}</Text>
           </View>
           <View style={styles.languageSelector}>
-            <TouchableOpacity style={styles.languageButton}>
-              <Text style={styles.languageText}>🇬🇧</Text>
-              <FontAwesome name="chevron-down" size={12} color="#8B7355" />
+            <TouchableOpacity
+              style={styles.languageButton}
+              onPress={() =>
+                setProfile((p) => ({ ...p, language: p.language === 'en' ? 'fr' : 'en' }))
+              }
+            >
+              <Text style={styles.languageText}>{profile.language === 'fr' ? '🇫🇷' : '🇬🇧'}</Text>
+              <FontAwesome name="exchange" size={12} color="#8B7355" />
             </TouchableOpacity>
           </View>
         </View>
@@ -171,19 +183,57 @@ export default function ProfileEditScreen() {
             placeholder="Your domain of expertise..."
           />
 
-          <EditableField
-            label="Social networks"
-            value={profile.socialNetworks}
-            onChangeText={(text) => setProfile({ ...profile, socialNetworks: text })}
-            placeholder="Your social links..."
-          />
+          <View style={styles.fieldContainer}>
+            <View style={styles.fieldHeader}>
+              <FontAwesome name="globe" size={14} color="#FF8C42" />
+              <Text style={styles.fieldLabel}>Social networks (optionnel)</Text>
+            </View>
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="Instagram URL"
+              placeholderTextColor="#8B7355"
+              value={profile.instagram}
+              onChangeText={(text) => setProfile({ ...profile, instagram: text })}
+              autoCapitalize="none"
+            />
+            <View style={{ height: 8 }} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="Facebook URL"
+              placeholderTextColor="#8B7355"
+              value={profile.facebook}
+              onChangeText={(text) => setProfile({ ...profile, facebook: text })}
+              autoCapitalize="none"
+            />
+            <View style={{ height: 8 }} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="LinkedIn URL"
+              placeholderTextColor="#8B7355"
+              value={profile.linkedin}
+              onChangeText={(text) => setProfile({ ...profile, linkedin: text })}
+              autoCapitalize="none"
+            />
+            <View style={{ height: 8 }} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="Website URL"
+              placeholderTextColor="#8B7355"
+              value={profile.website}
+              onChangeText={(text) => setProfile({ ...profile, website: text })}
+              autoCapitalize="none"
+            />
+          </View>
         </ProfileSection>
 
-        {/* Save Button */}
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save changes</Text>
-        </TouchableOpacity>
       </ScrollView>
+
+      {/* Sticky Save */}
+      <View style={[styles.saveBar, { paddingBottom: Math.max(insets.bottom, 10) }]}>
+        <TouchableOpacity style={styles.saveBarButton} onPress={handleSave}>
+          <Text style={styles.saveBarButtonText}>Save changes</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -362,6 +412,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  saveBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+    paddingTop: 8,
+    paddingHorizontal: 16,
+  },
+  saveBarButton: {
+    backgroundColor: '#FF8C42',
+    borderRadius: 25,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  saveBarButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
