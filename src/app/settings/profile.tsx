@@ -16,14 +16,18 @@ import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
 import { profileEditDefaults } from '@/data/fixtures/settings';
 import { usersUseCases } from '@/data/container';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function ProfileEditScreen() {
   const insets = useSafeAreaInsets();
+  const DEFAULT_BANNER_URL = 'https://images.unsplash.com/photo-1503264116251-35a269479413?w=1200&h=600&fit=crop';
   const [profile, setProfile] = useState({
     name: profileEditDefaults.name,
     language: 'en',
     description: profileEditDefaults.description,
     category: profileEditDefaults.category,
+    avatarUrl: profileEditDefaults.avatarUrl,
+    bannerUrl: DEFAULT_BANNER_URL,
     instagram: '',
     facebook: '',
     linkedin: '',
@@ -43,6 +47,7 @@ export default function ProfileEditScreen() {
           description: draft.description ?? prev.description,
           category: draft.category ?? prev.category,
           // Attempt best-effort parse if socialLinks provided as a string
+          avatarUrl: draft.avatarUrl ?? prev.avatarUrl,
           instagram: prev.instagram,
           facebook: prev.facebook,
           linkedin: prev.linkedin,
@@ -66,13 +71,30 @@ export default function ProfileEditScreen() {
         description: profile.description,
         category: profile.category,
         socialLinks: links,
-        avatarUrl: profileEditDefaults.avatarUrl,
+        avatarUrl: profile.avatarUrl,
       });
       Alert.alert('✅ Profile saved', 'Your changes have been saved successfully', [
         { text: 'OK', onPress: () => router.replace('/settings') },
       ]);
     } catch {
       Alert.alert('Error', 'Failed to save your profile');
+    }
+  };
+
+  const pickImage = async (): Promise<string | null> => {
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        quality: 0.9,
+      });
+      if (!res.canceled && (res as any).assets?.[0]?.uri) {
+        return (res as any).assets[0].uri as string;
+      }
+      return null;
+    } catch {
+      Alert.alert('Erreur', "Impossible d'ouvrir la galerie");
+      return null;
     }
   };
 
@@ -128,8 +150,14 @@ export default function ProfileEditScreen() {
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.profileImageContainer}>
-            <Image source={{ uri: profileEditDefaults.avatarUrl }} style={styles.profileImage} />
-            <TouchableOpacity style={styles.editImageButton}>
+            <Image source={{ uri: profile.avatarUrl }} style={styles.profileImage} />
+            <TouchableOpacity
+              style={styles.editImageButton}
+              onPress={async () => {
+                const uri = await pickImage();
+                if (uri) setProfile((p) => ({ ...p, avatarUrl: uri }));
+              }}
+            >
               <FontAwesome name="camera" size={16} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
@@ -152,18 +180,47 @@ export default function ProfileEditScreen() {
 
         {/* Profile Banner */}
         <View style={styles.profileBanner}>
-          <View style={styles.bannerContent}>
-            <View style={styles.bannerText}>
-              <Text style={styles.bannerTitle}>Complete your profile</Text>
-              <Text style={styles.bannerSubtitle}>Improve your visibility</Text>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={async () => {
+              const uri = await pickImage();
+              if (uri) setProfile((p) => ({ ...p, bannerUrl: uri }));
+            }}
+          >
+            <View style={styles.bannerContent}>
+              <View style={styles.bannerText}>
+                <Text style={styles.bannerTitle}>Complete your profile</Text>
+                <Text style={styles.bannerSubtitle}>Improve your visibility</Text>
+                {(() => {
+                  const missing: string[] = [];
+                  if (!profile.description?.trim()) missing.push('description');
+                  if (!profile.category?.trim()) missing.push('category');
+                  if (!profile.instagram && !profile.facebook && !profile.linkedin && !profile.website) {
+                    missing.push('social links');
+                  }
+                  if (profile.avatarUrl === profileEditDefaults.avatarUrl) missing.push('profile photo');
+                  if (profile.bannerUrl === DEFAULT_BANNER_URL) missing.push('banner');
+                  if (missing.length === 0) return null;
+                  return (
+                    <Text style={styles.bannerHint}>
+                      You can add: {missing.join(', ')}
+                    </Text>
+                  );
+                })()}
+              </View>
+              <Image source={{ uri: profile.bannerUrl }} style={styles.bannerImage} />
             </View>
-            <Image
-              source={{
-                uri: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop',
-              }}
-              style={styles.bannerImage}
-            />
-          </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editBannerButton}
+            onPress={async () => {
+              const uri = await pickImage();
+              if (uri) setProfile((p) => ({ ...p, bannerUrl: uri }));
+            }}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <FontAwesome name="camera" size={14} color="#FFFFFF" />
+          </TouchableOpacity>
         </View>
 
         {/* Editable Fields */}
@@ -329,6 +386,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 12,
     padding: 16,
+    position: 'relative',
   },
   bannerContent: {
     flexDirection: 'row',
@@ -347,10 +405,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#8B7355',
   },
+  bannerHint: {
+    marginTop: 6,
+    fontSize: 12,
+    color: '#8B7355',
+  },
   bannerImage: {
     width: 60,
     height: 60,
     borderRadius: 30,
+  },
+  editBannerButton: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    borderRadius: 14,
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   section: {
     backgroundColor: '#FFFFFF',
