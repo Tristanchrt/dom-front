@@ -65,6 +65,7 @@ function RootLayoutNav() {
         <Stack.Screen name="settings/profile" options={{ headerShown: false }} />
         <Stack.Screen name="settings/products" options={{ headerShown: false }} />
         <Stack.Screen name="settings/orders" options={{ headerShown: false }} />
+        <Stack.Screen name="settings/purchases" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding/profile-setup" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding/interests" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding/test-debug" options={{ headerShown: false }} />
