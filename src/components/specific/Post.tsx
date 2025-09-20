@@ -49,6 +49,13 @@ export default function Post({ post }: PostProps) {
   const [anchorY, setAnchorY] = useState<number | null>(null);
   const insets = useSafeAreaInsets();
   const [viewerUri, setViewerUri] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const MAX_PREVIEW_LEN = 150;
+  const isTruncated = !isExpanded && post.content && post.content.length > MAX_PREVIEW_LEN;
+  const previewText = isTruncated
+    ? `${post.content.slice(0, MAX_PREVIEW_LEN).trim()}…`
+    : post.content;
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -220,7 +227,12 @@ export default function Post({ post }: PostProps) {
 
       {/* Post Content */}
       <TouchableOpacity activeOpacity={0.9} onPress={handlePostClick}>
-        <Text style={styles.content}>{post.content}</Text>
+        <Text style={styles.content}>
+          {previewText}
+          {isTruncated && (
+            <Text style={styles.seeMore} onPress={handlePostClick}> Voir plus</Text>
+          )}
+        </Text>
       </TouchableOpacity>
 
       {/* Post Image - opens viewer, not the post */}
@@ -424,6 +436,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: '#2C1810',
     marginBottom: 12,
+  },
+  seeMore: {
+    color: '#FF8C42',
+    fontWeight: '700',
   },
   imageContainer: {
     position: 'relative',
