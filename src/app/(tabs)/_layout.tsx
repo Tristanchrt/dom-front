@@ -112,7 +112,27 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: -22 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../../../assets/images/create-post.png')}
+                style={{ width: 0, height: 0 }}
+              />
+            </View>
+          ),
+          tabBarButton: ({ onPress, onLongPress, accessibilityState, accessibilityRole, accessibilityLabel, testID }) => (
+            <Pressable
+              onPress={onPress}
+              onLongPress={onLongPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+              testID={testID}
+              style={({ pressed }) => [
+                { alignItems: 'center', justifyContent: 'center', marginTop: -22, width: 90, height: 90 },
+                pressed ? { opacity: 0.9 } : null,
+              ]}
+              hitSlop={10}
+            >
               <View
                 style={{
                   width: 68,
@@ -145,7 +165,7 @@ export default function TabLayout() {
                   />
                 </View>
               </View>
-            </View>
+            </Pressable>
           ),
           headerShown: false,
         }}

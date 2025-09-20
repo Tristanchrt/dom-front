@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,11 +10,13 @@ import {
   Image,
   Alert,
   Dimensions,
+  Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { computeHeaderPaddings } from '@/constants/Layout';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -36,6 +38,15 @@ export default function CreatePostScreen() {
     { id: '1', text: '' },
     { id: '2', text: '' },
   ]);
+  const [isOpen, setIsOpen] = useState(true);
+
+  // Re-open the modal every time the tab gains focus
+  useFocusEffect(
+    useCallback(() => {
+      setIsOpen(true);
+      return () => {};
+    }, []),
+  );
 
   const postTypes = [
     { id: 'text', icon: 'font', label: 'Texte', color: '#8B7355' },
@@ -311,29 +322,71 @@ export default function CreatePostScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, computeHeaderPaddings(insets)]}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
-          <Text style={styles.cancelText}>Annuler</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Nouvelle publication</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+      <Modal
+        visible={isOpen}
+        transparent
+        animationType="slide"
+        onRequestClose={() => {
+          setIsOpen(false);
+          router.back();
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => {
+              setIsOpen(false);
+              router.back();
+            }}
+          />
+          <View
+            style={[
+              styles.sheet,
+              {
+                paddingBottom: Math.max(insets.bottom, 12),
+                height: Math.round(Dimensions.get('window').height * 0.9),
+              },
+            ]}
+          >
+            <View style={styles.sheetHandle} />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {renderPostTypeSelector()}
-        {renderTextInput()}
-        {renderMediaSection()}
-        {renderProductSection()}
-        {renderPollSection()}
-      </ScrollView>
+            {/* Sheet Header */}
+            <View style={styles.sheetHeader}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setIsOpen(false);
+                  router.back();
+                }}
+              >
+                <Text style={styles.cancelText}>Annuler</Text>
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>Nouvelle publication</Text>
+              <View style={styles.headerSpacer} />
+            </View>
 
-      {/* Bottom Publish Button */}
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.publishButtonBottom} onPress={handlePublish}>
-          <Text style={styles.publishButtonText}>Publier</Text>
-        </TouchableOpacity>
-      </View>
+            <ScrollView
+              style={{ flex: 1 }}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8 }}
+            >
+              {renderPostTypeSelector()}
+              {renderTextInput()}
+              {renderMediaSection()}
+              {renderProductSection()}
+              {renderPollSection()}
+            </ScrollView>
+
+            {/* Sheet Bottom Publish Button */}
+            <View style={[styles.bottomContainer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+              <TouchableOpacity style={styles.publishButtonBottom} onPress={handlePublish}>
+                <Text style={styles.publishButtonText}>Publier</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -603,5 +656,36 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject as any,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  sheet: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingTop: 6,
+  },
+  sheetHandle: {
+    alignSelf: 'center',
+    width: 48,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E6DCD0',
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
 });

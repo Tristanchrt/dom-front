@@ -189,11 +189,11 @@ export default function HomeScreen() {
       >
         DÖM
       </Text>
-      {/*  <View style={styles.headerActions}>
+       <View style={styles.headerActions}>
         <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/shop')}>
           <FontAwesome name="shopping-cart" size={24} color="#2C1810" />
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 
