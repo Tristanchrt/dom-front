@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -11,149 +11,22 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Post from '@/components/specific/Post';
+import { postsUseCases } from '@/data/container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Dimensions } from 'react-native';
 import { computeHeaderPaddings } from '@/constants/Layout';
 
-const followingPosts = [
-  {
-    id: '1',
-    user: {
-      id: 'c1',
-      name: 'NYC Design',
-      handle: '@nycdesign',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    },
-    content: 'ef... zjemzjnezjnezjp ejenjb zjebnjz es zenjbc zjeb vjzbe vjz',
-    likes: 3100,
-    comments: 22,
-    shares: 0,
-    timestamp: '2h',
-  },
-  {
-    id: '2',
-    user: {
-      id: 'c1',
-      name: 'NYC Design',
-      handle: '@nycdesign',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "Man, you're my new guru! Viewing the lessons for a second time. Thoroughly pleased. And impressed that you draw from scientific literature in telling memorable...",
-    likes: 3100,
-    comments: 22,
-    shares: 0,
-    timestamp: '4h',
-  },
-  {
-    id: '3',
-    user: {
-      id: 'c1',
-      name: 'NYC Design',
-      handle: '@nycdesign',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    },
-    content: 'Ma nouvelle création à partager en famille !!',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
-    likes: 3100,
-    comments: 22,
-    shares: 0,
-    timestamp: '6h',
-    price: '30 €',
-  },
-];
-
-const explorerPosts = [
-  {
-    id: 'e1',
-    user: {
-      id: 'c3',
-      name: 'Travel Explorer',
-      handle: '@travelexplorer',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "🌍 Découvrez les merveilles cachées de l'Islande ! Ces paysages à couper le souffle vous laisseront sans voix.",
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-    likes: 8200,
-    comments: 156,
-    shares: 0,
-    timestamp: '1h',
-  },
-  {
-    id: 'e2',
-    user: {
-      id: 'c2',
-      name: 'Food Lover',
-      handle: '@foodlover',
-      avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "Recette du jour : Tarte aux pommes traditionnelle française 🥧 Parfaite pour les soirées d'automne !",
-    image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=300&fit=crop',
-    likes: 2400,
-    comments: 89,
-    shares: 0,
-    timestamp: '3h',
-    price: '25 €',
-  },
-  {
-    id: 'e3',
-    user: {
-      id: 'c4',
-      name: 'Tech Guru',
-      handle: '@techguru',
-      avatar:
-        'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      'Les nouvelles tendances en IA révolutionnent notre façon de travailler. Voici 5 outils que tout développeur devrait connaître en 2024 💻',
-    likes: 5600,
-    comments: 234,
-    shares: 0,
-    timestamp: '5h',
-  },
-  {
-    id: 'e4',
-    user: {
-      id: 'c1',
-      name: 'Art Studio',
-      handle: '@artstudio',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "Nouvelle œuvre terminée ! Peinture à l'huile sur toile, inspirée des couchers de soleil méditerranéens 🎨",
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
-    likes: 1800,
-    comments: 67,
-    shares: 0,
-    timestamp: '8h',
-    price: '450 €',
-  },
-  {
-    id: 'e5',
-    user: {
-      id: 'c4',
-      name: 'Fitness Coach',
-      handle: '@fitnesscoach',
-      avatar:
-        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=face',
-    },
-    content:
-      "💪 Séance du matin terminée ! 45 minutes d'entraînement intense. Qui me rejoint demain à 7h pour une session de groupe ?",
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
-    likes: 920,
-    comments: 43,
-    shares: 0,
-    timestamp: '10h',
-  },
-];
+type UIFeedPost = {
+  id: string;
+  user: { id?: string; name: string; handle: string; avatar: string };
+  content: string;
+  image?: string | undefined;
+  likes: number;
+  comments: number;
+  shares: number;
+  timestamp: string;
+  price?: string | undefined;
+};
 
 type FeedType = 'following' | 'explorer';
 
@@ -161,6 +34,42 @@ export default function HomeScreen() {
   const [activeFeed, setActiveFeed] = useState<FeedType>('following');
   const insets = useSafeAreaInsets();
   const isSmallScreen = Dimensions.get('window').height < 700;
+  const [following, setFollowing] = useState<UIFeedPost[]>([]);
+  const [explore, setExplore] = useState<UIFeedPost[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const list = await postsUseCases.list();
+        if (!alive) return;
+        const mapped: UIFeedPost[] = (list || []).map((p: any) => ({
+          id: p.id,
+          user: {
+            id: p.author?.id,
+            name: p.author?.name ?? 'User',
+            handle: p.author?.username ?? '@user',
+            avatar: p.author?.avatar ?? '',
+          },
+          content: p.content ?? '',
+          image: (p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls[0] : undefined) as string | undefined,
+          likes: p.likesCount ?? 0,
+          comments: p.commentsCount ?? 0,
+          shares: 0,
+          timestamp: '1h',
+          price: undefined,
+        }));
+        setFollowing(mapped);
+        setExplore(mapped.slice().reverse());
+      } catch {
+        setFollowing([]);
+        setExplore([]);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const handleFeedSwitch = (feedType: FeedType) => {
     if (feedType !== activeFeed) {
@@ -220,9 +129,7 @@ export default function HomeScreen() {
     </View>
   );
 
-  const getCurrentFeedData = () => {
-    return activeFeed === 'following' ? followingPosts : explorerPosts;
-  };
+  const getCurrentFeedData = () => (activeFeed === 'following' ? following : explore);
 
   return (
     <SafeAreaView style={styles.container}>

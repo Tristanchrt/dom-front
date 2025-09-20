@@ -5,6 +5,7 @@ export interface Post {
   content: string;
   authorId: string;
   author: User;
+  imageUrls?: string[];
   likesCount: number;
   commentsCount: number;
   isLiked: boolean;

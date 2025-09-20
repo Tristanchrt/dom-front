@@ -11,6 +11,7 @@ import {
   Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import * as MediaLibrary from 'expo-media-library';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -47,6 +48,7 @@ export default function Post({ post }: PostProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorY, setAnchorY] = useState<number | null>(null);
   const insets = useSafeAreaInsets();
+  const [viewerUri, setViewerUri] = useState<string | null>(null);
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -150,6 +152,21 @@ export default function Post({ post }: PostProps) {
     }
   };
 
+  const onDownloadImage = async () => {
+    if (!viewerUri) return;
+    try {
+      const perm = await MediaLibrary.requestPermissionsAsync();
+      if (!perm.granted) {
+        Alert.alert('Permission requise', "Autorisez l'accès à la galerie pour enregistrer l'image.");
+        return;
+      }
+      await MediaLibrary.saveToLibraryAsync(viewerUri);
+      Alert.alert('Enregistrée', "L'image a été enregistrée dans votre galerie.");
+    } catch {
+      Alert.alert('Erreur', "Impossible d'enregistrer l'image.");
+    }
+  };
+
   const handleUserClick = () => {
     if (post.user.id) {
       try {
@@ -206,15 +223,21 @@ export default function Post({ post }: PostProps) {
         <Text style={styles.content}>{post.content}</Text>
       </TouchableOpacity>
 
-      {/* Post Image */}
+      {/* Post Image - opens viewer, not the post */}
       {post.image && (
         <TouchableOpacity
-          testID="post-container"
+          testID="post-image"
           style={styles.imageContainer}
           activeOpacity={0.9}
           onPress={() => {
-            handleDoubleTap();
-            handlePostClick();
+            const now = Date.now();
+            const DOUBLE_PRESS_DELAY = 300;
+            if (lastTap && now - lastTap < DOUBLE_PRESS_DELAY) {
+              if (!isLiked) handleLike();
+            } else {
+              setLastTap(now);
+              setViewerUri(post.image as string);
+            }
           }}
         >
           <Image source={{ uri: post.image }} style={styles.postImage} />
@@ -327,6 +350,25 @@ export default function Post({ post }: PostProps) {
           </View>
         </View>
       </Modal>
+
+      {/* Image Viewer */}
+      <Modal visible={!!viewerUri} transparent animationType="fade" onRequestClose={() => setViewerUri(null)}>
+        <View style={styles.viewerBackdrop}>
+          {viewerUri && (
+            <>
+              <Image source={{ uri: viewerUri }} style={styles.viewerImage} resizeMode="contain" />
+              <View style={[styles.viewerTopBar, { paddingTop: Math.max(insets.top, 10) }]}>
+                <TouchableOpacity style={styles.viewerTopBtn} onPress={() => setViewerUri(null)} accessibilityLabel="Fermer">
+                  <FontAwesome name="close" size={22} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.viewerTopBtn} onPress={onDownloadImage} accessibilityLabel="Télécharger">
+                  <FontAwesome name="download" size={22} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -407,6 +449,35 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  viewerBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerImage: {
+    width: '92%',
+    height: '80%',
+  },
+  viewerTopBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 12,
+    paddingBottom: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  viewerTopBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.35)',
   },
   buyButton: {
     alignSelf: 'flex-start',
