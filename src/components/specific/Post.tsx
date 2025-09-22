@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     marginBottom: 8,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingVertical: 12,
   },
   header: {

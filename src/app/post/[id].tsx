@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,6 +11,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  LayoutAnimation,
+  UIManager,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -28,6 +30,7 @@ export default function PostDetailScreen() {
   const [likeCount, setLikeCount] = useState(0);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState(sampleComments);
+  const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null);
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
@@ -54,6 +57,12 @@ export default function PostDetailScreen() {
       </SafeAreaView>
     );
   }
+
+  useEffect(() => {
+    if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }, []);
 
   React.useEffect(() => {
     let mounted = true;
@@ -107,13 +116,22 @@ export default function PostDetailScreen() {
         timestamp: 'maintenant',
         likes: 0,
       };
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setComments([newComment, ...comments]);
       setComment('');
+      setHighlightedCommentId(newComment.id);
+      setTimeout(() => setHighlightedCommentId((prev) => (prev === newComment.id ? null : prev)), 1500);
     }
   };
 
   const renderComment = (commentItem: any) => (
-    <View key={commentItem.id} style={styles.commentItem}>
+    <View
+      key={commentItem.id}
+      style={[
+        styles.commentItem,
+        highlightedCommentId === commentItem.id && styles.commentItemHighlight,
+      ]}
+    >
       <Image source={{ uri: commentItem.user.avatar }} style={styles.commentAvatar} />
       <View style={styles.commentContent}>
         <View style={styles.commentHeader}>
@@ -231,7 +249,7 @@ export default function PostDetailScreen() {
         </ScrollView>
 
         {/* Comment Input */}
-        <View style={[styles.commentInputContainer, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+        <View style={[styles.commentInputContainer, { paddingBottom: Math.max(insets.bottom, 10) }]}>
           <Image
             source={{
               uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
@@ -251,7 +269,7 @@ export default function PostDetailScreen() {
             onPress={handleAddComment}
             disabled={!comment.trim()}
           >
-            <FontAwesome name="send" size={16} color={comment.trim() ? '#FF8C42' : '#8B7355'} />
+            <FontAwesome name="send" size={20} color={comment.trim() ? '#FF8C42' : '#8B7355'} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -457,6 +475,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
   },
+  commentItemHighlight: {
+    backgroundColor: '#FFF8F0',
+    borderRadius: 12,
+    padding: 8,
+  },
   commentAvatar: {
     width: 36,
     height: 36,
@@ -511,7 +534,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },
@@ -525,7 +548,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#2C1810',
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     backgroundColor: '#F5F5F5',
     borderRadius: 20,
