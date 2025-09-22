@@ -32,6 +32,9 @@ export default function PostDetailScreen() {
   const [comments, setComments] = useState(sampleComments);
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null);
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set());
+  const [replyingToId, setReplyingToId] = useState<string | null>(null);
+  const [replyDraft, setReplyDraft] = useState('');
+  const [highlightedReplyKey, setHighlightedReplyKey] = useState<string | null>(null);
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
@@ -168,10 +171,74 @@ export default function PostDetailScreen() {
             />
             <Text style={styles.commentLikeText}>{commentItem.likes}</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            setReplyingToId(commentItem.id);
+            setReplyDraft('');
+          }}>
             <Text style={styles.commentReply}>Répondre</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Replies list */}
+        {((commentItem as any).replies || []).map((r: any) => (
+          <View
+            key={`${commentItem.id}:${r.id}`}
+            style={[styles.replyItem, highlightedReplyKey === `${commentItem.id}:${r.id}` && styles.commentItemHighlight]}
+          >
+            <Image source={{ uri: r.user.avatar }} style={styles.replyAvatar} />
+            <View style={{ flex: 1 }}>
+              <View style={styles.commentHeader}>
+                <Text style={styles.commentUserName}>{r.user.name}</Text>
+                <Text style={styles.commentTimestamp}>{r.timestamp}</Text>
+              </View>
+              <Text style={styles.commentText}>{r.content}</Text>
+            </View>
+          </View>
+        ))}
+
+        {/* Reply input */}
+        {replyingToId === commentItem.id && (
+          <View style={styles.replyInputRow}>
+            <Image
+              source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face' }}
+              style={styles.replyAvatar}
+            />
+            <TextInput
+              style={styles.replyInput}
+              placeholder={`Répondre à ${commentItem.user.name}…`}
+              placeholderTextColor="#8B7355"
+              value={replyDraft}
+              onChangeText={setReplyDraft}
+              multiline
+            />
+            <TouchableOpacity
+              style={[styles.replySend, !replyDraft.trim() && { opacity: 0.6 }]}
+              disabled={!replyDraft.trim()}
+              onPress={() => {
+                const text = replyDraft.trim();
+                if (!text) return;
+                const newReply = {
+                  id: `r${Date.now()}`,
+                  user: {
+                    name: 'Vous',
+                    avatar:
+                      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face',
+                  },
+                  content: text,
+                  timestamp: 'maintenant',
+                };
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setComments((prev) => prev.map((c: any) => (c.id === commentItem.id ? { ...c, replies: [newReply, ...((c as any).replies || [])] } : c)));
+                setReplyDraft('');
+                setReplyingToId(null);
+                setHighlightedReplyKey(`${commentItem.id}:${newReply.id}`);
+                setTimeout(() => setHighlightedReplyKey((prev) => (prev === `${commentItem.id}:${newReply.id}` ? null : prev)), 1500);
+              }}
+            >
+              <FontAwesome name="send" size={16} color="#FF8C42" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -552,6 +619,39 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FF8C42',
     fontWeight: '600',
+  },
+  replyItem: {
+    flexDirection: 'row',
+    marginTop: 8,
+    marginLeft: 48,
+  },
+  replyAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    marginRight: 8,
+  },
+  replyInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    marginLeft: 48,
+  },
+  replyInput: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: '#2C1810',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    maxHeight: 80,
+  },
+  replySend: {
+    marginLeft: 8,
+    padding: 6,
   },
   commentInputContainer: {
     flexDirection: 'row',
