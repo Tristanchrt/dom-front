@@ -9,6 +9,7 @@ import {
   Animated,
   Alert,
   Modal,
+  Share,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
@@ -106,28 +107,12 @@ export default function Post({ post }: PostProps) {
     ]);
   };
 
-  const handleShare = () => {
-    Alert.alert('Partager', `Partager la publication de ${post.user.name} ?`, [
-      {
-        text: 'Annuler',
-        style: 'cancel',
-      },
-      {
-        text: 'Copier le lien',
-        onPress: () => {
-          Alert.alert(
-            'Lien copié !',
-            'Le lien de la publication a été copié dans le presse-papier.',
-          );
-        },
-      },
-      {
-        text: 'Partager sur...',
-        onPress: () => {
-          Alert.alert('Partage', 'Fonctionnalité de partage bientôt disponible !');
-        },
-      },
-    ]);
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `${post.content}\n\nVoir la publication: domfront://post/${post.id}`,
+      });
+    } catch {}
   };
 
   const handleBuy = () => {

@@ -16,6 +16,7 @@ import {
   Keyboard,
   Modal,
   Alert,
+  Share,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -133,6 +134,14 @@ export default function PostDetailScreen() {
       setHighlightedCommentId(newComment.id);
       setTimeout(() => setHighlightedCommentId((prev) => (prev === newComment.id ? null : prev)), 1500);
     }
+  };
+
+  const handleSharePost = async () => {
+    try {
+      await Share.share({
+        message: `${post.content}\n\nVoir la publication: domfront://post/${post.id}`,
+      });
+    } catch {}
   };
 
   const focusCommentBar = () => {
@@ -359,7 +368,7 @@ export default function PostDetailScreen() {
                 <Text style={styles.actionText}>{post.comments}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.actionButton}>
+              <TouchableOpacity style={styles.actionButton} onPress={handleSharePost}>
                 <FontAwesome name="share" size={24} color="#8B7355" />
                 <Text style={styles.actionText}>{post.shares}</Text>
               </TouchableOpacity>
