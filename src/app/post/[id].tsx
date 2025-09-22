@@ -14,6 +14,8 @@ import {
   LayoutAnimation,
   UIManager,
   Keyboard,
+  Modal,
+  Alert,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -39,6 +41,7 @@ export default function PostDetailScreen() {
   const commentInputRef = useRef<TextInput | null>(null);
   const scrollRef = useRef<ScrollView | null>(null);
   const [focusRequest, setFocusRequest] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
@@ -273,7 +276,11 @@ export default function PostDetailScreen() {
           <FontAwesome name="arrow-left" size={24} color="#2C1810" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Publication</Text>
-        <TouchableOpacity style={styles.headerIcon} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <TouchableOpacity
+          style={styles.headerIcon}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={() => setIsMenuOpen(true)}
+        >
           <FontAwesome name="ellipsis-v" size={24} color="#2C1810" />
         </TouchableOpacity>
       </View>
@@ -392,6 +399,58 @@ export default function PostDetailScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Header Action Menu */}
+      <Modal
+        visible={isMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsMenuOpen(false)}
+      >
+        <View style={styles.menuOverlay}>
+          <TouchableOpacity style={styles.menuBackdrop} activeOpacity={1} onPress={() => setIsMenuOpen(false)} />
+          <View style={[styles.menuCard, { top: insets.top + 12, right: 12 }] }>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Signaler', 'Signaler cette publication ?', [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Signaler', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="flag" size={14} color="#FF4444" />
+              <Text style={[styles.menuItemText, { color: '#FF4444' }]}>Signaler</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Bloquer', 'Bloquer le profil ?', [
+                  { text: 'Annuler', style: 'cancel' },
+                  { text: 'Bloquer', style: 'destructive' as any },
+                ]);
+              }}
+            >
+              <FontAwesome name="ban" size={14} color="#D9534F" />
+              <Text style={[styles.menuItemText, { color: '#D9534F' }]}>Bloquer le profil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setIsMenuOpen(false);
+                Alert.alert('Mettre en sourdine', 'La publication a été masquée.');
+              }}
+            >
+              <FontAwesome name="bell-slash" size={14} color="#8B7355" />
+              <Text style={styles.menuItemText}>Mettre en sourdine</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -455,6 +514,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  menuOverlay: { flex: 1 },
+  menuBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'transparent' },
+  menuCard: {
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 6,
+    minWidth: 220,
+  },
+  menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 8 },
+  menuItemText: { marginLeft: 10, fontSize: 14, color: '#2C1810', fontWeight: '500' },
   content: {
     flex: 1,
   },
