@@ -1,4 +1,17 @@
 // Fixtures for creator profiles used by profile page and as fallback in repository
+import { productDetails } from './products';
+
+function makeShopItem(productId: keyof typeof productDetails) {
+  const p = productDetails[productId];
+  return {
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    image: p.image,
+    rating: p.rating,
+    sales: p.sales,
+  };
+}
 export const creatorProfiles = {
   c1: {
     id: 'c1',
@@ -46,22 +59,8 @@ export const creatorProfiles = {
       },
     ],
     shop: [
-      {
-        id: 's1',
-        name: 'Guide Voyage Islande',
-        price: '35 €',
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
-        rating: 4.9,
-        sales: 234,
-      },
-      {
-        id: 's2',
-        name: 'Preset Photo Lifestyle',
-        price: '15 €',
-        image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop',
-        rating: 4.7,
-        sales: 456,
-      },
+      makeShopItem('p1'),
+      makeShopItem('p2'),
     ],
   },
   c2: {
@@ -103,30 +102,9 @@ export const creatorProfiles = {
       },
     ],
     shop: [
-      {
-        id: 's1',
-        name: 'Livre de Recettes',
-        price: '45 €',
-        image: 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=200&h=200&fit=crop',
-        rating: 4.8,
-        sales: 189,
-      },
-      {
-        id: 's2',
-        name: 'Cours de Cuisine Privé',
-        price: '150 €',
-        image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=200&h=200&fit=crop',
-        rating: 4.9,
-        sales: 67,
-      },
-      {
-        id: 's3',
-        name: 'Kit Épices Premium',
-        price: '25 €',
-        image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop',
-        rating: 4.6,
-        sales: 345,
-      },
+      makeShopItem('p3'),
+      makeShopItem('p7'),
+      makeShopItem('p6'),
     ],
   },
   c3: {
@@ -168,22 +146,8 @@ export const creatorProfiles = {
       },
     ],
     shop: [
-      {
-        id: 's1',
-        name: 'Guide Complet Islande',
-        price: '35 €',
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
-        rating: 4.9,
-        sales: 567,
-      },
-      {
-        id: 's2',
-        name: 'Presets Aurora Boréale',
-        price: '20 €',
-        image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop',
-        rating: 4.8,
-        sales: 432,
-      },
+      makeShopItem('p4'),
+      makeShopItem('p5'),
     ],
   },
   c4: {
@@ -217,23 +181,6 @@ export const creatorProfiles = {
         content: 'React Native vs Flutter 📱',
       },
     ],
-    shop: [
-      {
-        id: 's1',
-        name: 'Cours IA Complet',
-        price: '199 €',
-        image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=200&h=200&fit=crop',
-        rating: 4.9,
-        sales: 234,
-      },
-      {
-        id: 's2',
-        name: 'Template React Native',
-        price: '49 €',
-        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&h=200&fit=crop',
-        rating: 4.7,
-        sales: 345,
-      },
-    ],
+    shop: [],
   },
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   Dimensions,
   Alert,
+  Modal,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +17,7 @@ import { computeHeaderPaddings } from '@/constants/Layout';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useProduct } from '@/hooks/useProduct';
 import { productDetails } from '@/data/fixtures/products';
+import * as MediaLibrary from 'expo-media-library';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -26,9 +28,15 @@ export default function ProductDetailScreen() {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef<ScrollView>(null);
+  const [viewerUri, setViewerUri] = useState<string | null>(null);
 
   const fixture = productDetails[id as keyof typeof productDetails];
   const uiProduct = fixture; // keep UI using fixture structure for now
+  const images = (product?.imageUrls && product.imageUrls.length > 0)
+    ? product.imageUrls
+    : (uiProduct?.image ? [uiProduct.image] : []);
 
   const centsToLabel = (cents: number, currency: string) => {
     const euros = (cents / 100).toFixed(2).replace('.', ',');
@@ -114,27 +122,61 @@ export default function ProductDetailScreen() {
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Product Image with thumbnails */}
+        {/* Product Image Carousel with thumbnails */}
         <View style={styles.imageContainer}>
-          <Image source={{ uri: uiProduct.image }} style={styles.productImage} />
+          <ScrollView
+            ref={carouselRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={(e) => {
+              const index = Math.round(
+                e.nativeEvent.contentOffset.x / screenWidth,
+              );
+              setActiveIndex(index);
+            }}
+          >
+            {images.map((uri, index) => (
+              <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => setViewerUri(uri)}>
+                <Image source={{ uri }} style={styles.carouselImage} />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {/* Dots indicator */}
+          {images.length > 1 && (
+            <View style={styles.dotsContainer}>
+              {images.map((_, i) => (
+                <View
+                  key={i}
+                  style={[styles.dot, i === activeIndex && styles.dotActive]}
+                />
+              ))}
+            </View>
+          )}
 
           {/* Image thumbnails */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.thumbnailContainer}
-            contentContainerStyle={styles.thumbnailContent}
-          >
-            <TouchableOpacity style={[styles.thumbnail, styles.activeThumbnail]}>
-              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.thumbnail}>
-              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.thumbnail}>
-              <Image source={{ uri: uiProduct.image }} style={styles.thumbnailImage} />
-            </TouchableOpacity>
-          </ScrollView>
+          {images.length > 1 && (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.thumbnailContainer}
+              contentContainerStyle={styles.thumbnailContent}
+            >
+              {images.map((uri, i) => (
+                <TouchableOpacity
+                  key={i}
+                  style={[styles.thumbnail, i === activeIndex && styles.activeThumbnail]}
+                  onPress={() => {
+                    setActiveIndex(i);
+                    carouselRef.current?.scrollTo({ x: i * screenWidth, animated: true });
+                  }}
+                >
+                  <Image source={{ uri }} style={styles.thumbnailImage} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
 
           <TouchableOpacity
             style={styles.bookmarkButton}
@@ -147,14 +189,6 @@ export default function ProductDetailScreen() {
             />
           </TouchableOpacity>
         </View>
-
-        {/* Welcome Offer Banner */}
-        {uiProduct.welcomeOffer && (
-          <View style={styles.welcomeBanner}>
-            <Text style={styles.welcomeText}>Welcome offer</Text>
-            <FontAwesome name="chevron-right" size={12} color="#FF8C42" />
-          </View>
-        )}
 
         {/* Product Info */}
         <View style={styles.productInfo}>
@@ -280,6 +314,37 @@ export default function ProductDetailScreen() {
           <Text style={styles.buyButtonText}>Buy</Text>
         </TouchableOpacity>
       </View>
+      {/* Image Viewer */}
+      <Modal visible={!!viewerUri} transparent animationType="fade" onRequestClose={() => setViewerUri(null)}>
+        <View style={styles.viewerBackdrop}>
+          {viewerUri && (
+            <>
+              <Image source={{ uri: viewerUri }} style={styles.viewerImage} resizeMode="contain" />
+              <View style={[styles.viewerTopBar, { paddingTop: Math.max(insets.top, 10) }]}>
+                <TouchableOpacity style={styles.viewerTopBtn} onPress={() => setViewerUri(null)} accessibilityLabel="Fermer">
+                  <FontAwesome name="close" size={22} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.viewerTopBtn} onPress={async () => {
+                  try {
+                    const perm = await MediaLibrary.requestPermissionsAsync();
+                    if (!perm.granted) {
+                      Alert.alert('Permission requise', "Autorisez l'accès à la galerie pour enregistrer l'image.");
+                      return;
+                    }
+                    await MediaLibrary.saveToLibraryAsync(viewerUri);
+                    Alert.alert('Enregistrée', "L'image a été enregistrée dans votre galerie.");
+                  } catch {
+                    Alert.alert('Erreur', "Impossible d'enregistrer l'image.");
+                  }
+                }} accessibilityLabel="Télécharger">
+                  <FontAwesome name="download" size={22} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -339,6 +404,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     backgroundColor: '#F8F8F8',
   },
+  carouselImage: {
+    width: screenWidth,
+    height: 280,
+    resizeMode: 'cover',
+    backgroundColor: '#F8F8F8',
+  },
   thumbnailContainer: {
     position: 'absolute',
     bottom: 16,
@@ -375,6 +446,54 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: 80,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    marginHorizontal: 4,
+  },
+  dotActive: {
+    backgroundColor: '#FF8C42',
+  },
+  viewerBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerImage: {
+    width: '92%',
+    height: '80%',
+  },
+  viewerTopBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 12,
+    paddingBottom: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  viewerTopBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.35)',
   },
   welcomeBanner: {
     backgroundColor: 'rgba(255, 140, 66, 0.1)',

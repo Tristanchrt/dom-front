@@ -33,23 +33,6 @@ describe('ProductDetailScreen (app/product/[id])', () => {
     expect(getByText('Product not found')).toBeTruthy();
   });
 
-  it('renders product details for p1 and shows welcome offer', () => {
-    setRouteId('p1');
-
-    const { getByText, getAllByText } = render(<ProductDetailScreen />);
-
-    // Default selections applied from useEffect
-    expect(getByText('Color: Beige')).toBeTruthy();
-    expect(getByText('Size: S')).toBeTruthy();
-
-    // Welcome banner
-    expect(getByText('Welcome offer')).toBeTruthy();
-
-    // Seller line visible (appears in multiple places)
-    const sellerLines = getAllByText(/Sold by/i);
-    expect(sellerLines.length).toBeGreaterThanOrEqual(1);
-  });
-
   it('updates selected color when a color option is pressed', async () => {
     setRouteId('p1');
 

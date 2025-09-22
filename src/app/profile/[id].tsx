@@ -109,7 +109,7 @@ export default function CreatorProfileScreen() {
   );
 
   const renderShopItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.shopItem}>
+    <TouchableOpacity style={styles.shopItem} onPress={() => router.push(`/product/${item.id}`)}>
       <Image source={{ uri: item.image }} style={styles.shopImage} />
       <View style={styles.shopContent}>
         <Text style={styles.shopName} numberOfLines={2}>

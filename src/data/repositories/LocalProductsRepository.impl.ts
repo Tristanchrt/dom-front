@@ -25,7 +25,9 @@ export class LocalProductsRepository implements ProductsRepository {
         ? parsePriceCents(fallback.originalPrice)
         : undefined,
       currency: 'EUR',
-      imageUrls: [fallback.image],
+      imageUrls: Array.isArray((fallback as any).images) && (fallback as any).images.length > 0
+        ? [fallback.image, ...((fallback as any).images as string[])]
+        : [fallback.image],
       sellerName: fallback.seller,
       category: fallback.category,
       rating: fallback.rating,
