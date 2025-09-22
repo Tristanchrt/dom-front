@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -13,6 +13,7 @@ import {
   Platform,
   LayoutAnimation,
   UIManager,
+  Keyboard,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -35,6 +36,9 @@ export default function PostDetailScreen() {
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
   const [replyDraft, setReplyDraft] = useState('');
   const [highlightedReplyKey, setHighlightedReplyKey] = useState<string | null>(null);
+  const commentInputRef = useRef<TextInput | null>(null);
+  const scrollRef = useRef<ScrollView | null>(null);
+  const [focusRequest, setFocusRequest] = useState(false);
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
@@ -127,6 +131,24 @@ export default function PostDetailScreen() {
       setTimeout(() => setHighlightedCommentId((prev) => (prev === newComment.id ? null : prev)), 1500);
     }
   };
+
+  const focusCommentBar = () => {
+    // Focus input and ensure visible
+    setFocusRequest(true);
+    commentInputRef.current?.focus();
+  };
+
+  useEffect(() => {
+    const sub = Keyboard.addListener('keyboardDidShow', () => {
+      if (focusRequest) {
+        setTimeout(() => {
+          scrollRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+        setFocusRequest(false);
+      }
+    });
+    return () => sub.remove();
+  }, [focusRequest]);
 
   const renderComment = (commentItem: any) => (
     <View
@@ -261,7 +283,12 @@ export default function PostDetailScreen() {
         keyboardVerticalOffset={Platform.OS === 'ios' ? Math.max(insets.bottom, 0) : 0}
         style={styles.keyboardView}
       >
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+        <ScrollView
+          ref={scrollRef}
+          showsVerticalScrollIndicator={false}
+          style={styles.content}
+          keyboardShouldPersistTaps="handled"
+        >
           {/* User Header */}
           <View style={styles.userHeader}>
             <TouchableOpacity
@@ -320,7 +347,7 @@ export default function PostDetailScreen() {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.actionButton}>
+              <TouchableOpacity style={styles.actionButton} onPress={focusCommentBar}>
                 <FontAwesome name="comment-o" size={24} color="#8B7355" />
                 <Text style={styles.actionText}>{post.comments}</Text>
               </TouchableOpacity>
@@ -348,6 +375,7 @@ export default function PostDetailScreen() {
             style={styles.currentUserAvatar}
           />
           <TextInput
+            ref={commentInputRef}
             style={styles.commentInput}
             placeholder="Ajouter un commentaire..."
             placeholderTextColor="#8B7355"
