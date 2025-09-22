@@ -31,6 +31,7 @@ export default function PostDetailScreen() {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState(sampleComments);
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null);
+  const [likedComments, setLikedComments] = useState<Set<string>>(new Set());
 
   const post = postDetails[id as keyof typeof postDetails];
   const hasImage = (p: typeof post): p is typeof post & { image: string } =>
@@ -140,8 +141,31 @@ export default function PostDetailScreen() {
         </View>
         <Text style={styles.commentText}>{commentItem.content}</Text>
         <View style={styles.commentActions}>
-          <TouchableOpacity style={styles.commentLike}>
-            <FontAwesome name="heart-o" size={12} color="#8B7355" />
+          <TouchableOpacity
+            style={styles.commentLike}
+            onPress={() => {
+              const isLiked = likedComments.has(commentItem.id);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+              setComments((prev) =>
+                prev.map((c) =>
+                  c.id === commentItem.id
+                    ? { ...c, likes: Math.max(0, (c.likes || 0) + (isLiked ? -1 : 1)) }
+                    : c,
+                ),
+              );
+              setLikedComments((prev) => {
+                const next = new Set(prev);
+                if (isLiked) next.delete(commentItem.id);
+                else next.add(commentItem.id);
+                return next;
+              });
+            }}
+          >
+            <FontAwesome
+              name={likedComments.has(commentItem.id) ? 'heart' : 'heart-o'}
+              size={12}
+              color={likedComments.has(commentItem.id) ? '#FF4444' : '#8B7355'}
+            />
             <Text style={styles.commentLikeText}>{commentItem.likes}</Text>
           </TouchableOpacity>
           <TouchableOpacity>
