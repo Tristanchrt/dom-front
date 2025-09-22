@@ -31,6 +31,7 @@ export default function ProductDetailScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef<ScrollView>(null);
   const [viewerUri, setViewerUri] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
 
   const fixture = productDetails[id as keyof typeof productDetails];
   const uiProduct = fixture; // keep UI using fixture structure for now
@@ -55,6 +56,9 @@ export default function ProductDetailScreen() {
     }
   }, [uiProduct]);
 
+  const incrementQuantity = () => setQuantity((q) => Math.min(q + 1, 99));
+  const decrementQuantity = () => setQuantity((q) => Math.max(1, q - 1));
+
   if (!uiProduct) {
     return (
       <SafeAreaView style={styles.container}>
@@ -73,7 +77,7 @@ export default function ProductDetailScreen() {
   const handleAddToCart = () => {
     Alert.alert(
       '🛒 Added to cart',
-      `${displayName} (${selectedColor}, ${selectedSize}) has been added to your cart successfully!`,
+      `${displayName} x${quantity} (${selectedColor}, ${selectedSize}) has been added to your cart successfully!`,
       [
         { text: 'Continue shopping', style: 'cancel' },
         { text: 'View cart', onPress: () => console.log('Navigate to cart') },
@@ -273,11 +277,11 @@ export default function ProductDetailScreen() {
           <View style={styles.quantitySection}>
             <Text style={styles.quantityTitle}>Quantity</Text>
             <View style={styles.quantityContainer}>
-              <TouchableOpacity style={styles.quantityButton}>
+              <TouchableOpacity style={styles.quantityButton} onPress={decrementQuantity}>
                 <FontAwesome name="minus" size={12} color="#8B7355" />
               </TouchableOpacity>
-              <Text style={styles.quantityText}>1</Text>
-              <TouchableOpacity style={styles.quantityButton}>
+              <Text style={styles.quantityText}>{quantity}</Text>
+              <TouchableOpacity style={styles.quantityButton} onPress={incrementQuantity}>
                 <FontAwesome name="plus" size={12} color="#8B7355" />
               </TouchableOpacity>
             </View>
