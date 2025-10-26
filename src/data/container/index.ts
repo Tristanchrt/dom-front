@@ -12,6 +12,8 @@ import { SellerProductsUseCases } from '@/domain/usecases/product/SellerProducts
 import { LocalSellerProductsRepository } from '@/data/repositories/LocalSellerProductsRepository.impl';
 import { UsersUseCases } from '@/domain/usecases/user/UsersUseCases';
 import { LocalUsersRepository } from '@/data/repositories/LocalUsersRepository.impl';
+import { CommentsUseCases } from '@/domain/usecases/comment/CommentsUseCases';
+import { LocalCommentsRepository } from '@/data/repositories/LocalCommentsRepository.impl';
 
 export const postsUseCases = new PostsUseCases(new LocalPostsRepository());
 export const profilesUseCases = new ProfilesUseCases(new LocalProfilesRepository());
@@ -22,3 +24,4 @@ export const sellerProductsUseCases = new SellerProductsUseCases(
   new LocalSellerProductsRepository(),
 );
 export const usersUseCases = new UsersUseCases(new LocalUsersRepository());
+export const commentsUseCases = new CommentsUseCases(new LocalCommentsRepository());

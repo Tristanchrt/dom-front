@@ -6,4 +6,6 @@ export interface Comment {
   content: string;
   likesCount: number;
   createdAt: Date;
+  replyTo?: Pick<User, 'id' | 'name'>;
+  parentCommentId?: string;
 }

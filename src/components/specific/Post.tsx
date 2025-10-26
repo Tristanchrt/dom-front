@@ -15,6 +15,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CommentsSheet } from './CommentsSheet';
 
 interface PostType {
   id: string;
@@ -51,6 +52,7 @@ export default function Post({ post }: PostProps) {
   const insets = useSafeAreaInsets();
   const [viewerUri, setViewerUri] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
   const MAX_PREVIEW_LEN = 150;
   const isTruncated = !isExpanded && post.content && post.content.length > MAX_PREVIEW_LEN;
@@ -91,20 +93,7 @@ export default function Post({ post }: PostProps) {
   };
 
   const handleComment = () => {
-    // For now, show a placeholder alert
-    Alert.alert('Commentaires', 'Fonctionnalité des commentaires bientôt disponible !', [
-      {
-        text: 'OK',
-        style: 'default',
-      },
-      {
-        text: 'Simuler un commentaire',
-        onPress: () => {
-          setCommentCount((prev) => prev + 1);
-          Alert.alert('Commentaire ajouté !', 'Votre commentaire a été publié.');
-        },
-      },
-    ]);
+    setIsCommentsOpen(true);
   };
 
   const handleShare = async () => {
@@ -348,6 +337,25 @@ export default function Post({ post }: PostProps) {
         </View>
       </Modal>
 
+      {/* Comments Modal */}
+      <Modal
+        visible={isCommentsOpen}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsCommentsOpen(false)}
+      >
+        <View style={styles.commentsSheetContainer}>
+          <TouchableOpacity
+            style={styles.commentsSheetBackdrop}
+            activeOpacity={1}
+            onPress={() => setIsCommentsOpen(false)}
+          />
+          <View style={styles.commentsSheetCard}>
+            <CommentsSheet postId={post.id} />
+          </View>
+        </View>
+      </Modal>
+
       {/* Image Viewer */}
       <Modal visible={!!viewerUri} transparent animationType="fade" onRequestClose={() => setViewerUri(null)}>
         <View style={styles.viewerBackdrop}>
@@ -547,5 +555,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2C1810',
     fontWeight: '500',
+  },
+  commentsSheetContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  commentsSheetBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  commentsSheetCard: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    height: '80%',
+    paddingTop: 12,
   },
 });
